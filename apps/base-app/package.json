@@ -15,17 +15,24 @@
     "eas-build-post-install": "pnpm run -w build:mobile"
   },
   "dependencies": {
+    "@deur/shared-hooks": "*",
+    "@deur/shared-types": "*",
+    "@deur/tailwind-config": "*",
+    "@deur/design-system": "*",
     "expo": "^47.0.0",
+    "expo-constants": "~14.0.2",
     "expo-dev-client": "~2.0.0",
+    "expo-linking": "~3.3.0",
+    "expo-router": "^0.0.39",
     "expo-status-bar": "~1.4.2",
     "expo-updates": "~0.15.4",
     "nativewind": "^2.0.11",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-web": "~0.18.7",
-    "@deur/shared-hooks": "*",
-    "@deur/shared-types": "*"
+    "react-native-safe-area-context": "4.4.1",
+    "react-native-screens": "~3.18.0",
+    "react-native-web": "~0.18.7"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@deur/ui",
+  "name": "@deur/design-system",
   "version": "1.0.0",
   "description": "UI components for React Native",
   "author": "ahwelgemoed",
@@ -64,8 +64,15 @@
     "source": "src",
     "output": "build",
     "targets": [
-      "commonjs",
-      "typescript"
+      [
+        "commonjs",
+        {
+          "configFile": true
+        }
+      ],
+      [
+        "typescript"
+      ]
     ]
   },
   "dependencies": {

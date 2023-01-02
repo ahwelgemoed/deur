@@ -1,4 +1,5 @@
 import { useMqtt, useSendMqttMessage } from '@deur/shared-hooks';
+import { Strong } from '@deur/design-system';
 import { View, Text } from 'react-native';
 
 const App = () => {
@@ -10,9 +11,12 @@ const App = () => {
       {isConnected ? (
         <Text className="text-green-700">Connected</Text>
       ) : (
-        <Text className="text-red-700">Not Connected</Text>
+        <Text className="text-gray-400">Not Connected</Text>
       )}
-      <Text className="text-white">Welcome to my Gate</Text>
+      <Strong>
+        WHAT
+        <Text className="text-white">Welcome to my Gates</Text>
+      </Strong>
     </View>
   );
 };

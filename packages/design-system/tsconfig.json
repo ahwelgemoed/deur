@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
-  "include": ["./tailwind.config.js", "src"],
+  "include": ["src"],
   "compilerOptions": {
     "jsx": "react-native"
   }
