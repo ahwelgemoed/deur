@@ -5,7 +5,6 @@ export default function Page() {
   return (
     <View className="flex justify-center w-full flex-1 bg-black text-white items-center">
       <Text className="text-white">
-        Welcome to my ates
         <Link href="/">/index</Link>
       </Text>
     </View>

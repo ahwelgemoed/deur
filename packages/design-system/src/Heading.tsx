@@ -1,8 +1,12 @@
 import React from 'react';
 import { Text, TextProps } from 'react-native';
 
-export const Heading = ({ children, style, ...props }: TextProps) => (
-  <Text {...props} className="text-2xl">
+interface HeadingProps extends TextProps {
+  classNames?: string;
+}
+
+export const Heading = ({ classNames, children, style, ...props }: HeadingProps) => (
+  <Text {...props} className={`text-2xl ${classNames}`}>
     {children}
   </Text>
 );

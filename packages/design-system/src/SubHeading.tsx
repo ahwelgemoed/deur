@@ -1,8 +1,15 @@
 import React from 'react';
 import { Text, TextProps } from 'react-native';
 
-export const SubHeading = ({ children, style, ...props }: TextProps) => (
-  <Text {...props} className="text-sm">
-    {children}
-  </Text>
-);
+interface SubHeadingProps extends TextProps {
+  classNames?: string;
+}
+
+export const SubHeading = ({ classNames, children, style, ...props }: SubHeadingProps) => {
+  console.log('children', classNames);
+  return (
+    <Text {...props} className={`text-sm text-blue-500 ${classNames}`}>
+      {children}
+    </Text>
+  );
+};
