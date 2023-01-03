@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm/browser';
 
-@Entity('author')
-export class Author {
+@Entity('Member')
+export class Member {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -9,7 +9,10 @@ export class Author {
   name!: string;
 
   @Column({ type: 'text' })
-  cardNumber!: string;
+  email!: string;
+
+  @Column({ type: 'int' })
+  clubId!: string;
 
   @Column({ type: 'text' })
   birthDay!: string;
