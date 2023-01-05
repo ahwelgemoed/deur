@@ -26,7 +26,6 @@ export function useMqtt(): [
       }
     };
   }, []);
-
   const createClient = () => {
     mqttClient.current = new Paho.Client('127.0.0.1', Number(8080), '/', createMqttName('Mobile'));
 

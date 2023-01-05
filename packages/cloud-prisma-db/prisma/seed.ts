@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { faker } from '@faker-js/faker';
+import { PrismaClient } from '@prisma/client';
 
-import Chance from "chance";
+import Chance from 'chance';
 
 const chance = new Chance();
 
@@ -9,12 +10,13 @@ const prisma = new PrismaClient();
 async function main() {
   console.log(`Start seeding ...`);
   const startTime = Date.now();
-  for (let i = 0; i < 5_000_000; i++) {
+  for (let i = 0; i < 50_000; i++) {
     await prisma.user.create({
       data: {
-        name: chance.name(),
-        email: chance.email(),
-        clubId: chance.integer({ min: 0, max: 200 }),
+        name: faker.name.firstName(),
+        birthDay: faker.date.past(),
+        clubId: faker.datatype.number({ min: 1, max: 5000 }),
+        email: faker.internet.email(),
         isAllowed: chance.bool(),
       },
     });

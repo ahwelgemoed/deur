@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { respondToOpenGateRequest } from '../publish/publishOpenGate';
 export async function checkIfUserMayEnter(userId: string, clientId: string) {
-  // Do a Rest Call to Local Server to check USER
+  // Do a Rest Call to Local Server to Check USER
   const allowed = await getUserStatus(userId);
   await respondToOpenGateRequest(clientId, allowed ? true : false);
 }

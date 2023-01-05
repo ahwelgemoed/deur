@@ -8,6 +8,8 @@ async function clientRoutes(fastify: FastifyInstance) {
   }>('/create-new-app-user', {}, async function (request, reply) {
     const { id } = request.body;
 
+    // const user = await prisma.user.create({
+
     return { users: 'any', cached: false };
   });
 }

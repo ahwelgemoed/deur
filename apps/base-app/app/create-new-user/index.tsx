@@ -10,13 +10,13 @@ import { useLocalSource } from '../../src/localDB/useLocalDatabase';
 const CreateNewUser = () => {
   const [repository, createdEntity] = useLocalSource(Member);
   const navigation = useNavigation();
-  // navigation.push("details")
 
   const newMember = {
     name: faker.name.firstName(),
     birthDay: faker.date.past(),
     clubId: faker.datatype.number({ min: 1, max: 5000 }),
     email: faker.internet.email(),
+    isAllowed: true,
   };
 
   useEffect(() => {
@@ -32,7 +32,12 @@ const CreateNewUser = () => {
     createdEntity.birthDay = newMember.birthDay.toISOString();
     createdEntity.clubId = String(newMember.clubId);
     createdEntity.email = newMember.email;
-    await repository?.save(createdEntity);
+    createdEntity.isAllowed = newMember.isAllowed;
+    try {
+      await repository?.save(createdEntity);
+    } catch (error) {
+      console.log('error', error);
+    }
 
     const justCreatedPerson = await repository?.findOne({
       where: {

@@ -8,8 +8,8 @@ import SwipeButton from 'rn-swipe-button';
 const Swipper = () => {
   const [gatesOnline, setGatesOnline] = useState<string[]>();
   const [sendMessage] = useSendMqttMessage((e) => console.log('e', e));
-
   useMqttMessageListener(EMQQTTTopics.GATES_ONLINE, (message) => {
+    console.log('message', message);
     setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as any as string[]);
   });
 
@@ -17,8 +17,10 @@ const Swipper = () => {
     <View>
       {gatesOnline &&
         gatesOnline.map((gate, i) => (
-          <View className="flex justify-center">
-            <Text className="text-center text-xl uppercase py-6">Gate {i + 1}</Text>
+          <View className="flex justify-center" key={i}>
+            <Text className="text-center text-xl uppercase py-6">
+              Gate {i + 1} ({gate})
+            </Text>
             <SwipeButton
               key={gate}
               disableResetOnTap
@@ -31,7 +33,7 @@ const Swipper = () => {
               titleColor="#FFFFFF"
               title="Slide to unlock"
               onSwipeSuccess={() => {
-                sendMessage(EMQQTTTopics.OPEN_GATE, gate, 2);
+                sendMessage(`${gate}/${EMQQTTTopics.OPEN_GATE}`, gate, 2);
               }}
             />
           </View>

@@ -13,7 +13,6 @@ async function clientRoutes(fastify: FastifyInstance) {
       const { id } = request.params;
 
       const cachedClubUsers = await redis.get(REDIS_KEY);
-
       if (cachedClubUsers) {
         const allClubsUsers: Prisma.UserGroupByOutputType[] = JSON.parse(cachedClubUsers);
 

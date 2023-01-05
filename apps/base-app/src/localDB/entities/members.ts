@@ -16,4 +16,7 @@ export class Member {
 
   @Column({ type: 'text' })
   birthDay!: string;
+
+  @Column({ type: 'boolean' })
+  isAllowed!: boolean;
 }
