@@ -14,28 +14,27 @@ const Swipper = () => {
   });
 
   return (
-    <View>
+    <View className="w-[400px]">
       {gatesOnline &&
         gatesOnline.map((gate, i) => (
           <View className="flex justify-center" key={i}>
-            <Text className="text-center text-xl uppercase py-6">
-              Gate {i + 1} ({gate})
-            </Text>
+            <Text className="text-center text-xl uppercase py-6">Gate {i + 1}</Text>
             <SwipeButton
               key={gate}
               disableResetOnTap
               railBackgroundColor="#000"
               railStyles={{
-                backgroundColor: '#4aad41bd',
+                backgroundColor: '#7ad2bdb0',
                 borderColor: '#4aad41bd',
               }}
               thumbIconBackgroundColor="#FFFFFF"
               titleColor="#FFFFFF"
-              title="Slide to unlock"
+              title="Slide to open"
               onSwipeSuccess={() => {
                 sendMessage(`${gate}/${EMQQTTTopics.OPEN_GATE}`, gate, 2);
               }}
             />
+            <Text className="text-right text-xs uppercase text-gray-400">({gate})</Text>
           </View>
         ))}
     </View>

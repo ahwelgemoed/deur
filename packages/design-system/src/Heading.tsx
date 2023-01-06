@@ -6,7 +6,7 @@ interface HeadingProps extends TextProps {
 }
 
 export const Heading = ({ classNames, children, style, ...props }: HeadingProps) => (
-  <Text {...props} className={`text-[60px] uppercase bolder text-black ${classNames}`}>
+  <Text {...props} className={`text-[60px] uppercase bolder text-black font-display ${classNames}`}>
     {children}
   </Text>
 );

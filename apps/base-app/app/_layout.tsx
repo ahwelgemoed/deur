@@ -2,26 +2,57 @@
  * All Global Configs and Layouts from here
  */
 
-import { Layout } from 'expo-router';
+import {
+  useFonts,
+  Montserrat_100Thin,
+  Montserrat_100Thin_Italic,
+  Montserrat_200ExtraLight,
+  Montserrat_200ExtraLight_Italic,
+  Montserrat_300Light,
+  Montserrat_300Light_Italic,
+  Montserrat_400Regular,
+  Montserrat_400Regular_Italic,
+  Montserrat_500Medium,
+  Montserrat_500Medium_Italic,
+  Montserrat_600SemiBold,
+  Montserrat_600SemiBold_Italic,
+  Montserrat_700Bold,
+  Montserrat_700Bold_Italic,
+  Montserrat_800ExtraBold,
+  Montserrat_800ExtraBold_Italic,
+  Montserrat_900Black,
+  Montserrat_900Black_Italic,
+} from '@expo-google-fonts/montserrat';
+import { Layout, SplashScreen } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import GlobalAppSettings from '../src/components/GlobalAppSettings';
+
 export default function Root() {
-  // useEffect(() => {
-  //   async function init() {
-  //     const source = await dataSource.initialize();
-  //     const authorRepo = source.getRepository(Author);
-  //     const author = new Author();
-  //     author.name = 'Person';
-  //     author.birthDay = '1990-01-01';
-  //     author.cardNumber = '123456789';
-  //     await authorRepo.save(author);
+  const [fontsLoaded] = useFonts({
+    Montserrat_100Thin,
+    Montserrat_100Thin_Italic,
+    Montserrat_200ExtraLight,
+    Montserrat_200ExtraLight_Italic,
+    Montserrat_300Light,
+    Montserrat_300Light_Italic,
+    Montserrat_400Regular,
+    Montserrat_400Regular_Italic,
+    Montserrat_500Medium,
+    Montserrat_500Medium_Italic,
+    Montserrat_600SemiBold,
+    Montserrat_600SemiBold_Italic,
+    Montserrat_700Bold,
+    Montserrat_700Bold_Italic,
+    Montserrat_800ExtraBold,
+    Montserrat_800ExtraBold_Italic,
+    Montserrat_900Black,
+    Montserrat_900Black_Italic,
+  });
 
-  //     const authors = await authorRepo.find();
-  //     console.log('authors', authors);
-  //   }
-  //   init();
-  // }, []);
-
+  if (!fontsLoaded) {
+    return <SplashScreen />;
+  }
   return (
     <SafeAreaView>
       <RootLayout />
@@ -32,7 +63,9 @@ export default function Root() {
 function RootLayout() {
   return (
     <Layout>
-      <Layout.Children />
+      <GlobalAppSettings>
+        <Layout.Children />
+      </GlobalAppSettings>
     </Layout>
   );
 }

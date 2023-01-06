@@ -67,28 +67,15 @@ const MainLayout = ({
           headerComponent
         ) : (
           <>
-            <Heading>{headerMainText}</Heading>
-            <SubHeading classNames="uppercase text-gray-500 text-[20px]">
+            <Heading classNames="text-[60px]">{headerMainText}</Heading>
+            <SubHeading classNames="uppercase text-gray-400 text-[20px]">
               {headerSubText}
             </SubHeading>
           </>
         )}
       </View>
       <View className="flex p-4 h-full justify-center">
-        <View className="h-[400px] ">
-          {body}
-          {/* <ScrollView horizontal className="flex" centerContent={true} style={{ flexGrow: 0 }}>
-          {[1, 2, 3, 4].map((item) => {
-            return (
-              <Link href="/create-new-user" key={item} className="m-2 p-2">
-                <View className="w-[250px] bg-black rounded-tr-3xl rounded-bl-3xl h-full">
-                  <Strong classNames={'text-white'}>Member {item}</Strong>
-                </View>
-              </Link>
-            );
-          })}
-        </ScrollView> */}
-        </View>
+        <View className="h-[500px]">{body}</View>
         <View className="flex p-4 justify-center">
           {footerComponent ? footerComponent : null}
           <Text>{footerMainText ? footerMainText : null}</Text>

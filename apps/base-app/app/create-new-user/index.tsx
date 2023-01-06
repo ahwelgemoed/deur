@@ -7,17 +7,16 @@ import MainLayout from '../../src/components/MainLayout';
 import { Member } from '../../src/localDB/entities/members';
 import { useLocalSource } from '../../src/localDB/useLocalDatabase';
 
+const newMember = {
+  name: faker.name.firstName(),
+  birthDay: faker.date.past(),
+  clubId: faker.datatype.number({ min: 1, max: 5000 }),
+  email: faker.internet.email(),
+  isAllowed: true,
+};
 const CreateNewUser = () => {
   const [repository, createdEntity] = useLocalSource(Member);
   const navigation = useNavigation();
-
-  const newMember = {
-    name: faker.name.firstName(),
-    birthDay: faker.date.past(),
-    clubId: faker.datatype.number({ min: 1, max: 5000 }),
-    email: faker.internet.email(),
-    isAllowed: true,
-  };
 
   useEffect(() => {
     async function init() {
@@ -56,19 +55,23 @@ const CreateNewUser = () => {
     <MainLayout
       showBackButton
       headerMainText="Create New User"
-      headerSubText="please follow the steps"
+      headerSubText=""
       body={
         <View className="flex w-full h-full">
           <View className="flex flex-col justify-center items-center">
-            <Text className="text-3xl uppercase">Hello {newMember.name}</Text>
-            <Text className="text-lg uppercase">to Deur and Co.</Text>
+            <Text className="text-3xl uppercase font-text">Hello {newMember.name}</Text>
           </View>
           <View className="flex flex-row gap-2 justify-center">
-            <Text className="text-md uppercase">Email: {newMember.email}</Text>
-            <Text className="text-md uppercase">BirthDay: {newMember.birthDay.toDateString()}</Text>
+            <Text className="text-md uppercase  font-text">Email: {newMember.email}</Text>
+            <Text className="text-md uppercase  font-text">
+              BirthDay: {newMember.birthDay.toDateString()}
+            </Text>
           </View>
           <View className="flex flex-row gap-2 justify-center mt-10">
-            <Text className="bg-black text-white py-4 px-6" onPress={createNewUser}>
+            <Text
+              className="bg-black text-white py-4 px-6  font-text text-lg"
+              onPress={createNewUser}
+            >
               Create Your Membership
             </Text>
           </View>
