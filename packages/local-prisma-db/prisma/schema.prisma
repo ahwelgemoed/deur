@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev(local).db"
+}
+
+model User {
+  id    Int @id
+  birthDay DateTime  
+  name  String?
+  cardNumber String @unique
+  isAllowed Boolean @default(false)
+  location String
+}
+
+
+
+
+

@@ -7,7 +7,10 @@ import axiosRetry from 'axios-retry';
 
 import { Prisma } from '@deur/cloud-prisma-db';
 
+import { RedisKeys } from '@deur/shared-types';
+
 export const REDIS_KEY = 'clubUsers';
+
 const EXPIRATION_TIME_MIN = 60;
 export const redis = new Redis();
 // TODO::COULD RUN IN MULTI MODE --> LOOK INTO THIS
@@ -61,7 +64,7 @@ export { start };
 
 async function runBeforeServerStart() {
   console.log('👩‍🦳 RUNNING REDIS');
-  const url = `${process.env.BASE_CLOUD_URL}/v1/club-users/${process.env.CLUB_ID}`;
+  const url = `${process.env.BASE_CLOUD_URL}/v1/user-routes/users-by-location/${process.env.CLUB_ID}`;
   try {
     const response = await axios.get(url);
     const data = await response.data;
@@ -75,3 +78,11 @@ async function runBeforeServerStart() {
     console.error('error', error);
   }
 }
+/**
+ * Get All Data into SQLLite
+ * add to Cahce
+ * before Cache expires, get new data from cloud
+ * update cache
+ * update SQLLite
+ *
+ */
