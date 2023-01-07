@@ -1,3 +1,4 @@
+export * from './redisTypes';
 // MQTT Message Types
 export enum EMQTTMessageTypes {
   CONNECT = 1,
@@ -13,4 +14,9 @@ type TMqttClient = 'Mobile' | 'Web' | 'Server' | 'Gate';
 
 export function createMqttName(type: TMqttClient): string {
   return `${type}-${(Math.random() * 100).toString()}`;
+}
+
+export interface IMqttLocalToApp {
+  name: string;
+  reason: string;
 }

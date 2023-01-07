@@ -4,16 +4,48 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev(5_000_000).db"
+  url      = "file:./dev.db"
 }
-
+model Country {
+  id    Int     @id @default(autoincrement())
+  name  String
+  code  String
+  locations Location[]
+}
 model User {
   id    Int     @id @default(autoincrement())
   email String  
   birthDay DateTime  
   name  String?
-  clubId Int
+  locationId Int
+  cardNumber String @unique
   isAllowed Boolean @default(false)
+  location Location @relation(fields: [locationId], references: [id])
 }
+model Location {
+  id    Int     @id @default(autoincrement())
+  name  String
+  users User[]
+  devices Devices[]
+  countryId Int
+  country Country @relation(fields: [countryId], references: [id])
+}
+model Devices {
+  id    Int     @id @default(autoincrement())
+  name  String
+  deviceId String
+  locationId Int
+  location Location @relation(fields: [locationId], references: [id])
+  deviceType DeviceTypes @relation(fields: [deviceTypeId], references: [id])
+  deviceTypeId Int
+}
+
+model DeviceTypes {
+  id    Int     @id @default(autoincrement())
+  name  String
+  devices Devices[]
+}
+
+
 
 

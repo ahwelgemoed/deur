@@ -18,4 +18,5 @@ export const init = async (): Promise<DataSource> => {
 // Close the database connection
 export const close = async (): Promise<void> => {
   await dataSource.destroy();
+  // dataSource.dropDatabase();
 };
