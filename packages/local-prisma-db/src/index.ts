@@ -1,1 +1,1 @@
-export * as LocalPrisma from '@prisma/client';
+export * from '../prisma/generated';

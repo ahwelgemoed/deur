@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated"
 }
 
 datasource db {
@@ -8,15 +9,12 @@ datasource db {
 }
 
 model User {
-  id    Int @id
-  birthDay DateTime  
-  name  String?
-  cardNumber String @unique
-  isAllowed Boolean @default(false)
-  location String
+  id         Int      @id @unique
+  birthDay   DateTime
+  name       String?
+  cardNumber String   @unique
+  isAllowed  Boolean  @default(false)
+  location   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
-
-
-
-
-

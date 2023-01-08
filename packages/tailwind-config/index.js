@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Montserrat_900Black_Italic'],
-        body: ['Montserrat_600SemiBold_Italic'],
-        text: ['Montserrat_400Regular'],
+        display: ['Ubuntu_500Medium_Italic'],
+        body: ['Ubuntu_500Medium'],
+        text: ['Ubuntu_300Light'],
       },
     },
   },

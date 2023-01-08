@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient } from '@prisma/client';
-
+import { PrismaClient } from './generated';
 const prisma = new PrismaClient();
 
 const counties = [
@@ -37,7 +36,7 @@ async function main() {
       },
     });
     // Create 1000 Locations
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 800; i++) {
       const createdLocation = await prisma.location.create({
         data: {
           name: faker.address.cityName(),
@@ -45,7 +44,7 @@ async function main() {
         },
       });
       // Create 10000 Users per  Location
-      for (let i = 0; i < 800; i++) {
+      for (let i = 0; i < 5000; i++) {
         await prisma.user.create({
           data: {
             cardNumber: faker.datatype.uuid(),

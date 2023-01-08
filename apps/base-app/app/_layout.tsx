@@ -4,25 +4,15 @@
 
 import {
   useFonts,
-  Montserrat_100Thin,
-  Montserrat_100Thin_Italic,
-  Montserrat_200ExtraLight,
-  Montserrat_200ExtraLight_Italic,
-  Montserrat_300Light,
-  Montserrat_300Light_Italic,
-  Montserrat_400Regular,
-  Montserrat_400Regular_Italic,
-  Montserrat_500Medium,
-  Montserrat_500Medium_Italic,
-  Montserrat_600SemiBold,
-  Montserrat_600SemiBold_Italic,
-  Montserrat_700Bold,
-  Montserrat_700Bold_Italic,
-  Montserrat_800ExtraBold,
-  Montserrat_800ExtraBold_Italic,
-  Montserrat_900Black,
-  Montserrat_900Black_Italic,
-} from '@expo-google-fonts/montserrat';
+  Ubuntu_300Light,
+  Ubuntu_300Light_Italic,
+  Ubuntu_400Regular,
+  Ubuntu_400Regular_Italic,
+  Ubuntu_500Medium,
+  Ubuntu_500Medium_Italic,
+  Ubuntu_700Bold,
+  Ubuntu_700Bold_Italic,
+} from '@expo-google-fonts/ubuntu';
 import { Layout, SplashScreen } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -30,24 +20,14 @@ import GlobalAppSettings from '../src/components/GlobalAppSettings';
 
 export default function Root() {
   const [fontsLoaded] = useFonts({
-    Montserrat_100Thin,
-    Montserrat_100Thin_Italic,
-    Montserrat_200ExtraLight,
-    Montserrat_200ExtraLight_Italic,
-    Montserrat_300Light,
-    Montserrat_300Light_Italic,
-    Montserrat_400Regular,
-    Montserrat_400Regular_Italic,
-    Montserrat_500Medium,
-    Montserrat_500Medium_Italic,
-    Montserrat_600SemiBold,
-    Montserrat_600SemiBold_Italic,
-    Montserrat_700Bold,
-    Montserrat_700Bold_Italic,
-    Montserrat_800ExtraBold,
-    Montserrat_800ExtraBold_Italic,
-    Montserrat_900Black,
-    Montserrat_900Black_Italic,
+    Ubuntu_300Light,
+    Ubuntu_300Light_Italic,
+    Ubuntu_400Regular,
+    Ubuntu_400Regular_Italic,
+    Ubuntu_500Medium,
+    Ubuntu_500Medium_Italic,
+    Ubuntu_700Bold,
+    Ubuntu_700Bold_Italic,
   });
 
   if (!fontsLoaded) {

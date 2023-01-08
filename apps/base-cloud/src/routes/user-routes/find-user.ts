@@ -11,6 +11,7 @@ async function userRoutes(fastify: FastifyInstance) {
       });
       return { user: user, cached: undefined, error: undefined };
     } catch (error) {
+      console.log('error', error);
       return { user: undefined, cached: undefined, error: error };
     }
   });
