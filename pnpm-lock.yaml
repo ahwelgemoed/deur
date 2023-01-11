@@ -116,6 +116,8 @@ importers:
       ts-node-dev: ^2.0.0
       tsup: ^5.11.13
       typescript: ^4.9.3
+      zod: ^3.20.2
+      zod-to-json-schema: ^3.20.2
     dependencies:
       '@deur/cloud-prisma-db': link:../../packages/cloud-prisma-db
       '@fastify/autoload': 5.6.0
@@ -133,6 +135,8 @@ importers:
       ts-node: 10.9.1_awa2wsr5thmg3i7jqycphctjfq
       tsup: 5.12.9_z6wznmtyb6ovnulj6iujpct7um
       typescript: 4.9.4
+      zod: 3.20.2
+      zod-to-json-schema: 3.20.2_zod@3.20.2
     devDependencies:
       '@deur/shared-types': link:../../packages/shared-types
       '@types/node': 18.11.18
@@ -141,7 +145,6 @@ importers:
   apps/base-local:
     specifiers:
       '@deur/cloud-prisma-db': '*'
-      '@deur/local-prisma-db': '*'
       '@deur/shared-types': '*'
       '@fastify/autoload': ^5.6.0
       '@fastify/redis': ^6.1.0
@@ -164,7 +167,6 @@ importers:
       typescript: ^4.9.3
     dependencies:
       '@deur/cloud-prisma-db': link:../../packages/cloud-prisma-db
-      '@deur/local-prisma-db': link:../../packages/local-prisma-db
       '@fastify/autoload': 5.6.0
       '@fastify/redis': 6.1.0
       '@fastify/swagger': 8.2.1
@@ -326,25 +328,6 @@ importers:
       eslint-config-universe: 11.1.1_tqrjnzwvaqnhtgenkwo5lurvsm_crnjwcwerrbat3mlbmrsoa543e
       prettier: 2.8.1
 
-  packages/local-prisma-db:
-    specifiers:
-      '@deur/tsconfig': '*'
-      '@faker-js/faker': ^7.6.0
-      '@prisma/client': latest
-      '@types/chance': ^1.1.3
-      chance: ^1.1.9
-      prisma: latest
-      ts-node: ^10.9.1
-    dependencies:
-      '@faker-js/faker': 7.6.0
-      '@prisma/client': 4.8.1_prisma@4.8.1
-      '@types/chance': 1.1.3
-      chance: 1.1.9
-    devDependencies:
-      '@deur/tsconfig': link:../tsconfig
-      prisma: 4.8.1
-      ts-node: 10.9.1
-
   packages/shared-hooks:
     specifiers:
       '@deur/shared-types': '*'
@@ -373,8 +356,10 @@ importers:
   packages/shared-types:
     specifiers:
       typescript: latest
+      zod: ^3.20.2
     dependencies:
       typescript: 4.9.4
+      zod: 3.20.2
 
   packages/tailwind-config:
     specifiers:
@@ -16231,6 +16216,14 @@ packages:
       parenthesis: 3.1.8
       prisma: 4.8.1
       ts-morph: 13.0.3
+      zod: 3.20.2
+    dev: false
+
+  /zod-to-json-schema/3.20.2_zod@3.20.2:
+    resolution: {integrity: sha512-qka3UAXmVXD8z5SHkRU89UyHp8JHJW7zc8RQCpt7QloJOn6uijwkjUm8o+M/cF1IysmKc5gxac/QeDikaQMdzQ==}
+    peerDependencies:
+      zod: ^3.20.0
+    dependencies:
       zod: 3.20.2
     dev: false
 

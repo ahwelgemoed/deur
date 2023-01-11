@@ -1,18 +1,24 @@
 import { useMqttMessageListener, useSendMqttMessage } from '@deur/shared-hooks';
 import { EMQQTTTopics } from '@deur/shared-types';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text } from 'react-native';
 import SwipeButton from 'rn-swipe-button';
+import { v4 as uuidv4 } from 'uuid';
 
 // EMQQTTTopics
 const Swipper = () => {
+  const uuid = useRef(Date.now().toString());
   const [gatesOnline, setGatesOnline] = useState<string[]>();
+  const [gateStatus, setGatesOffline] = useState<boolean>(false);
   const [sendMessage] = useSendMqttMessage((e) => console.log('e', e));
   useMqttMessageListener(EMQQTTTopics.GATES_ONLINE, (message) => {
-    console.log('message', message);
     setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as any as string[]);
   });
-
+  useMqttMessageListener(uuid.current, (message) => {
+    setGatesOffline(true);
+  });
+  // TODO Display success when gate is opened
+  console.log('uuid.current', uuid.current);
   return (
     <View className="w-[400px]">
       {gatesOnline &&
@@ -31,7 +37,7 @@ const Swipper = () => {
               titleColor="#FFFFFF"
               title="Slide to open"
               onSwipeSuccess={() => {
-                sendMessage(`${gate}/${EMQQTTTopics.OPEN_GATE}`, gate, 2);
+                sendMessage(`${gate}/${EMQQTTTopics.OPEN_GATE}`, uuid.current, 2);
               }}
             />
             <Text className="text-right text-xs uppercase text-gray-400">({gate})</Text>

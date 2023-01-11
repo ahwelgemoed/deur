@@ -18,9 +18,14 @@ WiFiEventHandler wifiDisconnectHandler;
 
 void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) {
   Serial.println("Publish received as...");
+  Serial.print("  topic: ");
   Serial.println(topic);
+  std::string payloadStr(payload, len); // converting the payload char* to std::string
+  Serial.println(payloadStr.c_str());
   if (strcmp(topic, "mqtt-explorer-RealD1/OPEN_GATE") == 0) {
+
     Serial.println("I Will OPEN_GATE");
+    mqttClient.publish(payloadStr.c_str(), 0, false, "");
   }
 }
 
