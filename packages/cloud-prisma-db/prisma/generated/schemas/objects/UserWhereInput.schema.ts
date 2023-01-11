@@ -1,0 +1,51 @@
+import { z } from 'zod';
+import { IntFilterObjectSchema } from './IntFilter.schema';
+import { StringFilterObjectSchema } from './StringFilter.schema';
+import { DateTimeFilterObjectSchema } from './DateTimeFilter.schema';
+import { StringNullableFilterObjectSchema } from './StringNullableFilter.schema';
+import { BoolFilterObjectSchema } from './BoolFilter.schema';
+import { LocationRelationFilterObjectSchema } from './LocationRelationFilter.schema';
+import { LocationWhereInputObjectSchema } from './LocationWhereInput.schema';
+
+import type { Prisma } from '../..';
+
+const Schema: z.ZodType<Prisma.UserWhereInput> = z
+  .object({
+    AND: z
+      .union([
+        z.lazy(() => UserWhereInputObjectSchema),
+        z.lazy(() => UserWhereInputObjectSchema).array(),
+      ])
+      .optional(),
+    OR: z
+      .lazy(() => UserWhereInputObjectSchema)
+      .array()
+      .optional(),
+    NOT: z
+      .union([
+        z.lazy(() => UserWhereInputObjectSchema),
+        z.lazy(() => UserWhereInputObjectSchema).array(),
+      ])
+      .optional(),
+    id: z.union([z.lazy(() => IntFilterObjectSchema), z.number()]).optional(),
+    email: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
+    birthDay: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+    name: z
+      .union([z.lazy(() => StringNullableFilterObjectSchema), z.string()])
+      .optional()
+      .nullable(),
+    locationId: z.union([z.lazy(() => IntFilterObjectSchema), z.number()]).optional(),
+    cardNumber: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
+    isAllowed: z.union([z.lazy(() => BoolFilterObjectSchema), z.boolean()]).optional(),
+    location: z
+      .union([
+        z.lazy(() => LocationRelationFilterObjectSchema),
+        z.lazy(() => LocationWhereInputObjectSchema),
+      ])
+      .optional(),
+    createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+    updatedAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+  })
+  .strict();
+
+export const UserWhereInputObjectSchema = Schema;

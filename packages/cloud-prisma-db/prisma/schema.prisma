@@ -3,6 +3,12 @@ generator client {
   output   = "./generated"
 }
 
+generator zod {
+  provider    = "zod-prisma"
+  modelSuffix = "CloudModel"
+  output      = "../../shared-types/src/cloud-prisma-types"
+}
+
 datasource db {
   provider = "sqlite"
   url      = "file:./dev(cloud).db"

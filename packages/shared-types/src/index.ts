@@ -1,3 +1,6 @@
+export * from './cloud-prisma-types';
+export * from './local-prisma-types';
+
 export * from './redisTypes';
 // MQTT Message Types
 export enum EMQTTMessageTypes {

@@ -3,6 +3,12 @@ generator client {
   output   = "./generated"
 }
 
+generator zod {
+  provider    = "zod-prisma"
+  modelSuffix = "LocalModel"
+  output      = "../../shared-types/src/local-prisma-types"
+}
+
 datasource db {
   provider = "sqlite"
   url      = "file:./dev(local).db"

@@ -81,7 +81,7 @@ async function runBeforeServerStart() {
 
     for (let index = 0; index < users.length; index++) {
       const user = users[index];
-      await prisma.user.upsert({
+      await prisma.local_User.upsert({
         where: {
           id: user.id,
         },
