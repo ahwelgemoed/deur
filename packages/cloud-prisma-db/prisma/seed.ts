@@ -29,6 +29,7 @@ async function main() {
   // Loop over Countries
   for (let i = 0; i < counties.length; i++) {
     const country = counties[i];
+    console.log(`Seeding ${country.name} @ ${Date.now().toLocaleString()}`);
     const createdCountry = await prisma.country.create({
       data: {
         name: country.name,
@@ -36,7 +37,7 @@ async function main() {
       },
     });
     // Create 1000 Locations
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 500; i++) {
       const createdLocation = await prisma.location.create({
         data: {
           name: faker.address.cityName(),
@@ -44,7 +45,7 @@ async function main() {
         },
       });
       // Create 10000 Users per  Location
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 2000; i++) {
         await prisma.user.create({
           data: {
             cardNumber: faker.datatype.uuid(),

@@ -59,15 +59,6 @@
     }
    }
   },
-  "/v1/device-routes/all-device-types": {
-   "get": {
-    "responses": {
-     "200": {
-      "description": "Default Response"
-     }
-    }
-   }
-  },
   "/v1/location-routes/all-locations": {
    "get": {
     "responses": {
@@ -205,6 +196,15 @@
    }
   },
   "/v1/user-routes/users-by-location/{locationId}": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Default Response"
+     }
+    }
+   }
+  },
+  "/v1/device-routes/all-device-types": {
    "get": {
     "responses": {
      "200": {
