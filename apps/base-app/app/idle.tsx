@@ -11,7 +11,9 @@ export default function IdlePage() {
 
   const gateSentRoute = () => {
     router.push({ pathname: '/gate-actions/help-this-user', params: { id: user?.userId } });
-    setToActive();
+    setTimeout(() => {
+      setToActive();
+    }, 0);
   };
   if (user.userId) {
     return (

@@ -59,7 +59,16 @@
     }
    }
   },
-  "/v1/device-routes/all-device-types": {
+  "/v1/location-routes/all-locations": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Default Response"
+     }
+    }
+   }
+  },
+  "/v1/location-routes/location-by-country/{countryId}": {
    "get": {
     "responses": {
      "200": {
@@ -86,16 +95,7 @@
     }
    }
   },
-  "/v1/location-routes/all-locations": {
-   "get": {
-    "responses": {
-     "200": {
-      "description": "Default Response"
-     }
-    }
-   }
-  },
-  "/v1/location-routes/location-by-country/{countryId}": {
+  "/v1/device-routes/all-device-types": {
    "get": {
     "responses": {
      "200": {

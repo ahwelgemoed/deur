@@ -1,3 +1,5 @@
+import { CompleteUser } from './cloud-prisma-types';
+
 export * from './cloud-prisma-types';
 export * from './local-prisma-types';
 
@@ -32,3 +34,10 @@ export enum EReasons {
   USER_NOT_HOME_NOT_ALLOWED = 'USER_NOT_HOME_NOT_ALLOWED',
   USER_HOME_NOT_ALLOWED = 'USER_HOME_NOT_ALLOWED',
 }
+type LimitedUser = Pick<CompleteUser, 'id' | 'name' | 'isAllowed'>;
+
+export type GateUserResponse = {
+  user: LimitedUser | undefined;
+  reason: EReasons;
+  error: Error | undefined;
+};

@@ -2,8 +2,6 @@ import { Link } from 'expo-router';
 import { useEffect } from 'react';
 import { View, Text, Animated, Easing } from 'react-native';
 
-// import MainLayout from '../src/components/MainLayout';
-
 export default function Page() {
   const slide = new Animated.Value(0);
 
@@ -45,7 +43,7 @@ export default function Page() {
         >
           <View className="flex flex-row w-full justify-center items-center p-10 gap-10">
             <View className="rounded-2xl bg-[#EFEFF5] flex justify-center h-[200px] flex-[100%] p-4">
-              <Link href="/create-new-user" className=" h-full w-full">
+              <Link href="/create-new-user" className="h-full w-full">
                 <View className="bg-[#73EFFC] w-10 h-10 rounded-full"></View>
                 <Text className={'text-black font-body text-[40px] uppercase w-[80%]'}>
                   Create Account
@@ -56,7 +54,7 @@ export default function Page() {
               <Link href="/gate-actions/help-this-user" className="m-2 h-full w-full items-center">
                 <View className="bg-[#701BDC] w-10 h-10 rounded-full"></View>
                 <Text className={'text-black font-body text-[40px] uppercase w-[80%]'}>
-                  Gate Sent Me
+                  Could Not Get In?
                 </Text>
               </Link>
             </View>
@@ -66,7 +64,7 @@ export default function Page() {
               <Link href="/create-new-user" className="m-2 h-full w-full">
                 <View className="bg-[#F5C045] w-10 h-10 rounded-full"></View>
                 <Text className={'text-black font-body text-[40px] uppercase w-[80%]'}>
-                  Forgot Card
+                  Forgot Your Access Card?
                 </Text>
               </Link>
             </View>
@@ -74,7 +72,7 @@ export default function Page() {
               <Link href="/create-new-user" className="m-2 h-full w-full items-center">
                 <View className="bg-[#EA3877] w-10 h-10 rounded-full"></View>
                 <Text className={'text-black font-body text-[40px] uppercase w-[80%]'}>
-                  Gate Sent Me
+                  One time Access
                 </Text>
               </Link>
             </View>

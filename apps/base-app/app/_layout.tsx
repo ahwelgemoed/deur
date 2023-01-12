@@ -17,7 +17,6 @@ import { Navigator, Slot, SplashScreen } from 'expo-router';
 
 import { HelpUserProvider } from '../src/contexts/HelpUser.Context';
 import { IdleStateProvider } from '../src/contexts/IdleState.Context';
-// import GlobalAppSettings from '../src/components/GlobalAppSettings';
 
 export const unstable_settings = {
   initialRouteName: 'index',

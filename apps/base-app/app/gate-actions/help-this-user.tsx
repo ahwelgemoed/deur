@@ -9,8 +9,8 @@ import { getUserToHelpThem } from '../../src/utils/gate-queries';
 const HelpThisUser = () => {
   const params = useSearchParams();
   const { data, isLoading } = useSWR('getUserToHelp', () => {
-    const data = getUserToHelpThem(params.id);
-    return data;
+    const restDAta = getUserToHelpThem(params.id);
+    return restDAta;
   });
   if (isLoading) {
     return (
@@ -19,6 +19,7 @@ const HelpThisUser = () => {
       </View>
     );
   }
+  console.log('data', data);
   return (
     <MainLayout
       showBackButton

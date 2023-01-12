@@ -1,6 +1,5 @@
 import { useMqttMessageListener } from '@deur/shared-hooks';
 import { EMQQTTTopics } from '@deur/shared-types';
-import { useRouter } from 'expo-router';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type HelpUserProviderProps = { children: React.ReactNode };
@@ -29,7 +28,6 @@ export function HelpUserProvider({ children }: HelpUserProviderProps) {
         userId: json.user.id,
         userName: json.user.name,
       });
-      // router.push({ pathname: '/gate-actions/help-this-user', params: { id: json.user.id } });
     }
   });
   useEffect(() => {

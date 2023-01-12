@@ -1,4 +1,4 @@
-import { useNavigation, useRouter } from 'expo-router';
+import { useNavigation, useRouter, usePathname } from 'expo-router';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import UserInactivity from 'react-native-user-inactivity';
 
@@ -15,9 +15,10 @@ const IdleContext = createContext<{
 });
 
 export function IdleStateProvider({ children }: IdleStateProviderProps) {
+  const pathName = usePathname();
   const router = useRouter();
   const nav = useNavigation();
-  const idleTime = useRef(10_000);
+  const idleTime = useRef(10_0000);
 
   const setToInactive = () => {
     setActive(false);
@@ -32,8 +33,7 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
     if (active) {
       // GO TO HOME PAGE
       // WE do this as Router this is used for when we automatically go to a page from idle and manually set Active mode
-      // @ts-ignore
-      if (nav.getCurrentRoute()?.path === '/idle') {
+      if (pathName === '/idle') {
         router.push({ pathname: '/' });
       }
     } else {
@@ -46,7 +46,7 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
     <IdleContext.Provider value={{ isActive: active, setToInactive, setToActive }}>
       <UserInactivity
         isActive={active}
-        timeForInactivity={idleTime.current}
+        timeForInactivity={pathName === '/' ? 5000 : 10_0000}
         onAction={(isActive: boolean) => {
           if (!isActive) {
             setActive(isActive);
@@ -65,8 +65,3 @@ export function useSetToIdle() {
   }
   return context;
 }
-/**
- * Get Data from API
- * Push To Local Storage
- *
- */
