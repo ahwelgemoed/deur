@@ -55,7 +55,7 @@ const MainLayout = ({
       <View className="p-4 h-[100px]">
         {showBackButton && (
           <Text
-            className="text-bold uppercase"
+            className="text-bold uppercase pt-4"
             onPress={() => {
               navigation.goBack();
             }}

@@ -47,7 +47,10 @@ const CreateNewUser = () => {
     // TODO MACH THIS MORE GENERIC
     if (justCreatedPerson?.id) {
       // @ts-ignore
-      navigation.push('gate-actions/open-gate', { member: justCreatedPerson });
+      navigation.push('gate-actions/open-gate', {
+        memberId: justCreatedPerson.id,
+        memberName: justCreatedPerson.name,
+      });
     }
   };
 

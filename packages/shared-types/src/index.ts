@@ -8,6 +8,7 @@ export enum EMQTTMessageTypes {
 }
 export enum EMQQTTTopics {
   GATES_ONLINE = 'GATES_ONLINE',
+  HELP_THIS_USER = 'HELP_THIS_USER',
   OPEN_GATE = 'OPEN_GATE',
   CONFIRM_ENTRY = 'CONFIRM_ENTRY',
   OPEN = 'OPEN',
@@ -22,4 +23,12 @@ export function createMqttName(type: TMqttClient): string {
 export interface IMqttLocalToApp {
   name: string;
   reason: string;
+}
+export enum EReasons {
+  USER_FOUND_LOCAL_CACHE_RESET = 'USER_FOUND_LOCAL_CACHE_RESET',
+  USER_NOT_FOUND = 'USER_NOT_FOUND',
+  USER_FOUND = 'USER_FOUND',
+  USER_NOT_HOME_BUT_ALLOWED = 'USER_NOT_HOME_BUT_ALLOWED',
+  USER_NOT_HOME_NOT_ALLOWED = 'USER_NOT_HOME_NOT_ALLOWED',
+  USER_HOME_NOT_ALLOWED = 'USER_HOME_NOT_ALLOWED',
 }

@@ -1,17 +1,21 @@
 import { useMqttMessageListener } from '@deur/shared-hooks';
-import { Layout } from 'expo-router';
+import { EMQQTTTopics } from '@deur/shared-types';
+import { useRouter } from 'expo-router';
 import React from 'react';
 
 const GlobalAppSettings = ({ children }: any) => {
-  const { navigation } = Layout.useContext();
-  const [_isConnected] = useMqttMessageListener('HELP_THIS_USER', (message) => {
+  const router = useRouter();
+  const [_isConnected] = useMqttMessageListener(EMQQTTTopics.HELP_THIS_USER, (message) => {
+    console.log('message', message);
     const json = JSON.parse(message.payloadString);
-    if (json.name) {
+    console.log('json', json);
+    if (json.reason) {
       console.log('json', json);
-      // @ts-ignore
-      navigation.push('gate-actions/help-this-user', { member: json });
+      router.push({ pathname: '/gate-actions/help-this-user', params: { id: json.user.id } });
     }
   });
+
+  console.log('_isConnected', _isConnected);
   return <>{children}</>;
 };
 

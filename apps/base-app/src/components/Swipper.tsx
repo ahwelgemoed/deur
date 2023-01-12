@@ -4,21 +4,24 @@ import React, { useRef, useState } from 'react';
 import { View, Text } from 'react-native';
 import SwipeButton from 'rn-swipe-button';
 import { v4 as uuidv4 } from 'uuid';
-
+interface ISwipper {
+  successCallback: () => void;
+}
 // EMQQTTTopics
-const Swipper = () => {
-  const uuid = useRef(Date.now().toString());
+const Swipper = ({ successCallback }: ISwipper) => {
+  const uuid = useRef(uuidv4());
   const [gatesOnline, setGatesOnline] = useState<string[]>();
-  const [gateStatus, setGatesOffline] = useState<boolean>(false);
   const [sendMessage] = useSendMqttMessage((e) => console.log('e', e));
   useMqttMessageListener(EMQQTTTopics.GATES_ONLINE, (message) => {
     setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as any as string[]);
   });
   useMqttMessageListener(uuid.current, (message) => {
-    setGatesOffline(true);
+    successCallback();
   });
+
   // TODO Display success when gate is opened
   console.log('uuid.current', uuid.current);
+
   return (
     <View className="w-[400px]">
       {gatesOnline &&
