@@ -10,13 +10,16 @@ const dataSource = new DataSource({
   type: 'expo',
 });
 
+/**
+ * Initialize the database connection
+ */
 export const init = async (): Promise<DataSource> => {
   await dataSource.initialize();
   return dataSource;
 };
-
-// Close the database connection
+/**
+ * Close the database connection
+ */
 export const close = async (): Promise<void> => {
   await dataSource.destroy();
-  // dataSource.dropDatabase();
 };

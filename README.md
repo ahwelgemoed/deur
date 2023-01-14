@@ -27,3 +27,8 @@ Basic Kiosk Flow
 
 Get Data from Local Cloud -> Save It to Local Database -> Get From there and Display
 Create Person -> Save Locally -> In background pass To Local And Relay that up to cloud
+
+# Sign in at Gate -> Last Sign In Saved -> Tries to sign in 10min later 15 min later 10km away -> Denied
+
+Now - Last Sign In =  
+now Postal Code = Last Postal Code = travel time

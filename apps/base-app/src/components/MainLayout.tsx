@@ -1,7 +1,7 @@
 import { Heading, SubHeading } from '@deur/design-system';
 import { useNavigation } from 'expo-router';
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, KeyboardAvoidingView } from 'react-native';
 
 interface MainLayoutProps_HeaderText {
   showBackButton?: boolean;
@@ -51,38 +51,38 @@ const MainLayout = ({
   const navigation = useNavigation();
 
   return (
-    <View className="flex w-full h-full">
-      <View className="p-4 h-[100px]">
-        {showBackButton && (
-          <Text
-            className="text-bold uppercase pt-4"
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            Go Back
-          </Text>
-        )}
-        {headerComponent ? (
-          headerComponent
-        ) : (
-          <>
-            <Heading classNames="text-[60px]">{headerMainText}</Heading>
-            <SubHeading classNames="uppercase text-gray-400 text-[20px]">
-              {headerSubText}
-            </SubHeading>
-          </>
-        )}
-      </View>
-      <View className="flex p-4 h-full justify-center">
-        <View className="h-[500px]">{body}</View>
-        <View className="flex p-4 justify-center">
-          {footerComponent ? footerComponent : null}
-          <Text>{footerMainText ? footerMainText : null}</Text>
-          <Text>{footerSubText ? footerSubText : null}</Text>
+    <KeyboardAvoidingView
+      style={{ flexGrow: 1, height: '100%' }}
+      behavior="padding"
+      enabled
+      // keyboardVerticalOffset={50}
+    >
+      <View className="bg-black w-full h-full flex p-2">
+        <View className="">
+          {showBackButton && (
+            <Text
+              className="text-bold uppercase pt-4"
+              onPress={() => {
+                navigation.goBack();
+              }}
+            >
+              Go Back
+            </Text>
+          )}
+          {headerComponent ? (
+            headerComponent
+          ) : (
+            <>
+              <Heading classNames="text-white font-body text-[80px]">{headerMainText}</Heading>
+              <Text className="uppercase text-[#DDDDE1] font-text text-[40px]">
+                {headerSubText}
+              </Text>
+            </>
+          )}
         </View>
+        <View className="flex-1 ">{body}</View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 
@@ -16,7 +16,7 @@ const newMember = {
 };
 const CreateNewUser = () => {
   const [repository, createdEntity] = useLocalSource(Member);
-  const navigation = useNavigation();
+  const router = useRouter();
 
   useEffect(() => {
     async function init() {
@@ -35,7 +35,7 @@ const CreateNewUser = () => {
     try {
       await repository?.save(createdEntity);
     } catch (error) {
-      console.log('error', error);
+      console.log('🚀error', error);
     }
 
     const justCreatedPerson = await repository?.findOne({
@@ -43,13 +43,11 @@ const CreateNewUser = () => {
         name: newMember.name,
       },
     });
-
     // TODO MACH THIS MORE GENERIC
     if (justCreatedPerson?.id) {
-      // @ts-ignore
-      navigation.push('gate-actions/open-gate', {
-        memberId: justCreatedPerson.id,
-        memberName: justCreatedPerson.name,
+      router.push({
+        pathname: '/gate-actions/open-gate',
+        params: { memberId: justCreatedPerson.id, memberName: justCreatedPerson.name },
       });
     }
   };
@@ -62,17 +60,17 @@ const CreateNewUser = () => {
       body={
         <View className="flex w-full h-full">
           <View className="flex flex-col justify-center items-center">
-            <Text className="text-3xl uppercase font-text">Hello {newMember.name}</Text>
+            <Text className="text-3xl uppercase font-text text-white">👋 {newMember.name}</Text>
           </View>
           <View className="flex flex-row gap-2 justify-center">
-            <Text className="text-md uppercase  font-text">Email: {newMember.email}</Text>
-            <Text className="text-md uppercase  font-text">
+            <Text className="text-md uppercase font-tex text-white">Email: {newMember.email}</Text>
+            <Text className="text-md uppercase font-text text-white">
               BirthDay: {newMember.birthDay.toDateString()}
             </Text>
           </View>
           <View className="flex flex-row gap-2 justify-center mt-10">
             <Text
-              className="bg-black text-white py-4 px-6  font-text text-lg"
+              className=" text-white py-4 px-6  font-text text-lg bg-slate-800"
               onPress={createNewUser}
             >
               Create Your Membership

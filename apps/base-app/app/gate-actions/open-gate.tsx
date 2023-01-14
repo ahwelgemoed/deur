@@ -54,7 +54,7 @@ const OpenGate = () => {
       headerSubText=""
       body={
         <View className="flex w-full h-full items-center">
-          <Text className="uppercase font-body text-xl">
+          <Text className="uppercase font-body text-xl text-white">
             Choose a Gate and swipe and go enjoy...
           </Text>
           <Swipper successCallback={successCallback} />

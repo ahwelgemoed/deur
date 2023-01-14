@@ -31,7 +31,7 @@ export default function IdlePage() {
   return (
     <Pressable onPress={setToActive}>
       <View className="bg-black w-full h-full flex justify-center p-4">
-        <Text className="text-white font-body text-[100px]">Welcome</Text>
+        <Text className="text-white font-text text-[100px]">Welcome</Text>
         <View className="text-center flex content-center">
           <Text className="text-[#DDDDE1] font-display text-[40px]">
             Press to Interact

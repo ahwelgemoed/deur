@@ -13,16 +13,16 @@ import {
   Ubuntu_700Bold,
   Ubuntu_700Bold_Italic,
 } from '@expo-google-fonts/ubuntu';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Navigator, Slot, SplashScreen } from 'expo-router';
 
 import { HelpUserProvider } from '../src/contexts/HelpUser.Context';
 import { IdleStateProvider } from '../src/contexts/IdleState.Context';
+import { DeviceStateProvider } from '../src/contexts/SetupDevice.Context';
 
-export const unstable_settings = {
-  initialRouteName: 'index',
-};
+const queryClient = new QueryClient();
 
-export default function Root() {
+export default function Layout() {
   const [fontsLoaded] = useFonts({
     Ubuntu_300Light,
     Ubuntu_300Light_Italic,
@@ -38,15 +38,19 @@ export default function Root() {
     return <SplashScreen />;
   }
   return (
-    <IdleStateProvider>
-      <HelpUserProvider>
-        <RootLayout />
-      </HelpUserProvider>
-    </IdleStateProvider>
+    <QueryClientProvider client={queryClient}>
+      <DeviceStateProvider>
+        <IdleStateProvider>
+          <HelpUserProvider>
+            <RootLayout />
+          </HelpUserProvider>
+        </IdleStateProvider>
+      </DeviceStateProvider>
+    </QueryClientProvider>
   );
 }
 
-function RootLayout() {
+function RootLayout({}) {
   return (
     <Navigator>
       <Slot />

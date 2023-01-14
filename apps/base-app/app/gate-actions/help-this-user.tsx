@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import useSWR from 'swr';
 
 import MainLayout from '../../src/components/MainLayout';
-import { getUserToHelpThem } from '../../src/utils/gate-queries';
+import { getUserToHelpThem } from '../../src/utils/queries/gate-queries';
 
 const HelpThisUser = () => {
   const params = useSearchParams();
@@ -19,7 +19,6 @@ const HelpThisUser = () => {
       </View>
     );
   }
-  console.log('data', data);
   return (
     <MainLayout
       showBackButton
