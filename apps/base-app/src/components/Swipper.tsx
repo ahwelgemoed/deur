@@ -16,6 +16,7 @@ const Swipper = ({ successCallback }: ISwipper) => {
     setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as any as string[]);
   });
   useMqttMessageListener(uuid.current, (message) => {
+    console.log('message', message);
     successCallback();
   });
 

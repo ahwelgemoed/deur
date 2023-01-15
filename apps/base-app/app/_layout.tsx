@@ -15,6 +15,7 @@ import {
 } from '@expo-google-fonts/ubuntu';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Navigator, Slot, SplashScreen } from 'expo-router';
+import AxiosInstance from '../src/api/AxiosInstance';
 
 import { HelpUserProvider } from '../src/contexts/HelpUser.Context';
 import { IdleStateProvider } from '../src/contexts/IdleState.Context';
@@ -42,7 +43,9 @@ export default function Layout() {
       <DeviceStateProvider>
         <IdleStateProvider>
           <HelpUserProvider>
-            <RootLayout />
+            <AxiosInstance>
+              <RootLayout />
+            </AxiosInstance>
           </HelpUserProvider>
         </IdleStateProvider>
       </DeviceStateProvider>

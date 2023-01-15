@@ -6,7 +6,7 @@ import LoadingFullScreen from '../components/idlePages/LoadingPage';
 
 type IdleStateProviderProps = { children: React.ReactNode };
 
-export const DEVICE_STORAGE_ID = '@deviceSetupDatas';
+export const DEVICE_STORAGE_ID = '@deviceSetup';
 
 export type TDeviceSetupData = {
   deviceId: string;
@@ -28,9 +28,11 @@ export enum DeviceSetupState {
 
 const SetupDeviceContext = createContext<{
   deviceSetupState: DeviceSetupState;
+  deviceDetails?: TDeviceSetupData;
   getDeviceSetupData: () => Promise<void>;
 }>({
   deviceSetupState: DeviceSetupState.loading,
+  deviceDetails: undefined,
   getDeviceSetupData: () => Promise.resolve(),
 });
 
@@ -40,9 +42,11 @@ export function DeviceStateProvider({ children }: IdleStateProviderProps) {
   const [deviceSetupState, setDeviceSetupState] = useState<DeviceSetupState>(
     DeviceSetupState.loading
   );
+  const [deviceDetails, setDeviceDetails] = useState<TDeviceSetupData>();
   const getDeviceSetupData = async () => {
     const deviceSetupData = await AsyncStorage.getItem(DEVICE_STORAGE_ID);
     if (deviceSetupData) {
+      setDeviceDetails(JSON.parse(deviceSetupData));
       setDeviceSetupState(DeviceSetupState.successFull);
     } else {
       setDeviceSetupState(DeviceSetupState.neverDone);
@@ -69,6 +73,7 @@ export function DeviceStateProvider({ children }: IdleStateProviderProps) {
   return (
     <SetupDeviceContext.Provider
       value={{
+        deviceDetails,
         getDeviceSetupData,
         deviceSetupState,
       }}

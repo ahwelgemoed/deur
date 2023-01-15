@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@deur/design-system": "*",
+    "@deur/feature-home": "*",
     "@deur/shared-hooks": "*",
     "@deur/shared-types": "*",
     "@deur/tailwind-config": "*",

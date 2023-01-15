@@ -8,7 +8,6 @@ import { useSetToIdle } from '../../src/contexts/IdleState.Context';
 
 const OpenGate = () => {
   const { setToInactive } = useSetToIdle();
-  console.log('useSetToIdle()', useSetToIdle());
   const params = useSearchParams();
   const { memberId, memberName } = params;
   const [successfullyGateOpened, setSuccessfullyGateOpened] = useState<boolean>(false);

@@ -1,12 +1,6 @@
-import axios from 'axios';
-
-import { BASE_URL } from '..';
+import { authApi } from '../../api/AxiosInstance';
 
 export const getAllDeviceTypes = async () => {
-  const response = await axios.get(`${BASE_URL}/device-routes/all-device-types`, {
-    headers: {
-      'x-origin-call': '1',
-    },
-  });
+  const response = await authApi.get(`/device-routes/all-device-types`);
   return response.data;
 };

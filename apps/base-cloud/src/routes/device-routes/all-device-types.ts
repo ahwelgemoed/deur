@@ -3,6 +3,7 @@ import { prisma } from '../../set-up-server';
 
 async function countryRoutes(fastify: FastifyInstance) {
   fastify.get<{}>('/all-device-types', async function (request, reply) {
+    console.log('request.', request.headers);
     try {
       const allDeviceTypes = await prisma.deviceTypes.findMany({});
       return { deviceTypes: allDeviceTypes, cached: undefined, error: undefined };

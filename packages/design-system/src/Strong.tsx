@@ -6,7 +6,7 @@ interface StrongProps extends TextProps {
 }
 
 export const Strong = ({ classNames, children, style, ...props }: StrongProps) => (
-  <Text {...props} className={`text-blue-600 text-2xl uppercase ${classNames}`}>
+  <Text {...props} className={`text-orange-900 text-2xl uppercase ${classNames}`}>
     {children}
   </Text>
 );

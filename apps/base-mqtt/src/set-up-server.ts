@@ -8,6 +8,7 @@ import { clientDisconnect } from './callbacks/disconnect.cb';
 import { clientSubscribed } from './callbacks/subscribe.cb';
 import { clientUnsubscribed } from './callbacks/unsubscribe.cb';
 import { clientPublished } from './callbacks/publish.cb';
+import { gates } from './gates';
 
 const MQTT_PORT = 1881;
 const MQTT_WS_PORT = 8080;
@@ -27,6 +28,12 @@ const startServer = async () => {
     console.log('MQTT server started and listening on port ', MQTT_PORT);
   });
 };
+
+setInterval(() => {
+  // @ts-ignore
+  console.log(Object.keys(mqttClient.clients));
+  console.log('gates', gates);
+}, 2000);
 
 mqttClient.on('client', clientConnected);
 

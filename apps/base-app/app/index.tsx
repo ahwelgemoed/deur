@@ -12,7 +12,7 @@ export default function Page() {
   const moveBoxIn = () => {
     Animated.timing(slide, {
       toValue: 1,
-      duration: 1000,
+      duration: 500,
       useNativeDriver: true,
       easing: Easing.bounce,
     }).start();

@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+
+const withTM = require('next-transpile-modules')(['@deur/design-system']);
+
+module.exports = withTM({
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   webpack: (config) => {
     // Set the alias from `react-native` to `react-native-web`
     config.resolve.alias = {
@@ -20,4 +23,4 @@ module.exports = {
 
     return config;
   },
-};
+});

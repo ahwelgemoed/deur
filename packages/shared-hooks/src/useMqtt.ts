@@ -121,7 +121,6 @@ export function useSendMqttMessage(
       mqttClient.send(topic, message, qos, retained);
 
       mqttClient.onMessageDelivered = function (message) {
-        console.log('Message delivered');
         callback && callback(message);
       };
     }

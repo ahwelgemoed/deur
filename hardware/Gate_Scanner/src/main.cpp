@@ -5,7 +5,7 @@
 #include "WiFiManager.h"
 #include <ArduinoJson.h>
 
-
+int randomNumber = random(100,500);
 
 #define JSON_CONFIG_FILE "/config.json"
 #define MQTT_HOST IPAddress(192, 168, 68, 102)
@@ -15,16 +15,20 @@ AsyncMqttClient mqttClient;
 WiFiEventHandler wifiConnectHandler;
 WiFiEventHandler wifiDisconnectHandler;
 
+String DEVICE_NAME = "@deur_"+ String(randomNumber);
+String OPEN_GATE = DEVICE_NAME+"/OPEN_GATE";
+
+
 
 void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total) {
   Serial.println("Publish received as...");
-  Serial.print("  topic: ");
+  Serial.print("topic:");
   Serial.println(topic);
   std::string payloadStr(payload, len); // converting the payload char* to std::string
   Serial.println(payloadStr.c_str());
-  if (strcmp(topic, "mqtt-explorer-RealD1/OPEN_GATE") == 0) {
-
+  if (strcmp(topic, OPEN_GATE.c_str()) == 0) {
     Serial.println("I Will OPEN_GATE");
+    digitalWrite(LED_BUILTIN, LOW);
     mqttClient.publish(payloadStr.c_str(), 0, false, "");
   }
 }
@@ -38,7 +42,7 @@ void onMqttConnect(bool sessionPresent) {
   Serial.println("Connected to MQTT.");
   Serial.print("Session present: ");
   Serial.println(sessionPresent);
-  mqttClient.subscribe("mqtt-explorer-RealD1/OPEN_GATE",0);
+  mqttClient.subscribe(OPEN_GATE.c_str(),0);
 }
 
 void onMqttDisconnect(AsyncMqttClientDisconnectReason reason) {
@@ -64,11 +68,18 @@ void onWifiDisconnect(const WiFiEventStationModeDisconnected& event) {
 
 void setup() {
   Serial.begin(115200);
+
+// Ensure Serial is ready
+  while (!Serial) {
+    delay(100);
+  }
+
   pinMode(LED_BUILTIN, OUTPUT); 
+  delay(1000);
 
   Serial.println("WIFI Connected...");
   mqttClient.setServer(MQTT_HOST, MQTT_PORT);
-  mqttClient.setClientId("mqtt-explorer-RealD1");
+  mqttClient.setClientId(DEVICE_NAME.c_str());
 
   mqttClient.onConnect(onMqttConnect);
   mqttClient.onMessage(onMqttMessage);
@@ -81,8 +92,6 @@ void setup() {
   WiFiManager wifiManager;
 
   // wifiManager.resetSettings();
- 
-  // Add all defined parameters
 
   if(!wifiManager.autoConnect("My_Gate")) {
     Serial.println("Failed to connect and hit timeout");
@@ -93,7 +102,9 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Reading JSON File...");
-  Serial.println(F("Print config file..."));
-  delay(4000);
+  Serial.println(DEVICE_NAME);
+  Serial.println(OPEN_GATE);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+
 }
