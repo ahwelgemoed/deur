@@ -1,4 +1,4 @@
-export * from './Paragraph';
-export * from './Heading';
-export * from './SubHeading';
-export * from './Strong';
+export * from './HomeIcon';
+
+export { WText as Text } from './utils/wrappedComponents';
+export { WView as View } from './utils/wrappedComponents';

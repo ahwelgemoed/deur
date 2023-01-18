@@ -5,7 +5,7 @@
 
 import * as runtime from './runtime/index';
 declare const prisma: unique symbol
-export type PrismaPromise<A> = Promise<A> & {[prisma]: true}
+export interface PrismaPromise<A> extends Promise<A> {[prisma]: true}
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
 type UnwrapTuple<Tuple extends readonly unknown[]> = {
   [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
@@ -41,12 +41,26 @@ export type User = {
 }
 
 /**
+ * Model VisitsToLocation
+ * 
+ */
+export type VisitsToLocation = {
+  id: number
+  userId: number
+  locationId: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+/**
  * Model Location
  * 
  */
 export type Location = {
   id: number
   name: string
+  lat: string
+  long: string
   countryId: number
   createdAt: Date
   updatedAt: Date
@@ -191,9 +205,9 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>;
+  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>
 
-  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel}): Promise<R>;
+  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<R>
 
       /**
    * `prisma.country`: Exposes CRUD operations for the **Country** model.
@@ -214,6 +228,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<GlobalReject>;
+
+  /**
+   * `prisma.visitsToLocation`: Exposes CRUD operations for the **VisitsToLocation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VisitsToLocations
+    * const visitsToLocations = await prisma.visitsToLocation.findMany()
+    * ```
+    */
+  get visitsToLocation(): Prisma.VisitsToLocationDelegate<GlobalReject>;
 
   /**
    * `prisma.location`: Exposes CRUD operations for the **Location** model.
@@ -285,8 +309,8 @@ export namespace Prisma {
 
 
   /**
-   * Prisma Client JS version: 4.8.1
-   * Query Engine version: d6e67a83f971b175a593ccc12e15c4a757f93ffe
+   * Prisma Client JS version: 4.9.0
+   * Query Engine version: ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
    */
   export type PrismaVersion = {
     client: string
@@ -650,19 +674,11 @@ export namespace Prisma {
 
   export type Keys<U extends Union> = U extends unknown ? keyof U : never
 
-  type Exact<A, W = unknown> = 
-  W extends unknown ? A extends Narrowable ? Cast<A, W> : Cast<
-  {[K in keyof A]: K extends keyof W ? Exact<A[K], W[K]> : never},
-  {[K in keyof W]: K extends keyof A ? Exact<A[K], W[K]> : W[K]}>
-  : never;
-
-  type Narrowable = string | number | boolean | bigint;
-
   type Cast<A, B> = A extends B ? A : B;
 
   export const type: unique symbol;
 
-  export function validator<V>(): <S>(select: Exact<S, V>) => S;
+  export function validator<V>(): <S>(select: runtime.Types.Utils.LegacyExact<S, V>) => S;
 
   /**
    * Used by group by
@@ -730,6 +746,7 @@ export namespace Prisma {
   export const ModelName: {
     Country: 'Country',
     User: 'User',
+    VisitsToLocation: 'VisitsToLocation',
     Location: 'Location',
     Devices: 'Devices',
     DeviceTypes: 'DeviceTypes'
@@ -934,9 +951,51 @@ export namespace Prisma {
   export type CountryCountOutputTypeArgs = {
     /**
      * Select specific fields to fetch from the CountryCountOutputType
-     * 
-    **/
+     */
     select?: CountryCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+
+  export type UserCountOutputType = {
+    visits: number
+  }
+
+  export type UserCountOutputTypeSelect = {
+    visits?: boolean
+  }
+
+  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? UserCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (UserCountOutputTypeArgs)
+    ? UserCountOutputType 
+    : S extends { select: any } & (UserCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
+  } 
+      : UserCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect | null
   }
 
 
@@ -949,11 +1008,13 @@ export namespace Prisma {
   export type LocationCountOutputType = {
     users: number
     devices: number
+    visits: number
   }
 
   export type LocationCountOutputTypeSelect = {
     users?: boolean
     devices?: boolean
+    visits?: boolean
   }
 
   export type LocationCountOutputTypeGetPayload<S extends boolean | null | undefined | LocationCountOutputTypeArgs> =
@@ -980,8 +1041,7 @@ export namespace Prisma {
   export type LocationCountOutputTypeArgs = {
     /**
      * Select specific fields to fetch from the LocationCountOutputType
-     * 
-    **/
+     */
     select?: LocationCountOutputTypeSelect | null
   }
 
@@ -1024,8 +1084,7 @@ export namespace Prisma {
   export type DeviceTypesCountOutputTypeArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypesCountOutputType
-     * 
-    **/
+     */
     select?: DeviceTypesCountOutputTypeSelect | null
   }
 
@@ -1118,36 +1177,31 @@ export namespace Prisma {
   export type CountryAggregateArgs = {
     /**
      * Filter which Country to aggregate.
-     * 
-    **/
+     */
     where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Countries to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Countries from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Countries.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -1195,7 +1249,7 @@ export namespace Prisma {
   export type CountryGroupByArgs = {
     where?: CountryWhereInput
     orderBy?: Enumerable<CountryOrderByWithAggregationInput>
-    by: Array<CountryScalarFieldEnum>
+    by: CountryScalarFieldEnum[]
     having?: CountryScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -1248,7 +1302,7 @@ export namespace Prisma {
   export type CountryInclude = {
     locations?: boolean | Country$locationsArgs
     _count?: boolean | CountryCountOutputTypeArgs
-  } 
+  }
 
   export type CountryGetPayload<S extends boolean | null | undefined | CountryArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -1269,13 +1323,13 @@ export namespace Prisma {
       : Country
 
 
-  type CountryCountArgs = Merge<
+  type CountryCountArgs = 
     Omit<CountryFindManyArgs, 'select' | 'include'> & {
       select?: CountryCountAggregateInputType | true
     }
-  >
 
   export interface CountryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one Country that matches the filter.
      * @param {CountryFindUniqueArgs} args - Arguments to find a Country
@@ -1657,18 +1711,15 @@ export namespace Prisma {
   export type CountryFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * Filter, which Country to fetch.
-     * 
-    **/
+     */
     where: CountryWhereUniqueInput
   }
 
@@ -1690,18 +1741,15 @@ export namespace Prisma {
   export type CountryFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * Filter, which Country to fetch.
-     * 
-    **/
+     */
     where: CountryWhereUniqueInput
   }
 
@@ -1712,53 +1760,45 @@ export namespace Prisma {
   export type CountryFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * Filter, which Country to fetch.
-     * 
-    **/
+     */
     where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Countries to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Countries.
-     * 
-    **/
+     */
     cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Countries from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Countries.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Countries.
-     * 
-    **/
+     */
     distinct?: Enumerable<CountryScalarFieldEnum>
   }
 
@@ -1780,53 +1820,45 @@ export namespace Prisma {
   export type CountryFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * Filter, which Country to fetch.
-     * 
-    **/
+     */
     where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Countries to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Countries.
-     * 
-    **/
+     */
     cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Countries from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Countries.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Countries.
-     * 
-    **/
+     */
     distinct?: Enumerable<CountryScalarFieldEnum>
   }
 
@@ -1837,46 +1869,39 @@ export namespace Prisma {
   export type CountryFindManyArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * Filter, which Countries to fetch.
-     * 
-    **/
+     */
     where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Countries to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Countries.
-     * 
-    **/
+     */
     cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Countries from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Countries.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<CountryScalarFieldEnum>
   }
@@ -1888,18 +1913,15 @@ export namespace Prisma {
   export type CountryCreateArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * The data needed to create a Country.
-     * 
-    **/
+     */
     data: XOR<CountryCreateInput, CountryUncheckedCreateInput>
   }
 
@@ -1910,23 +1932,19 @@ export namespace Prisma {
   export type CountryUpdateArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * The data needed to update a Country.
-     * 
-    **/
+     */
     data: XOR<CountryUpdateInput, CountryUncheckedUpdateInput>
     /**
      * Choose, which Country to update.
-     * 
-    **/
+     */
     where: CountryWhereUniqueInput
   }
 
@@ -1937,13 +1955,11 @@ export namespace Prisma {
   export type CountryUpdateManyArgs = {
     /**
      * The data used to update Countries.
-     * 
-    **/
+     */
     data: XOR<CountryUpdateManyMutationInput, CountryUncheckedUpdateManyInput>
     /**
      * Filter which Countries to update
-     * 
-    **/
+     */
     where?: CountryWhereInput
   }
 
@@ -1954,28 +1970,23 @@ export namespace Prisma {
   export type CountryUpsertArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * The filter to search for the Country to update in case it exists.
-     * 
-    **/
+     */
     where: CountryWhereUniqueInput
     /**
      * In case the Country found by the `where` argument doesn't exist, create a new Country with this data.
-     * 
-    **/
+     */
     create: XOR<CountryCreateInput, CountryUncheckedCreateInput>
     /**
      * In case the Country was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<CountryUpdateInput, CountryUncheckedUpdateInput>
   }
 
@@ -1986,18 +1997,15 @@ export namespace Prisma {
   export type CountryDeleteArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
     /**
      * Filter which Country to delete.
-     * 
-    **/
+     */
     where: CountryWhereUniqueInput
   }
 
@@ -2008,8 +2016,7 @@ export namespace Prisma {
   export type CountryDeleteManyArgs = {
     /**
      * Filter which Countries to delete
-     * 
-    **/
+     */
     where?: CountryWhereInput
   }
 
@@ -2020,13 +2027,11 @@ export namespace Prisma {
   export type Country$locationsArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     where?: LocationWhereInput
     orderBy?: Enumerable<LocationOrderByWithRelationInput>
@@ -2043,13 +2048,11 @@ export namespace Prisma {
   export type CountryArgs = {
     /**
      * Select specific fields to fetch from the Country
-     * 
-    **/
+     */
     select?: CountrySelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: CountryInclude | null
   }
 
@@ -2166,36 +2169,31 @@ export namespace Prisma {
   export type UserAggregateArgs = {
     /**
      * Filter which User to aggregate.
-     * 
-    **/
+     */
     where?: UserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Users to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<UserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: UserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Users from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Users.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -2243,7 +2241,7 @@ export namespace Prisma {
   export type UserGroupByArgs = {
     where?: UserWhereInput
     orderBy?: Enumerable<UserOrderByWithAggregationInput>
-    by: Array<UserScalarFieldEnum>
+    by: UserScalarFieldEnum[]
     having?: UserScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -2295,14 +2293,18 @@ export namespace Prisma {
     cardNumber?: boolean
     isAllowed?: boolean
     location?: boolean | LocationArgs
+    visits?: boolean | User$visitsArgs
     createdAt?: boolean
     updatedAt?: boolean
+    _count?: boolean | UserCountOutputTypeArgs
   }
 
 
   export type UserInclude = {
     location?: boolean | LocationArgs
-  } 
+    visits?: boolean | User$visitsArgs
+    _count?: boolean | UserCountOutputTypeArgs
+  }
 
   export type UserGetPayload<S extends boolean | null | undefined | UserArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -2311,23 +2313,27 @@ export namespace Prisma {
     S extends { include: any } & (UserArgs | UserFindManyArgs)
     ? User  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'location' ? LocationGetPayload<S['include'][P]> :  never
+        P extends 'location' ? LocationGetPayload<S['include'][P]> :
+        P extends 'visits' ? Array < VisitsToLocationGetPayload<S['include'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (UserArgs | UserFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'location' ? LocationGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
+        P extends 'location' ? LocationGetPayload<S['select'][P]> :
+        P extends 'visits' ? Array < VisitsToLocationGetPayload<S['select'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
       : User
 
 
-  type UserCountArgs = Merge<
+  type UserCountArgs = 
     Omit<UserFindManyArgs, 'select' | 'include'> & {
       select?: UserCountAggregateInputType | true
     }
-  >
 
   export interface UserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one User that matches the filter.
      * @param {UserFindUniqueArgs} args - Arguments to find a User
@@ -2676,6 +2682,8 @@ export namespace Prisma {
 
     location<T extends LocationArgs= {}>(args?: Subset<T, LocationArgs>): Prisma__LocationClient<LocationGetPayload<T> | Null>;
 
+    visits<T extends User$visitsArgs= {}>(args?: Subset<T, User$visitsArgs>): PrismaPromise<Array<VisitsToLocationGetPayload<T>>| Null>;
+
     private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2709,18 +2717,15 @@ export namespace Prisma {
   export type UserFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * Filter, which User to fetch.
-     * 
-    **/
+     */
     where: UserWhereUniqueInput
   }
 
@@ -2742,18 +2747,15 @@ export namespace Prisma {
   export type UserFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * Filter, which User to fetch.
-     * 
-    **/
+     */
     where: UserWhereUniqueInput
   }
 
@@ -2764,53 +2766,45 @@ export namespace Prisma {
   export type UserFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * Filter, which User to fetch.
-     * 
-    **/
+     */
     where?: UserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Users to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<UserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Users.
-     * 
-    **/
+     */
     cursor?: UserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Users from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Users.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Users.
-     * 
-    **/
+     */
     distinct?: Enumerable<UserScalarFieldEnum>
   }
 
@@ -2832,53 +2826,45 @@ export namespace Prisma {
   export type UserFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * Filter, which User to fetch.
-     * 
-    **/
+     */
     where?: UserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Users to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<UserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Users.
-     * 
-    **/
+     */
     cursor?: UserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Users from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Users.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Users.
-     * 
-    **/
+     */
     distinct?: Enumerable<UserScalarFieldEnum>
   }
 
@@ -2889,46 +2875,39 @@ export namespace Prisma {
   export type UserFindManyArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * Filter, which Users to fetch.
-     * 
-    **/
+     */
     where?: UserWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Users to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<UserOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Users.
-     * 
-    **/
+     */
     cursor?: UserWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Users from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Users.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<UserScalarFieldEnum>
   }
@@ -2940,18 +2919,15 @@ export namespace Prisma {
   export type UserCreateArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * The data needed to create a User.
-     * 
-    **/
+     */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
   }
 
@@ -2962,23 +2938,19 @@ export namespace Prisma {
   export type UserUpdateArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * The data needed to update a User.
-     * 
-    **/
+     */
     data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
     /**
      * Choose, which User to update.
-     * 
-    **/
+     */
     where: UserWhereUniqueInput
   }
 
@@ -2989,13 +2961,11 @@ export namespace Prisma {
   export type UserUpdateManyArgs = {
     /**
      * The data used to update Users.
-     * 
-    **/
+     */
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
     /**
      * Filter which Users to update
-     * 
-    **/
+     */
     where?: UserWhereInput
   }
 
@@ -3006,28 +2976,23 @@ export namespace Prisma {
   export type UserUpsertArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * The filter to search for the User to update in case it exists.
-     * 
-    **/
+     */
     where: UserWhereUniqueInput
     /**
      * In case the User found by the `where` argument doesn't exist, create a new User with this data.
-     * 
-    **/
+     */
     create: XOR<UserCreateInput, UserUncheckedCreateInput>
     /**
      * In case the User was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
   }
 
@@ -3038,18 +3003,15 @@ export namespace Prisma {
   export type UserDeleteArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     /**
      * Filter which User to delete.
-     * 
-    **/
+     */
     where: UserWhereUniqueInput
   }
 
@@ -3060,9 +3022,29 @@ export namespace Prisma {
   export type UserDeleteManyArgs = {
     /**
      * Filter which Users to delete
-     * 
-    **/
+     */
     where?: UserWhereInput
+  }
+
+
+  /**
+   * User.visits
+   */
+  export type User$visitsArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    where?: VisitsToLocationWhereInput
+    orderBy?: Enumerable<VisitsToLocationOrderByWithRelationInput>
+    cursor?: VisitsToLocationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<VisitsToLocationScalarFieldEnum>
   }
 
 
@@ -3072,14 +3054,965 @@ export namespace Prisma {
   export type UserArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude | null
+  }
+
+
+
+  /**
+   * Model VisitsToLocation
+   */
+
+
+  export type AggregateVisitsToLocation = {
+    _count: VisitsToLocationCountAggregateOutputType | null
+    _avg: VisitsToLocationAvgAggregateOutputType | null
+    _sum: VisitsToLocationSumAggregateOutputType | null
+    _min: VisitsToLocationMinAggregateOutputType | null
+    _max: VisitsToLocationMaxAggregateOutputType | null
+  }
+
+  export type VisitsToLocationAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    locationId: number | null
+  }
+
+  export type VisitsToLocationSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    locationId: number | null
+  }
+
+  export type VisitsToLocationMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    locationId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type VisitsToLocationMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    locationId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type VisitsToLocationCountAggregateOutputType = {
+    id: number
+    userId: number
+    locationId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type VisitsToLocationAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    locationId?: true
+  }
+
+  export type VisitsToLocationSumAggregateInputType = {
+    id?: true
+    userId?: true
+    locationId?: true
+  }
+
+  export type VisitsToLocationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    locationId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type VisitsToLocationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    locationId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type VisitsToLocationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    locationId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type VisitsToLocationAggregateArgs = {
+    /**
+     * Filter which VisitsToLocation to aggregate.
+     */
+    where?: VisitsToLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitsToLocations to fetch.
+     */
+    orderBy?: Enumerable<VisitsToLocationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VisitsToLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitsToLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitsToLocations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VisitsToLocations
+    **/
+    _count?: true | VisitsToLocationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VisitsToLocationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VisitsToLocationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VisitsToLocationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VisitsToLocationMaxAggregateInputType
+  }
+
+  export type GetVisitsToLocationAggregateType<T extends VisitsToLocationAggregateArgs> = {
+        [P in keyof T & keyof AggregateVisitsToLocation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVisitsToLocation[P]>
+      : GetScalarType<T[P], AggregateVisitsToLocation[P]>
+  }
+
+
+
+
+  export type VisitsToLocationGroupByArgs = {
+    where?: VisitsToLocationWhereInput
+    orderBy?: Enumerable<VisitsToLocationOrderByWithAggregationInput>
+    by: VisitsToLocationScalarFieldEnum[]
+    having?: VisitsToLocationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VisitsToLocationCountAggregateInputType | true
+    _avg?: VisitsToLocationAvgAggregateInputType
+    _sum?: VisitsToLocationSumAggregateInputType
+    _min?: VisitsToLocationMinAggregateInputType
+    _max?: VisitsToLocationMaxAggregateInputType
+  }
+
+
+  export type VisitsToLocationGroupByOutputType = {
+    id: number
+    userId: number
+    locationId: number
+    createdAt: Date
+    updatedAt: Date
+    _count: VisitsToLocationCountAggregateOutputType | null
+    _avg: VisitsToLocationAvgAggregateOutputType | null
+    _sum: VisitsToLocationSumAggregateOutputType | null
+    _min: VisitsToLocationMinAggregateOutputType | null
+    _max: VisitsToLocationMaxAggregateOutputType | null
+  }
+
+  type GetVisitsToLocationGroupByPayload<T extends VisitsToLocationGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<VisitsToLocationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VisitsToLocationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VisitsToLocationGroupByOutputType[P]>
+            : GetScalarType<T[P], VisitsToLocationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VisitsToLocationSelect = {
+    id?: boolean
+    userId?: boolean
+    user?: boolean | UserArgs
+    locationId?: boolean
+    location?: boolean | LocationArgs
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type VisitsToLocationInclude = {
+    user?: boolean | UserArgs
+    location?: boolean | LocationArgs
+  }
+
+  export type VisitsToLocationGetPayload<S extends boolean | null | undefined | VisitsToLocationArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? VisitsToLocation :
+    S extends undefined ? never :
+    S extends { include: any } & (VisitsToLocationArgs | VisitsToLocationFindManyArgs)
+    ? VisitsToLocation  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'user' ? UserGetPayload<S['include'][P]> :
+        P extends 'location' ? LocationGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (VisitsToLocationArgs | VisitsToLocationFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'user' ? UserGetPayload<S['select'][P]> :
+        P extends 'location' ? LocationGetPayload<S['select'][P]> :  P extends keyof VisitsToLocation ? VisitsToLocation[P] : never
+  } 
+      : VisitsToLocation
+
+
+  type VisitsToLocationCountArgs = 
+    Omit<VisitsToLocationFindManyArgs, 'select' | 'include'> & {
+      select?: VisitsToLocationCountAggregateInputType | true
+    }
+
+  export interface VisitsToLocationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
+    /**
+     * Find zero or one VisitsToLocation that matches the filter.
+     * @param {VisitsToLocationFindUniqueArgs} args - Arguments to find a VisitsToLocation
+     * @example
+     * // Get one VisitsToLocation
+     * const visitsToLocation = await prisma.visitsToLocation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends VisitsToLocationFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, VisitsToLocationFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'VisitsToLocation'> extends True ? Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>> : Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T> | null, null>
+
+    /**
+     * Find one VisitsToLocation that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {VisitsToLocationFindUniqueOrThrowArgs} args - Arguments to find a VisitsToLocation
+     * @example
+     * // Get one VisitsToLocation
+     * const visitsToLocation = await prisma.visitsToLocation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends VisitsToLocationFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, VisitsToLocationFindUniqueOrThrowArgs>
+    ): Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>>
+
+    /**
+     * Find the first VisitsToLocation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitsToLocationFindFirstArgs} args - Arguments to find a VisitsToLocation
+     * @example
+     * // Get one VisitsToLocation
+     * const visitsToLocation = await prisma.visitsToLocation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends VisitsToLocationFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, VisitsToLocationFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'VisitsToLocation'> extends True ? Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>> : Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T> | null, null>
+
+    /**
+     * Find the first VisitsToLocation that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitsToLocationFindFirstOrThrowArgs} args - Arguments to find a VisitsToLocation
+     * @example
+     * // Get one VisitsToLocation
+     * const visitsToLocation = await prisma.visitsToLocation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends VisitsToLocationFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, VisitsToLocationFindFirstOrThrowArgs>
+    ): Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>>
+
+    /**
+     * Find zero or more VisitsToLocations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitsToLocationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VisitsToLocations
+     * const visitsToLocations = await prisma.visitsToLocation.findMany()
+     * 
+     * // Get first 10 VisitsToLocations
+     * const visitsToLocations = await prisma.visitsToLocation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const visitsToLocationWithIdOnly = await prisma.visitsToLocation.findMany({ select: { id: true } })
      * 
     **/
-    include?: UserInclude | null
+    findMany<T extends VisitsToLocationFindManyArgs>(
+      args?: SelectSubset<T, VisitsToLocationFindManyArgs>
+    ): PrismaPromise<Array<VisitsToLocationGetPayload<T>>>
+
+    /**
+     * Create a VisitsToLocation.
+     * @param {VisitsToLocationCreateArgs} args - Arguments to create a VisitsToLocation.
+     * @example
+     * // Create one VisitsToLocation
+     * const VisitsToLocation = await prisma.visitsToLocation.create({
+     *   data: {
+     *     // ... data to create a VisitsToLocation
+     *   }
+     * })
+     * 
+    **/
+    create<T extends VisitsToLocationCreateArgs>(
+      args: SelectSubset<T, VisitsToLocationCreateArgs>
+    ): Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>>
+
+    /**
+     * Delete a VisitsToLocation.
+     * @param {VisitsToLocationDeleteArgs} args - Arguments to delete one VisitsToLocation.
+     * @example
+     * // Delete one VisitsToLocation
+     * const VisitsToLocation = await prisma.visitsToLocation.delete({
+     *   where: {
+     *     // ... filter to delete one VisitsToLocation
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends VisitsToLocationDeleteArgs>(
+      args: SelectSubset<T, VisitsToLocationDeleteArgs>
+    ): Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>>
+
+    /**
+     * Update one VisitsToLocation.
+     * @param {VisitsToLocationUpdateArgs} args - Arguments to update one VisitsToLocation.
+     * @example
+     * // Update one VisitsToLocation
+     * const visitsToLocation = await prisma.visitsToLocation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends VisitsToLocationUpdateArgs>(
+      args: SelectSubset<T, VisitsToLocationUpdateArgs>
+    ): Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>>
+
+    /**
+     * Delete zero or more VisitsToLocations.
+     * @param {VisitsToLocationDeleteManyArgs} args - Arguments to filter VisitsToLocations to delete.
+     * @example
+     * // Delete a few VisitsToLocations
+     * const { count } = await prisma.visitsToLocation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends VisitsToLocationDeleteManyArgs>(
+      args?: SelectSubset<T, VisitsToLocationDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VisitsToLocations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitsToLocationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VisitsToLocations
+     * const visitsToLocation = await prisma.visitsToLocation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends VisitsToLocationUpdateManyArgs>(
+      args: SelectSubset<T, VisitsToLocationUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one VisitsToLocation.
+     * @param {VisitsToLocationUpsertArgs} args - Arguments to update or create a VisitsToLocation.
+     * @example
+     * // Update or create a VisitsToLocation
+     * const visitsToLocation = await prisma.visitsToLocation.upsert({
+     *   create: {
+     *     // ... data to create a VisitsToLocation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VisitsToLocation we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends VisitsToLocationUpsertArgs>(
+      args: SelectSubset<T, VisitsToLocationUpsertArgs>
+    ): Prisma__VisitsToLocationClient<VisitsToLocationGetPayload<T>>
+
+    /**
+     * Count the number of VisitsToLocations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitsToLocationCountArgs} args - Arguments to filter VisitsToLocations to count.
+     * @example
+     * // Count the number of VisitsToLocations
+     * const count = await prisma.visitsToLocation.count({
+     *   where: {
+     *     // ... the filter for the VisitsToLocations we want to count
+     *   }
+     * })
+    **/
+    count<T extends VisitsToLocationCountArgs>(
+      args?: Subset<T, VisitsToLocationCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VisitsToLocationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VisitsToLocation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitsToLocationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VisitsToLocationAggregateArgs>(args: Subset<T, VisitsToLocationAggregateArgs>): PrismaPromise<GetVisitsToLocationAggregateType<T>>
+
+    /**
+     * Group by VisitsToLocation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitsToLocationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VisitsToLocationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VisitsToLocationGroupByArgs['orderBy'] }
+        : { orderBy?: VisitsToLocationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VisitsToLocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVisitsToLocationGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VisitsToLocation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__VisitsToLocationClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    user<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+
+    location<T extends LocationArgs= {}>(args?: Subset<T, LocationArgs>): Prisma__LocationClient<LocationGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * VisitsToLocation base type for findUnique actions
+   */
+  export type VisitsToLocationFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * Filter, which VisitsToLocation to fetch.
+     */
+    where: VisitsToLocationWhereUniqueInput
+  }
+
+  /**
+   * VisitsToLocation findUnique
+   */
+  export interface VisitsToLocationFindUniqueArgs extends VisitsToLocationFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * VisitsToLocation findUniqueOrThrow
+   */
+  export type VisitsToLocationFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * Filter, which VisitsToLocation to fetch.
+     */
+    where: VisitsToLocationWhereUniqueInput
+  }
+
+
+  /**
+   * VisitsToLocation base type for findFirst actions
+   */
+  export type VisitsToLocationFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * Filter, which VisitsToLocation to fetch.
+     */
+    where?: VisitsToLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitsToLocations to fetch.
+     */
+    orderBy?: Enumerable<VisitsToLocationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VisitsToLocations.
+     */
+    cursor?: VisitsToLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitsToLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitsToLocations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VisitsToLocations.
+     */
+    distinct?: Enumerable<VisitsToLocationScalarFieldEnum>
+  }
+
+  /**
+   * VisitsToLocation findFirst
+   */
+  export interface VisitsToLocationFindFirstArgs extends VisitsToLocationFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * VisitsToLocation findFirstOrThrow
+   */
+  export type VisitsToLocationFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * Filter, which VisitsToLocation to fetch.
+     */
+    where?: VisitsToLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitsToLocations to fetch.
+     */
+    orderBy?: Enumerable<VisitsToLocationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VisitsToLocations.
+     */
+    cursor?: VisitsToLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitsToLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitsToLocations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VisitsToLocations.
+     */
+    distinct?: Enumerable<VisitsToLocationScalarFieldEnum>
+  }
+
+
+  /**
+   * VisitsToLocation findMany
+   */
+  export type VisitsToLocationFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * Filter, which VisitsToLocations to fetch.
+     */
+    where?: VisitsToLocationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitsToLocations to fetch.
+     */
+    orderBy?: Enumerable<VisitsToLocationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VisitsToLocations.
+     */
+    cursor?: VisitsToLocationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitsToLocations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitsToLocations.
+     */
+    skip?: number
+    distinct?: Enumerable<VisitsToLocationScalarFieldEnum>
+  }
+
+
+  /**
+   * VisitsToLocation create
+   */
+  export type VisitsToLocationCreateArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * The data needed to create a VisitsToLocation.
+     */
+    data: XOR<VisitsToLocationCreateInput, VisitsToLocationUncheckedCreateInput>
+  }
+
+
+  /**
+   * VisitsToLocation update
+   */
+  export type VisitsToLocationUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * The data needed to update a VisitsToLocation.
+     */
+    data: XOR<VisitsToLocationUpdateInput, VisitsToLocationUncheckedUpdateInput>
+    /**
+     * Choose, which VisitsToLocation to update.
+     */
+    where: VisitsToLocationWhereUniqueInput
+  }
+
+
+  /**
+   * VisitsToLocation updateMany
+   */
+  export type VisitsToLocationUpdateManyArgs = {
+    /**
+     * The data used to update VisitsToLocations.
+     */
+    data: XOR<VisitsToLocationUpdateManyMutationInput, VisitsToLocationUncheckedUpdateManyInput>
+    /**
+     * Filter which VisitsToLocations to update
+     */
+    where?: VisitsToLocationWhereInput
+  }
+
+
+  /**
+   * VisitsToLocation upsert
+   */
+  export type VisitsToLocationUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * The filter to search for the VisitsToLocation to update in case it exists.
+     */
+    where: VisitsToLocationWhereUniqueInput
+    /**
+     * In case the VisitsToLocation found by the `where` argument doesn't exist, create a new VisitsToLocation with this data.
+     */
+    create: XOR<VisitsToLocationCreateInput, VisitsToLocationUncheckedCreateInput>
+    /**
+     * In case the VisitsToLocation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VisitsToLocationUpdateInput, VisitsToLocationUncheckedUpdateInput>
+  }
+
+
+  /**
+   * VisitsToLocation delete
+   */
+  export type VisitsToLocationDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    /**
+     * Filter which VisitsToLocation to delete.
+     */
+    where: VisitsToLocationWhereUniqueInput
+  }
+
+
+  /**
+   * VisitsToLocation deleteMany
+   */
+  export type VisitsToLocationDeleteManyArgs = {
+    /**
+     * Filter which VisitsToLocations to delete
+     */
+    where?: VisitsToLocationWhereInput
+  }
+
+
+  /**
+   * VisitsToLocation without action
+   */
+  export type VisitsToLocationArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
   }
 
 
@@ -3110,6 +4043,8 @@ export namespace Prisma {
   export type LocationMinAggregateOutputType = {
     id: number | null
     name: string | null
+    lat: string | null
+    long: string | null
     countryId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3118,6 +4053,8 @@ export namespace Prisma {
   export type LocationMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    lat: string | null
+    long: string | null
     countryId: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3126,6 +4063,8 @@ export namespace Prisma {
   export type LocationCountAggregateOutputType = {
     id: number
     name: number
+    lat: number
+    long: number
     countryId: number
     createdAt: number
     updatedAt: number
@@ -3146,6 +4085,8 @@ export namespace Prisma {
   export type LocationMinAggregateInputType = {
     id?: true
     name?: true
+    lat?: true
+    long?: true
     countryId?: true
     createdAt?: true
     updatedAt?: true
@@ -3154,6 +4095,8 @@ export namespace Prisma {
   export type LocationMaxAggregateInputType = {
     id?: true
     name?: true
+    lat?: true
+    long?: true
     countryId?: true
     createdAt?: true
     updatedAt?: true
@@ -3162,6 +4105,8 @@ export namespace Prisma {
   export type LocationCountAggregateInputType = {
     id?: true
     name?: true
+    lat?: true
+    long?: true
     countryId?: true
     createdAt?: true
     updatedAt?: true
@@ -3171,36 +4116,31 @@ export namespace Prisma {
   export type LocationAggregateArgs = {
     /**
      * Filter which Location to aggregate.
-     * 
-    **/
+     */
     where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Locations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<LocationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Locations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Locations.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -3248,7 +4188,7 @@ export namespace Prisma {
   export type LocationGroupByArgs = {
     where?: LocationWhereInput
     orderBy?: Enumerable<LocationOrderByWithAggregationInput>
-    by: Array<LocationScalarFieldEnum>
+    by: LocationScalarFieldEnum[]
     having?: LocationScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -3263,6 +4203,8 @@ export namespace Prisma {
   export type LocationGroupByOutputType = {
     id: number
     name: string
+    lat: string
+    long: string
     countryId: number
     createdAt: Date
     updatedAt: Date
@@ -3292,8 +4234,11 @@ export namespace Prisma {
     name?: boolean
     users?: boolean | Location$usersArgs
     devices?: boolean | Location$devicesArgs
+    lat?: boolean
+    long?: boolean
     countryId?: boolean
     country?: boolean | CountryArgs
+    visits?: boolean | Location$visitsArgs
     createdAt?: boolean
     updatedAt?: boolean
     _count?: boolean | LocationCountOutputTypeArgs
@@ -3304,8 +4249,9 @@ export namespace Prisma {
     users?: boolean | Location$usersArgs
     devices?: boolean | Location$devicesArgs
     country?: boolean | CountryArgs
+    visits?: boolean | Location$visitsArgs
     _count?: boolean | LocationCountOutputTypeArgs
-  } 
+  }
 
   export type LocationGetPayload<S extends boolean | null | undefined | LocationArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -3317,6 +4263,7 @@ export namespace Prisma {
         P extends 'users' ? Array < UserGetPayload<S['include'][P]>>  :
         P extends 'devices' ? Array < DevicesGetPayload<S['include'][P]>>  :
         P extends 'country' ? CountryGetPayload<S['include'][P]> :
+        P extends 'visits' ? Array < VisitsToLocationGetPayload<S['include'][P]>>  :
         P extends '_count' ? LocationCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (LocationArgs | LocationFindManyArgs)
@@ -3325,18 +4272,19 @@ export namespace Prisma {
         P extends 'users' ? Array < UserGetPayload<S['select'][P]>>  :
         P extends 'devices' ? Array < DevicesGetPayload<S['select'][P]>>  :
         P extends 'country' ? CountryGetPayload<S['select'][P]> :
+        P extends 'visits' ? Array < VisitsToLocationGetPayload<S['select'][P]>>  :
         P extends '_count' ? LocationCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Location ? Location[P] : never
   } 
       : Location
 
 
-  type LocationCountArgs = Merge<
+  type LocationCountArgs = 
     Omit<LocationFindManyArgs, 'select' | 'include'> & {
       select?: LocationCountAggregateInputType | true
     }
-  >
 
   export interface LocationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one Location that matches the filter.
      * @param {LocationFindUniqueArgs} args - Arguments to find a Location
@@ -3689,6 +4637,8 @@ export namespace Prisma {
 
     country<T extends CountryArgs= {}>(args?: Subset<T, CountryArgs>): Prisma__CountryClient<CountryGetPayload<T> | Null>;
 
+    visits<T extends Location$visitsArgs= {}>(args?: Subset<T, Location$visitsArgs>): PrismaPromise<Array<VisitsToLocationGetPayload<T>>| Null>;
+
     private get _document();
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3722,18 +4672,15 @@ export namespace Prisma {
   export type LocationFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * Filter, which Location to fetch.
-     * 
-    **/
+     */
     where: LocationWhereUniqueInput
   }
 
@@ -3755,18 +4702,15 @@ export namespace Prisma {
   export type LocationFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * Filter, which Location to fetch.
-     * 
-    **/
+     */
     where: LocationWhereUniqueInput
   }
 
@@ -3777,53 +4721,45 @@ export namespace Prisma {
   export type LocationFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * Filter, which Location to fetch.
-     * 
-    **/
+     */
     where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Locations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<LocationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Locations.
-     * 
-    **/
+     */
     cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Locations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Locations.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Locations.
-     * 
-    **/
+     */
     distinct?: Enumerable<LocationScalarFieldEnum>
   }
 
@@ -3845,53 +4781,45 @@ export namespace Prisma {
   export type LocationFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * Filter, which Location to fetch.
-     * 
-    **/
+     */
     where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Locations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<LocationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Locations.
-     * 
-    **/
+     */
     cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Locations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Locations.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Locations.
-     * 
-    **/
+     */
     distinct?: Enumerable<LocationScalarFieldEnum>
   }
 
@@ -3902,46 +4830,39 @@ export namespace Prisma {
   export type LocationFindManyArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * Filter, which Locations to fetch.
-     * 
-    **/
+     */
     where?: LocationWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Locations to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<LocationOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Locations.
-     * 
-    **/
+     */
     cursor?: LocationWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Locations from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Locations.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<LocationScalarFieldEnum>
   }
@@ -3953,18 +4874,15 @@ export namespace Prisma {
   export type LocationCreateArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * The data needed to create a Location.
-     * 
-    **/
+     */
     data: XOR<LocationCreateInput, LocationUncheckedCreateInput>
   }
 
@@ -3975,23 +4893,19 @@ export namespace Prisma {
   export type LocationUpdateArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * The data needed to update a Location.
-     * 
-    **/
+     */
     data: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
     /**
      * Choose, which Location to update.
-     * 
-    **/
+     */
     where: LocationWhereUniqueInput
   }
 
@@ -4002,13 +4916,11 @@ export namespace Prisma {
   export type LocationUpdateManyArgs = {
     /**
      * The data used to update Locations.
-     * 
-    **/
+     */
     data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyInput>
     /**
      * Filter which Locations to update
-     * 
-    **/
+     */
     where?: LocationWhereInput
   }
 
@@ -4019,28 +4931,23 @@ export namespace Prisma {
   export type LocationUpsertArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * The filter to search for the Location to update in case it exists.
-     * 
-    **/
+     */
     where: LocationWhereUniqueInput
     /**
      * In case the Location found by the `where` argument doesn't exist, create a new Location with this data.
-     * 
-    **/
+     */
     create: XOR<LocationCreateInput, LocationUncheckedCreateInput>
     /**
      * In case the Location was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
   }
 
@@ -4051,18 +4958,15 @@ export namespace Prisma {
   export type LocationDeleteArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
     /**
      * Filter which Location to delete.
-     * 
-    **/
+     */
     where: LocationWhereUniqueInput
   }
 
@@ -4073,8 +4977,7 @@ export namespace Prisma {
   export type LocationDeleteManyArgs = {
     /**
      * Filter which Locations to delete
-     * 
-    **/
+     */
     where?: LocationWhereInput
   }
 
@@ -4085,13 +4988,11 @@ export namespace Prisma {
   export type Location$usersArgs = {
     /**
      * Select specific fields to fetch from the User
-     * 
-    **/
+     */
     select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: UserInclude | null
     where?: UserWhereInput
     orderBy?: Enumerable<UserOrderByWithRelationInput>
@@ -4108,13 +5009,11 @@ export namespace Prisma {
   export type Location$devicesArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     where?: DevicesWhereInput
     orderBy?: Enumerable<DevicesOrderByWithRelationInput>
@@ -4126,18 +5025,37 @@ export namespace Prisma {
 
 
   /**
+   * Location.visits
+   */
+  export type Location$visitsArgs = {
+    /**
+     * Select specific fields to fetch from the VisitsToLocation
+     */
+    select?: VisitsToLocationSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: VisitsToLocationInclude | null
+    where?: VisitsToLocationWhereInput
+    orderBy?: Enumerable<VisitsToLocationOrderByWithRelationInput>
+    cursor?: VisitsToLocationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<VisitsToLocationScalarFieldEnum>
+  }
+
+
+  /**
    * Location without action
    */
   export type LocationArgs = {
     /**
      * Select specific fields to fetch from the Location
-     * 
-    **/
+     */
     select?: LocationSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: LocationInclude | null
   }
 
@@ -4246,36 +5164,31 @@ export namespace Prisma {
   export type DevicesAggregateArgs = {
     /**
      * Filter which Devices to aggregate.
-     * 
-    **/
+     */
     where?: DevicesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Devices to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DevicesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: DevicesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Devices from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Devices.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -4323,7 +5236,7 @@ export namespace Prisma {
   export type DevicesGroupByArgs = {
     where?: DevicesWhereInput
     orderBy?: Enumerable<DevicesOrderByWithAggregationInput>
-    by: Array<DevicesScalarFieldEnum>
+    by: DevicesScalarFieldEnum[]
     having?: DevicesScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -4380,7 +5293,7 @@ export namespace Prisma {
   export type DevicesInclude = {
     location?: boolean | LocationArgs
     deviceType?: boolean | DeviceTypesArgs
-  } 
+  }
 
   export type DevicesGetPayload<S extends boolean | null | undefined | DevicesArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -4401,13 +5314,13 @@ export namespace Prisma {
       : Devices
 
 
-  type DevicesCountArgs = Merge<
+  type DevicesCountArgs = 
     Omit<DevicesFindManyArgs, 'select' | 'include'> & {
       select?: DevicesCountAggregateInputType | true
     }
-  >
 
   export interface DevicesDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one Devices that matches the filter.
      * @param {DevicesFindUniqueArgs} args - Arguments to find a Devices
@@ -4791,18 +5704,15 @@ export namespace Prisma {
   export type DevicesFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * Filter, which Devices to fetch.
-     * 
-    **/
+     */
     where: DevicesWhereUniqueInput
   }
 
@@ -4824,18 +5734,15 @@ export namespace Prisma {
   export type DevicesFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * Filter, which Devices to fetch.
-     * 
-    **/
+     */
     where: DevicesWhereUniqueInput
   }
 
@@ -4846,53 +5753,45 @@ export namespace Prisma {
   export type DevicesFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * Filter, which Devices to fetch.
-     * 
-    **/
+     */
     where?: DevicesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Devices to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DevicesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Devices.
-     * 
-    **/
+     */
     cursor?: DevicesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Devices from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Devices.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Devices.
-     * 
-    **/
+     */
     distinct?: Enumerable<DevicesScalarFieldEnum>
   }
 
@@ -4914,53 +5813,45 @@ export namespace Prisma {
   export type DevicesFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * Filter, which Devices to fetch.
-     * 
-    **/
+     */
     where?: DevicesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Devices to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DevicesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Devices.
-     * 
-    **/
+     */
     cursor?: DevicesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Devices from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Devices.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Devices.
-     * 
-    **/
+     */
     distinct?: Enumerable<DevicesScalarFieldEnum>
   }
 
@@ -4971,46 +5862,39 @@ export namespace Prisma {
   export type DevicesFindManyArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * Filter, which Devices to fetch.
-     * 
-    **/
+     */
     where?: DevicesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Devices to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DevicesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Devices.
-     * 
-    **/
+     */
     cursor?: DevicesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Devices from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Devices.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<DevicesScalarFieldEnum>
   }
@@ -5022,18 +5906,15 @@ export namespace Prisma {
   export type DevicesCreateArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * The data needed to create a Devices.
-     * 
-    **/
+     */
     data: XOR<DevicesCreateInput, DevicesUncheckedCreateInput>
   }
 
@@ -5044,23 +5925,19 @@ export namespace Prisma {
   export type DevicesUpdateArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * The data needed to update a Devices.
-     * 
-    **/
+     */
     data: XOR<DevicesUpdateInput, DevicesUncheckedUpdateInput>
     /**
      * Choose, which Devices to update.
-     * 
-    **/
+     */
     where: DevicesWhereUniqueInput
   }
 
@@ -5071,13 +5948,11 @@ export namespace Prisma {
   export type DevicesUpdateManyArgs = {
     /**
      * The data used to update Devices.
-     * 
-    **/
+     */
     data: XOR<DevicesUpdateManyMutationInput, DevicesUncheckedUpdateManyInput>
     /**
      * Filter which Devices to update
-     * 
-    **/
+     */
     where?: DevicesWhereInput
   }
 
@@ -5088,28 +5963,23 @@ export namespace Prisma {
   export type DevicesUpsertArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * The filter to search for the Devices to update in case it exists.
-     * 
-    **/
+     */
     where: DevicesWhereUniqueInput
     /**
      * In case the Devices found by the `where` argument doesn't exist, create a new Devices with this data.
-     * 
-    **/
+     */
     create: XOR<DevicesCreateInput, DevicesUncheckedCreateInput>
     /**
      * In case the Devices was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<DevicesUpdateInput, DevicesUncheckedUpdateInput>
   }
 
@@ -5120,18 +5990,15 @@ export namespace Prisma {
   export type DevicesDeleteArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     /**
      * Filter which Devices to delete.
-     * 
-    **/
+     */
     where: DevicesWhereUniqueInput
   }
 
@@ -5142,8 +6009,7 @@ export namespace Prisma {
   export type DevicesDeleteManyArgs = {
     /**
      * Filter which Devices to delete
-     * 
-    **/
+     */
     where?: DevicesWhereInput
   }
 
@@ -5154,13 +6020,11 @@ export namespace Prisma {
   export type DevicesArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
   }
 
@@ -5243,36 +6107,31 @@ export namespace Prisma {
   export type DeviceTypesAggregateArgs = {
     /**
      * Filter which DeviceTypes to aggregate.
-     * 
-    **/
+     */
     where?: DeviceTypesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of DeviceTypes to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DeviceTypesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: DeviceTypesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` DeviceTypes from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` DeviceTypes.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -5320,7 +6179,7 @@ export namespace Prisma {
   export type DeviceTypesGroupByArgs = {
     where?: DeviceTypesWhereInput
     orderBy?: Enumerable<DeviceTypesOrderByWithAggregationInput>
-    by: Array<DeviceTypesScalarFieldEnum>
+    by: DeviceTypesScalarFieldEnum[]
     having?: DeviceTypesScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -5371,7 +6230,7 @@ export namespace Prisma {
   export type DeviceTypesInclude = {
     devices?: boolean | DeviceTypes$devicesArgs
     _count?: boolean | DeviceTypesCountOutputTypeArgs
-  } 
+  }
 
   export type DeviceTypesGetPayload<S extends boolean | null | undefined | DeviceTypesArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
@@ -5392,13 +6251,13 @@ export namespace Prisma {
       : DeviceTypes
 
 
-  type DeviceTypesCountArgs = Merge<
+  type DeviceTypesCountArgs = 
     Omit<DeviceTypesFindManyArgs, 'select' | 'include'> & {
       select?: DeviceTypesCountAggregateInputType | true
     }
-  >
 
   export interface DeviceTypesDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+
     /**
      * Find zero or one DeviceTypes that matches the filter.
      * @param {DeviceTypesFindUniqueArgs} args - Arguments to find a DeviceTypes
@@ -5780,18 +6639,15 @@ export namespace Prisma {
   export type DeviceTypesFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * Filter, which DeviceTypes to fetch.
-     * 
-    **/
+     */
     where: DeviceTypesWhereUniqueInput
   }
 
@@ -5813,18 +6669,15 @@ export namespace Prisma {
   export type DeviceTypesFindUniqueOrThrowArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * Filter, which DeviceTypes to fetch.
-     * 
-    **/
+     */
     where: DeviceTypesWhereUniqueInput
   }
 
@@ -5835,53 +6688,45 @@ export namespace Prisma {
   export type DeviceTypesFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * Filter, which DeviceTypes to fetch.
-     * 
-    **/
+     */
     where?: DeviceTypesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of DeviceTypes to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DeviceTypesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for DeviceTypes.
-     * 
-    **/
+     */
     cursor?: DeviceTypesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` DeviceTypes from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` DeviceTypes.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of DeviceTypes.
-     * 
-    **/
+     */
     distinct?: Enumerable<DeviceTypesScalarFieldEnum>
   }
 
@@ -5903,53 +6748,45 @@ export namespace Prisma {
   export type DeviceTypesFindFirstOrThrowArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * Filter, which DeviceTypes to fetch.
-     * 
-    **/
+     */
     where?: DeviceTypesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of DeviceTypes to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DeviceTypesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for DeviceTypes.
-     * 
-    **/
+     */
     cursor?: DeviceTypesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` DeviceTypes from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` DeviceTypes.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of DeviceTypes.
-     * 
-    **/
+     */
     distinct?: Enumerable<DeviceTypesScalarFieldEnum>
   }
 
@@ -5960,46 +6797,39 @@ export namespace Prisma {
   export type DeviceTypesFindManyArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * Filter, which DeviceTypes to fetch.
-     * 
-    **/
+     */
     where?: DeviceTypesWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of DeviceTypes to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<DeviceTypesOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing DeviceTypes.
-     * 
-    **/
+     */
     cursor?: DeviceTypesWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` DeviceTypes from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` DeviceTypes.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<DeviceTypesScalarFieldEnum>
   }
@@ -6011,18 +6841,15 @@ export namespace Prisma {
   export type DeviceTypesCreateArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * The data needed to create a DeviceTypes.
-     * 
-    **/
+     */
     data: XOR<DeviceTypesCreateInput, DeviceTypesUncheckedCreateInput>
   }
 
@@ -6033,23 +6860,19 @@ export namespace Prisma {
   export type DeviceTypesUpdateArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * The data needed to update a DeviceTypes.
-     * 
-    **/
+     */
     data: XOR<DeviceTypesUpdateInput, DeviceTypesUncheckedUpdateInput>
     /**
      * Choose, which DeviceTypes to update.
-     * 
-    **/
+     */
     where: DeviceTypesWhereUniqueInput
   }
 
@@ -6060,13 +6883,11 @@ export namespace Prisma {
   export type DeviceTypesUpdateManyArgs = {
     /**
      * The data used to update DeviceTypes.
-     * 
-    **/
+     */
     data: XOR<DeviceTypesUpdateManyMutationInput, DeviceTypesUncheckedUpdateManyInput>
     /**
      * Filter which DeviceTypes to update
-     * 
-    **/
+     */
     where?: DeviceTypesWhereInput
   }
 
@@ -6077,28 +6898,23 @@ export namespace Prisma {
   export type DeviceTypesUpsertArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * The filter to search for the DeviceTypes to update in case it exists.
-     * 
-    **/
+     */
     where: DeviceTypesWhereUniqueInput
     /**
      * In case the DeviceTypes found by the `where` argument doesn't exist, create a new DeviceTypes with this data.
-     * 
-    **/
+     */
     create: XOR<DeviceTypesCreateInput, DeviceTypesUncheckedCreateInput>
     /**
      * In case the DeviceTypes was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<DeviceTypesUpdateInput, DeviceTypesUncheckedUpdateInput>
   }
 
@@ -6109,18 +6925,15 @@ export namespace Prisma {
   export type DeviceTypesDeleteArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
     /**
      * Filter which DeviceTypes to delete.
-     * 
-    **/
+     */
     where: DeviceTypesWhereUniqueInput
   }
 
@@ -6131,8 +6944,7 @@ export namespace Prisma {
   export type DeviceTypesDeleteManyArgs = {
     /**
      * Filter which DeviceTypes to delete
-     * 
-    **/
+     */
     where?: DeviceTypesWhereInput
   }
 
@@ -6143,13 +6955,11 @@ export namespace Prisma {
   export type DeviceTypes$devicesArgs = {
     /**
      * Select specific fields to fetch from the Devices
-     * 
-    **/
+     */
     select?: DevicesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DevicesInclude | null
     where?: DevicesWhereInput
     orderBy?: Enumerable<DevicesOrderByWithRelationInput>
@@ -6166,13 +6976,11 @@ export namespace Prisma {
   export type DeviceTypesArgs = {
     /**
      * Select specific fields to fetch from the DeviceTypes
-     * 
-    **/
+     */
     select?: DeviceTypesSelect | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
+     */
     include?: DeviceTypesInclude | null
   }
 
@@ -6222,6 +7030,8 @@ export namespace Prisma {
   export const LocationScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    lat: 'lat',
+    long: 'long',
     countryId: 'countryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -6258,6 +7068,17 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const VisitsToLocationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    locationId: 'locationId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type VisitsToLocationScalarFieldEnum = (typeof VisitsToLocationScalarFieldEnum)[keyof typeof VisitsToLocationScalarFieldEnum]
 
 
   /**
@@ -6326,6 +7147,7 @@ export namespace Prisma {
     cardNumber?: StringFilter | string
     isAllowed?: BoolFilter | boolean
     location?: XOR<LocationRelationFilter, LocationWhereInput>
+    visits?: VisitsToLocationListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
@@ -6339,6 +7161,7 @@ export namespace Prisma {
     cardNumber?: SortOrder
     isAllowed?: SortOrder
     location?: LocationOrderByWithRelationInput
+    visits?: VisitsToLocationOrderByRelationAggregateInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6380,6 +7203,57 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
+  export type VisitsToLocationWhereInput = {
+    AND?: Enumerable<VisitsToLocationWhereInput>
+    OR?: Enumerable<VisitsToLocationWhereInput>
+    NOT?: Enumerable<VisitsToLocationWhereInput>
+    id?: IntFilter | number
+    userId?: IntFilter | number
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    locationId?: IntFilter | number
+    location?: XOR<LocationRelationFilter, LocationWhereInput>
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+  }
+
+  export type VisitsToLocationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+    locationId?: SortOrder
+    location?: LocationOrderByWithRelationInput
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VisitsToLocationWhereUniqueInput = {
+    id?: number
+  }
+
+  export type VisitsToLocationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: VisitsToLocationCountOrderByAggregateInput
+    _avg?: VisitsToLocationAvgOrderByAggregateInput
+    _max?: VisitsToLocationMaxOrderByAggregateInput
+    _min?: VisitsToLocationMinOrderByAggregateInput
+    _sum?: VisitsToLocationSumOrderByAggregateInput
+  }
+
+  export type VisitsToLocationScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<VisitsToLocationScalarWhereWithAggregatesInput>
+    OR?: Enumerable<VisitsToLocationScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<VisitsToLocationScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    userId?: IntWithAggregatesFilter | number
+    locationId?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
+  }
+
   export type LocationWhereInput = {
     AND?: Enumerable<LocationWhereInput>
     OR?: Enumerable<LocationWhereInput>
@@ -6388,8 +7262,11 @@ export namespace Prisma {
     name?: StringFilter | string
     users?: UserListRelationFilter
     devices?: DevicesListRelationFilter
+    lat?: StringFilter | string
+    long?: StringFilter | string
     countryId?: IntFilter | number
     country?: XOR<CountryRelationFilter, CountryWhereInput>
+    visits?: VisitsToLocationListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
@@ -6399,8 +7276,11 @@ export namespace Prisma {
     name?: SortOrder
     users?: UserOrderByRelationAggregateInput
     devices?: DevicesOrderByRelationAggregateInput
+    lat?: SortOrder
+    long?: SortOrder
     countryId?: SortOrder
     country?: CountryOrderByWithRelationInput
+    visits?: VisitsToLocationOrderByRelationAggregateInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6412,6 +7292,8 @@ export namespace Prisma {
   export type LocationOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    lat?: SortOrder
+    long?: SortOrder
     countryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -6428,6 +7310,8 @@ export namespace Prisma {
     NOT?: Enumerable<LocationScalarWhereWithAggregatesInput>
     id?: IntWithAggregatesFilter | number
     name?: StringWithAggregatesFilter | string
+    lat?: StringWithAggregatesFilter | string
+    long?: StringWithAggregatesFilter | string
     countryId?: IntWithAggregatesFilter | number
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
@@ -6593,6 +7477,7 @@ export namespace Prisma {
     cardNumber: string
     isAllowed?: boolean
     location: LocationCreateNestedOneWithoutUsersInput
+    visits?: VisitsToLocationCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6605,6 +7490,7 @@ export namespace Prisma {
     locationId: number
     cardNumber: string
     isAllowed?: boolean
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6616,6 +7502,7 @@ export namespace Prisma {
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
     location?: LocationUpdateOneRequiredWithoutUsersNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6628,6 +7515,7 @@ export namespace Prisma {
     locationId?: IntFieldUpdateOperationsInput | number
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6654,11 +7542,57 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VisitsToLocationCreateInput = {
+    user: UserCreateNestedOneWithoutVisitsInput
+    location: LocationCreateNestedOneWithoutVisitsInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VisitsToLocationUncheckedCreateInput = {
+    id?: number
+    userId: number
+    locationId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VisitsToLocationUpdateInput = {
+    user?: UserUpdateOneRequiredWithoutVisitsNestedInput
+    location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    locationId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    locationId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type LocationCreateInput = {
     name: string
     users?: UserCreateNestedManyWithoutLocationInput
     devices?: DevicesCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
     country: CountryCreateNestedOneWithoutLocationsInput
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6668,7 +7602,10 @@ export namespace Prisma {
     name: string
     users?: UserUncheckedCreateNestedManyWithoutLocationInput
     devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
     countryId: number
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6677,7 +7614,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutLocationNestedInput
     devices?: DevicesUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6687,13 +7627,18 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutLocationNestedInput
     devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     countryId?: IntFieldUpdateOperationsInput | number
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LocationUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6701,6 +7646,8 @@ export namespace Prisma {
   export type LocationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     countryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6953,6 +7900,16 @@ export namespace Prisma {
     isNot?: LocationWhereInput
   }
 
+  export type VisitsToLocationListRelationFilter = {
+    every?: VisitsToLocationWhereInput
+    some?: VisitsToLocationWhereInput
+    none?: VisitsToLocationWhereInput
+  }
+
+  export type VisitsToLocationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -7024,6 +7981,47 @@ export namespace Prisma {
     _max?: NestedBoolFilter
   }
 
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type VisitsToLocationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VisitsToLocationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationId?: SortOrder
+  }
+
+  export type VisitsToLocationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VisitsToLocationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type VisitsToLocationSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    locationId?: SortOrder
+  }
+
   export type UserListRelationFilter = {
     every?: UserWhereInput
     some?: UserWhereInput
@@ -7052,6 +8050,8 @@ export namespace Prisma {
   export type LocationCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    lat?: SortOrder
+    long?: SortOrder
     countryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7065,6 +8065,8 @@ export namespace Prisma {
   export type LocationMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    lat?: SortOrder
+    long?: SortOrder
     countryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7073,6 +8075,8 @@ export namespace Prisma {
   export type LocationMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    lat?: SortOrder
+    long?: SortOrder
     countryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -7219,6 +8223,18 @@ export namespace Prisma {
     connect?: LocationWhereUniqueInput
   }
 
+  export type VisitsToLocationCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutUserInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutUserInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
+  }
+
+  export type VisitsToLocationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutUserInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutUserInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -7233,6 +8249,60 @@ export namespace Prisma {
     upsert?: LocationUpsertWithoutUsersInput
     connect?: LocationWhereUniqueInput
     update?: XOR<LocationUpdateWithoutUsersInput, LocationUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type VisitsToLocationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutUserInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<VisitsToLocationUpsertWithWhereUniqueWithoutUserInput>
+    set?: Enumerable<VisitsToLocationWhereUniqueInput>
+    disconnect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    delete?: Enumerable<VisitsToLocationWhereUniqueInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    update?: Enumerable<VisitsToLocationUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<VisitsToLocationUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<VisitsToLocationScalarWhereInput>
+  }
+
+  export type VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutUserInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<VisitsToLocationUpsertWithWhereUniqueWithoutUserInput>
+    set?: Enumerable<VisitsToLocationWhereUniqueInput>
+    disconnect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    delete?: Enumerable<VisitsToLocationWhereUniqueInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    update?: Enumerable<VisitsToLocationUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<VisitsToLocationUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<VisitsToLocationScalarWhereInput>
+  }
+
+  export type UserCreateNestedOneWithoutVisitsInput = {
+    create?: XOR<UserCreateWithoutVisitsInput, UserUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVisitsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type LocationCreateNestedOneWithoutVisitsInput = {
+    create?: XOR<LocationCreateWithoutVisitsInput, LocationUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: LocationCreateOrConnectWithoutVisitsInput
+    connect?: LocationWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutVisitsNestedInput = {
+    create?: XOR<UserCreateWithoutVisitsInput, UserUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutVisitsInput
+    upsert?: UserUpsertWithoutVisitsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutVisitsInput, UserUncheckedUpdateWithoutVisitsInput>
+  }
+
+  export type LocationUpdateOneRequiredWithoutVisitsNestedInput = {
+    create?: XOR<LocationCreateWithoutVisitsInput, LocationUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: LocationCreateOrConnectWithoutVisitsInput
+    upsert?: LocationUpsertWithoutVisitsInput
+    connect?: LocationWhereUniqueInput
+    update?: XOR<LocationUpdateWithoutVisitsInput, LocationUncheckedUpdateWithoutVisitsInput>
   }
 
   export type UserCreateNestedManyWithoutLocationInput = {
@@ -7253,6 +8323,12 @@ export namespace Prisma {
     connect?: CountryWhereUniqueInput
   }
 
+  export type VisitsToLocationCreateNestedManyWithoutLocationInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutLocationInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutLocationInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutLocationInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
+  }
+
   export type UserUncheckedCreateNestedManyWithoutLocationInput = {
     create?: XOR<Enumerable<UserCreateWithoutLocationInput>, Enumerable<UserUncheckedCreateWithoutLocationInput>>
     connectOrCreate?: Enumerable<UserCreateOrConnectWithoutLocationInput>
@@ -7263,6 +8339,12 @@ export namespace Prisma {
     create?: XOR<Enumerable<DevicesCreateWithoutLocationInput>, Enumerable<DevicesUncheckedCreateWithoutLocationInput>>
     connectOrCreate?: Enumerable<DevicesCreateOrConnectWithoutLocationInput>
     connect?: Enumerable<DevicesWhereUniqueInput>
+  }
+
+  export type VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutLocationInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutLocationInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutLocationInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
   }
 
   export type UserUpdateManyWithoutLocationNestedInput = {
@@ -7299,6 +8381,19 @@ export namespace Prisma {
     update?: XOR<CountryUpdateWithoutLocationsInput, CountryUncheckedUpdateWithoutLocationsInput>
   }
 
+  export type VisitsToLocationUpdateManyWithoutLocationNestedInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutLocationInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutLocationInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutLocationInput>
+    upsert?: Enumerable<VisitsToLocationUpsertWithWhereUniqueWithoutLocationInput>
+    set?: Enumerable<VisitsToLocationWhereUniqueInput>
+    disconnect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    delete?: Enumerable<VisitsToLocationWhereUniqueInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    update?: Enumerable<VisitsToLocationUpdateWithWhereUniqueWithoutLocationInput>
+    updateMany?: Enumerable<VisitsToLocationUpdateManyWithWhereWithoutLocationInput>
+    deleteMany?: Enumerable<VisitsToLocationScalarWhereInput>
+  }
+
   export type UserUncheckedUpdateManyWithoutLocationNestedInput = {
     create?: XOR<Enumerable<UserCreateWithoutLocationInput>, Enumerable<UserUncheckedCreateWithoutLocationInput>>
     connectOrCreate?: Enumerable<UserCreateOrConnectWithoutLocationInput>
@@ -7323,6 +8418,19 @@ export namespace Prisma {
     update?: Enumerable<DevicesUpdateWithWhereUniqueWithoutLocationInput>
     updateMany?: Enumerable<DevicesUpdateManyWithWhereWithoutLocationInput>
     deleteMany?: Enumerable<DevicesScalarWhereInput>
+  }
+
+  export type VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput = {
+    create?: XOR<Enumerable<VisitsToLocationCreateWithoutLocationInput>, Enumerable<VisitsToLocationUncheckedCreateWithoutLocationInput>>
+    connectOrCreate?: Enumerable<VisitsToLocationCreateOrConnectWithoutLocationInput>
+    upsert?: Enumerable<VisitsToLocationUpsertWithWhereUniqueWithoutLocationInput>
+    set?: Enumerable<VisitsToLocationWhereUniqueInput>
+    disconnect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    delete?: Enumerable<VisitsToLocationWhereUniqueInput>
+    connect?: Enumerable<VisitsToLocationWhereUniqueInput>
+    update?: Enumerable<VisitsToLocationUpdateWithWhereUniqueWithoutLocationInput>
+    updateMany?: Enumerable<VisitsToLocationUpdateManyWithWhereWithoutLocationInput>
+    deleteMany?: Enumerable<VisitsToLocationScalarWhereInput>
   }
 
   export type LocationCreateNestedOneWithoutDevicesInput = {
@@ -7544,6 +8652,9 @@ export namespace Prisma {
     name: string
     users?: UserCreateNestedManyWithoutLocationInput
     devices?: DevicesCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7553,6 +8664,9 @@ export namespace Prisma {
     name: string
     users?: UserUncheckedCreateNestedManyWithoutLocationInput
     devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7584,6 +8698,8 @@ export namespace Prisma {
     NOT?: Enumerable<LocationScalarWhereInput>
     id?: IntFilter | number
     name?: StringFilter | string
+    lat?: StringFilter | string
+    long?: StringFilter | string
     countryId?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
@@ -7592,7 +8708,10 @@ export namespace Prisma {
   export type LocationCreateWithoutUsersInput = {
     name: string
     devices?: DevicesCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
     country: CountryCreateNestedOneWithoutLocationsInput
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7601,7 +8720,10 @@ export namespace Prisma {
     id?: number
     name: string
     devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
     countryId: number
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7609,6 +8731,24 @@ export namespace Prisma {
   export type LocationCreateOrConnectWithoutUsersInput = {
     where: LocationWhereUniqueInput
     create: XOR<LocationCreateWithoutUsersInput, LocationUncheckedCreateWithoutUsersInput>
+  }
+
+  export type VisitsToLocationCreateWithoutUserInput = {
+    location: LocationCreateNestedOneWithoutVisitsInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VisitsToLocationUncheckedCreateWithoutUserInput = {
+    id?: number
+    locationId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VisitsToLocationCreateOrConnectWithoutUserInput = {
+    where: VisitsToLocationWhereUniqueInput
+    create: XOR<VisitsToLocationCreateWithoutUserInput, VisitsToLocationUncheckedCreateWithoutUserInput>
   }
 
   export type LocationUpsertWithoutUsersInput = {
@@ -7619,7 +8759,10 @@ export namespace Prisma {
   export type LocationUpdateWithoutUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
     devices?: DevicesUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7628,6 +8771,148 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
+    countryId?: IntFieldUpdateOperationsInput | number
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUpsertWithWhereUniqueWithoutUserInput = {
+    where: VisitsToLocationWhereUniqueInput
+    update: XOR<VisitsToLocationUpdateWithoutUserInput, VisitsToLocationUncheckedUpdateWithoutUserInput>
+    create: XOR<VisitsToLocationCreateWithoutUserInput, VisitsToLocationUncheckedCreateWithoutUserInput>
+  }
+
+  export type VisitsToLocationUpdateWithWhereUniqueWithoutUserInput = {
+    where: VisitsToLocationWhereUniqueInput
+    data: XOR<VisitsToLocationUpdateWithoutUserInput, VisitsToLocationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type VisitsToLocationUpdateManyWithWhereWithoutUserInput = {
+    where: VisitsToLocationScalarWhereInput
+    data: XOR<VisitsToLocationUpdateManyMutationInput, VisitsToLocationUncheckedUpdateManyWithoutVisitsInput>
+  }
+
+  export type VisitsToLocationScalarWhereInput = {
+    AND?: Enumerable<VisitsToLocationScalarWhereInput>
+    OR?: Enumerable<VisitsToLocationScalarWhereInput>
+    NOT?: Enumerable<VisitsToLocationScalarWhereInput>
+    id?: IntFilter | number
+    userId?: IntFilter | number
+    locationId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+  }
+
+  export type UserCreateWithoutVisitsInput = {
+    email: string
+    birthDay: Date | string
+    name?: string | null
+    cardNumber: string
+    isAllowed?: boolean
+    location: LocationCreateNestedOneWithoutUsersInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserUncheckedCreateWithoutVisitsInput = {
+    id?: number
+    email: string
+    birthDay: Date | string
+    name?: string | null
+    locationId: number
+    cardNumber: string
+    isAllowed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutVisitsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutVisitsInput, UserUncheckedCreateWithoutVisitsInput>
+  }
+
+  export type LocationCreateWithoutVisitsInput = {
+    name: string
+    users?: UserCreateNestedManyWithoutLocationInput
+    devices?: DevicesCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
+    country: CountryCreateNestedOneWithoutLocationsInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LocationUncheckedCreateWithoutVisitsInput = {
+    id?: number
+    name: string
+    users?: UserUncheckedCreateNestedManyWithoutLocationInput
+    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
+    countryId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LocationCreateOrConnectWithoutVisitsInput = {
+    where: LocationWhereUniqueInput
+    create: XOR<LocationCreateWithoutVisitsInput, LocationUncheckedCreateWithoutVisitsInput>
+  }
+
+  export type UserUpsertWithoutVisitsInput = {
+    update: XOR<UserUpdateWithoutVisitsInput, UserUncheckedUpdateWithoutVisitsInput>
+    create: XOR<UserCreateWithoutVisitsInput, UserUncheckedCreateWithoutVisitsInput>
+  }
+
+  export type UserUpdateWithoutVisitsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    location?: LocationUpdateOneRequiredWithoutUsersNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutVisitsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    locationId?: IntFieldUpdateOperationsInput | number
+    cardNumber?: StringFieldUpdateOperationsInput | string
+    isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LocationUpsertWithoutVisitsInput = {
+    update: XOR<LocationUpdateWithoutVisitsInput, LocationUncheckedUpdateWithoutVisitsInput>
+    create: XOR<LocationCreateWithoutVisitsInput, LocationUncheckedCreateWithoutVisitsInput>
+  }
+
+  export type LocationUpdateWithoutVisitsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    users?: UserUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
+    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LocationUncheckedUpdateWithoutVisitsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     countryId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7639,6 +8924,7 @@ export namespace Prisma {
     name?: string | null
     cardNumber: string
     isAllowed?: boolean
+    visits?: VisitsToLocationCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7650,6 +8936,7 @@ export namespace Prisma {
     name?: string | null
     cardNumber: string
     isAllowed?: boolean
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7699,6 +8986,24 @@ export namespace Prisma {
   export type CountryCreateOrConnectWithoutLocationsInput = {
     where: CountryWhereUniqueInput
     create: XOR<CountryCreateWithoutLocationsInput, CountryUncheckedCreateWithoutLocationsInput>
+  }
+
+  export type VisitsToLocationCreateWithoutLocationInput = {
+    user: UserCreateNestedOneWithoutVisitsInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VisitsToLocationUncheckedCreateWithoutLocationInput = {
+    id?: number
+    userId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type VisitsToLocationCreateOrConnectWithoutLocationInput = {
+    where: VisitsToLocationWhereUniqueInput
+    create: XOR<VisitsToLocationCreateWithoutLocationInput, VisitsToLocationUncheckedCreateWithoutLocationInput>
   }
 
   export type UserUpsertWithWhereUniqueWithoutLocationInput = {
@@ -7781,10 +9086,29 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VisitsToLocationUpsertWithWhereUniqueWithoutLocationInput = {
+    where: VisitsToLocationWhereUniqueInput
+    update: XOR<VisitsToLocationUpdateWithoutLocationInput, VisitsToLocationUncheckedUpdateWithoutLocationInput>
+    create: XOR<VisitsToLocationCreateWithoutLocationInput, VisitsToLocationUncheckedCreateWithoutLocationInput>
+  }
+
+  export type VisitsToLocationUpdateWithWhereUniqueWithoutLocationInput = {
+    where: VisitsToLocationWhereUniqueInput
+    data: XOR<VisitsToLocationUpdateWithoutLocationInput, VisitsToLocationUncheckedUpdateWithoutLocationInput>
+  }
+
+  export type VisitsToLocationUpdateManyWithWhereWithoutLocationInput = {
+    where: VisitsToLocationScalarWhereInput
+    data: XOR<VisitsToLocationUpdateManyMutationInput, VisitsToLocationUncheckedUpdateManyWithoutVisitsInput>
+  }
+
   export type LocationCreateWithoutDevicesInput = {
     name: string
     users?: UserCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
     country: CountryCreateNestedOneWithoutLocationsInput
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7793,7 +9117,10 @@ export namespace Prisma {
     id?: number
     name: string
     users?: UserUncheckedCreateNestedManyWithoutLocationInput
+    lat: string
+    long: string
     countryId: number
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7829,7 +9156,10 @@ export namespace Prisma {
   export type LocationUpdateWithoutDevicesInput = {
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7838,7 +9168,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
     countryId?: IntFieldUpdateOperationsInput | number
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7903,6 +9236,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutLocationNestedInput
     devices?: DevicesUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7912,6 +9248,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutLocationNestedInput
     devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7919,6 +9258,28 @@ export namespace Prisma {
   export type LocationUncheckedUpdateManyWithoutLocationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    lat?: StringFieldUpdateOperationsInput | string
+    long?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUpdateWithoutUserInput = {
+    location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    locationId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUncheckedUpdateManyWithoutVisitsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    locationId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7929,6 +9290,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7940,6 +9302,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7977,6 +9340,19 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     deviceTypeId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUpdateWithoutLocationInput = {
+    user?: UserUpdateOneRequiredWithoutVisitsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitsToLocationUncheckedUpdateWithoutLocationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

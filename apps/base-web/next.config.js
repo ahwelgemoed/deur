@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-const withTM = require('next-transpile-modules')(['@deur/design-system']);
-
-module.exports = withTM({
+module.exports = {
   reactStrictMode: true,
   swcMinify: false,
   webpack: (config) => {
@@ -20,7 +18,7 @@ module.exports = withTM({
       '.web.tsx',
       ...config.resolve.extensions,
     ];
-
     return config;
   },
-});
+  transpilePackages: ['@deur/design-system', 'nativewind'],
+};

@@ -32,6 +32,17 @@ model User {
   cardNumber String   @unique
   isAllowed  Boolean  @default(false)
   location   Location @relation(fields: [locationId], references: [id])
+  visits     VisitsToLocation[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model VisitsToLocation {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -41,8 +52,11 @@ model Location {
   name      String
   users     User[]
   devices   Devices[]
+  lat String
+  long String
   countryId Int
   country   Country   @relation(fields: [countryId], references: [id])
+  visits    VisitsToLocation[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

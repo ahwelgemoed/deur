@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { CompleteLocation, RelatedLocationCloudModel } from "./index"
+import { CompleteLocation, RelatedLocationCloudModel, CompleteVisitsToLocation, RelatedVisitsToLocationCloudModel } from "./index"
 
 export const UserCloudModel = z.object({
   id: z.number().int(),
@@ -15,6 +15,7 @@ export const UserCloudModel = z.object({
 
 export interface CompleteUser extends z.infer<typeof UserCloudModel> {
   location: CompleteLocation
+  visits: CompleteVisitsToLocation[]
 }
 
 /**
@@ -24,4 +25,5 @@ export interface CompleteUser extends z.infer<typeof UserCloudModel> {
  */
 export const RelatedUserCloudModel: z.ZodSchema<CompleteUser> = z.lazy(() => UserCloudModel.extend({
   location: RelatedLocationCloudModel,
+  visits: RelatedVisitsToLocationCloudModel.array(),
 }))

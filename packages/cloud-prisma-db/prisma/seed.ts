@@ -37,15 +37,17 @@ async function main() {
       },
     });
     // Create 1000 Locations
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 800; i++) {
       const createdLocation = await prisma.location.create({
         data: {
           name: faker.address.cityName(),
           countryId: createdCountry.id,
+          lat: faker.address.latitude(),
+          long: faker.address.longitude(),
         },
       });
-      // Create 10000 Users per  Location
-      for (let i = 0; i < 2000; i++) {
+      // Create 2000 Users per  Location
+      for (let i = 0; i < 3500; i++) {
         await prisma.user.create({
           data: {
             cardNumber: faker.datatype.uuid(),

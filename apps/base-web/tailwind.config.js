@@ -6,6 +6,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
     '../../packages/design-system/src/**/*.{js,ts,jsx,tsx}',
   ],
+  plugins: [require('nativewind/tailwind/css')],
   theme: {
     extend: {},
   },
