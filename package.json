@@ -8,9 +8,9 @@
     "build": "turbo build",
     "build:mobile": "turbo build --filter=\"...{./apps/base-app}\"",
     "build:web": "turbo build --filter=\"...{./apps/base-web}\"",
-    "dev:base:web": "npm run dev -- --filter @deur/base-web",
-    "dev:base:app": "npm run dev -- --filter @deur/design-system --filter @deur/base-app",
-    "dev:base:servers": "npm run dev -- --filter @deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local"
+    "dev:base:web": "turbo dev --filter=\"{./apps/base-web}...\"",
+    "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
+    "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local"
   },
   "devDependencies": {
     "turbo": "^1.5.4",
