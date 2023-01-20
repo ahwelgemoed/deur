@@ -46,6 +46,7 @@ fastify.register(require('@fastify/swagger-ui'), {
   staticCSP: true,
   transformSpecificationClone: true,
 });
+
 fastify.register(autoload, {
   dir: path.join(__dirname, './routes'),
   options: { prefix: 'v1' },
