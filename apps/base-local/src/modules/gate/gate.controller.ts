@@ -11,7 +11,7 @@ export async function userAllowedCheck(
     // some Logic
     const body = request.body;
 
-    return reply.code(200).send({ isAllowed: true, braaf: 'asd' });
+    return reply.code(200).send({ isAllowed: true });
   } catch (error) {
     return reply.code(500).send({ status: 'ERROR' });
   }
