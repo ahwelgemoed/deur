@@ -2,7 +2,7 @@
 apps/*/credentials.json
 apps/*/build
 packages/*/build
-
+.nyc_output
 # Turborepo
 .turbo
 

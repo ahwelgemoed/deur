@@ -35,7 +35,6 @@
     "dev": "tsup --watch",
     "format": "prisma format",
     "generate": "prisma generate",
-    "lint": "eslint ./src --fix",
     "prebuild": "npm run generate",
     "predev": "npm run generate",
     "init": "npx prisma migrate dev --name init",

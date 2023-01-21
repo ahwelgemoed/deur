@@ -59,6 +59,24 @@
     }
    }
   },
+  "/v1/device-routes/all-device-types": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Default Response"
+     }
+    }
+   }
+  },
+  "/v1/device-routes/create-device": {
+   "post": {
+    "responses": {
+     "200": {
+      "description": "Default Response"
+     }
+    }
+   }
+  },
   "/v1/gate-routes/gate-user/{userId}": {
    "get": {
     "responses": {
@@ -69,6 +87,24 @@
    }
   },
   "/v1/gate-routes/get-user-to-help/{userId}": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Default Response"
+     }
+    }
+   }
+  },
+  "/v1/location-routes/all-locations": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Default Response"
+     }
+    }
+   }
+  },
+  "/v1/location-routes/location-by-country/{countryId}": {
    "get": {
     "responses": {
      "200": {
@@ -196,42 +232,6 @@
    }
   },
   "/v1/user-routes/users-by-location/{locationId}": {
-   "get": {
-    "responses": {
-     "200": {
-      "description": "Default Response"
-     }
-    }
-   }
-  },
-  "/v1/device-routes/all-device-types": {
-   "get": {
-    "responses": {
-     "200": {
-      "description": "Default Response"
-     }
-    }
-   }
-  },
-  "/v1/device-routes/create-device": {
-   "post": {
-    "responses": {
-     "200": {
-      "description": "Default Response"
-     }
-    }
-   }
-  },
-  "/v1/location-routes/all-locations": {
-   "get": {
-    "responses": {
-     "200": {
-      "description": "Default Response"
-     }
-    }
-   }
-  },
-  "/v1/location-routes/location-by-country/{countryId}": {
    "get": {
     "responses": {
      "200": {
