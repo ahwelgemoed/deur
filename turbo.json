@@ -4,6 +4,7 @@
     "lint": {
       "outputs": []
     },
+    "test:e2e": {},
     "test": {
       "dependsOn": ["build"],
       "inputs": ["**/*.{ts,tsx,js,jsx}"]

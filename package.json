@@ -9,6 +9,7 @@
     "build:mobile": "turbo build --filter=\"...{./apps/base-app}\"",
     "build:web": "turbo build --filter=\"...{./apps/base-web}\"",
     "dev:base:web": "turbo dev --filter=\"{./apps/base-web}...\"",
+    "test:base:web:e2e": "turbo test:e2e --filter=\"{./apps/base-web}...\"",
     "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
     "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local"
   },
