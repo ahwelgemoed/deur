@@ -7,6 +7,7 @@
     "dist/**"
   ],
   "dependencies": {
+    "tsup": "^5.11.13",
     "@expo-google-fonts/ubuntu": "^0.2.2",
     "@faker-js/faker": "^7.6.0",
     "@prisma/client": "latest",

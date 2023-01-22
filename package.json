@@ -11,6 +11,7 @@
     "dev:base:web": "turbo dev --filter=\"{./apps/base-web}...\"",
     "test:base:web:e2e": "turbo test:e2e --filter=\"{./apps/base-web}...\"",
     "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
+    "p": "turbo prune --scope=@deur/base-cloud",
     "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local"
   },
   "devDependencies": {

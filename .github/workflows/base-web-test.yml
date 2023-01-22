@@ -9,7 +9,7 @@ on:
 
 jobs:
   test_setup:
-    name: Test setup
+    name: Wait for Vercel preview deployment to be ready
     runs-on: ubuntu-latest
     outputs:
       preview_url: ${{ steps.waitForVercelPreviewDeployment.outputs.url }}
@@ -22,7 +22,7 @@ jobs:
           max_timeout: 600
   test_e2e:
     needs: test_setup
-    name: Playwright tests
+    name: Playwright E2E Tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
