@@ -1,6 +1,7 @@
-import { useNavigation, useRouter, usePathname } from 'expo-router';
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import UserInactivity from 'react-native-user-inactivity';
+import { useRouter, usePathname } from 'expo-router';
+import { createContext, useContext, useEffect, useState } from 'react';
+// import UserInactivity from 'react-native-user-inactivity';
+
 import { useDeviceSetupState } from './SetupDevice.Context';
 
 type IdleStateProviderProps = { children: React.ReactNode };
@@ -19,7 +20,7 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
   const { deviceSetupState } = useDeviceSetupState();
   const pathName = usePathname();
   const router = useRouter();
-  const idleTime = useRef(10_0000);
+  // const idleTime = useRef(10_0000);
 
   const setToInactive = () => {
     setActive(false);
@@ -48,7 +49,7 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
 
   return (
     <IdleContext.Provider value={{ isActive: active, setToInactive, setToActive }}>
-      <UserInactivity
+      {/* <UserInactivity
         isActive={active}
         timeForInactivity={pathName === '/' ? 5000 : 10_0000}
         onAction={(isActive: boolean) => {
@@ -56,9 +57,9 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
             setActive(isActive);
           }
         }}
-      >
-        {children}
-      </UserInactivity>
+      > */}
+      {children}
+      {/* </UserInactivity> */}
     </IdleContext.Provider>
   );
 }

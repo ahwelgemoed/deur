@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "test:e2e": "playwright test",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "next lint"
   },
   "dependencies": {
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@deur/eslint-config": "*",
     "@deur/tsconfig": "*",
+    "@playwright/test": "^1.29.2",
     "@types/node": "^18.11.5",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",

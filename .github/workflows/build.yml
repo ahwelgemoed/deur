@@ -36,6 +36,6 @@ jobs:
       - name: 👷 Build packages for mobile
         run: pnpm run -w build:mobile
 
-      - name: 🚀 Build mobile
-        working-directory: apps/mobile
+      - name: 🚀 Build base-app
+        working-directory: apps/base-app
         run: eas build --non-interactive --wait --platform=${{ github.event.inputs.platform }} --profile=${{ github.event.inputs.profile }}

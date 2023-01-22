@@ -24,11 +24,11 @@ jobs:
         run: pnpm run -w build
 
       - name: 🚀 Publish preview
-        working-directory: apps/mobile
+        working-directory: apps/base-app
         run: expo publish --release-channel=pr-${{ github.event.number }}
 
       - name: 💬 Comment preview
         uses: expo/expo-github-action/preview-comment@v7
         with:
-          project: apps/mobile
+          project: apps/base-app
           channel: pr-${{ github.event.number }}
