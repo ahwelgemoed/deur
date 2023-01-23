@@ -11,7 +11,7 @@
     "build": "tsup src/index.ts --format cjs",
     "start": "node dist/index.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "dev": "tsup --onSuccess \"node dist/index.js\"",
+    "dev": "tsnd --respawn --transpile-only --exit-child src/index.ts",
     "test:tap": "tap --node-arg=--require=ts-node/register",
     "test:tap:dev": "tap --node-arg=--require=ts-node/register --watch"
   },
@@ -19,8 +19,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@deur/cloud-prisma-db": "*",
-    "@faker-js/faker": "^7.6.0",
     "@fastify/autoload": "^5.6.0",
     "@fastify/redis": "^6.1.0",
     "@fastify/swagger": "^8.3.0",
@@ -43,10 +41,12 @@
   },
   "devDependencies": {
     "@deur/shared-types": "*",
+    "@deur/tsconfig": "*",
     "@types/fastify-static": "^2.2.1",
     "@types/node": "^18.11.10",
     "@types/tap": "^15.0.7",
     "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "tsnd": "^1.1.0"
   }
 }

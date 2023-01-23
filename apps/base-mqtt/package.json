@@ -8,7 +8,7 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup src/index.ts --format cjs",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@deur/shared-types": "*",
+    "@deur/tsconfig": "*",
     "@types/fastify-static": "^2.2.1",
     "@types/node": "^18.11.10",
     "ts-node-dev": "^2.0.0"
