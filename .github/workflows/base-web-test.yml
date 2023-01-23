@@ -1,4 +1,4 @@
-name: Base-Web Tests
+name: E2E Tests for Base-Web
 
 on:
   workflow_dispatch:
