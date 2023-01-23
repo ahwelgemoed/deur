@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  test_setup:
+  wait_for_vercel_preview_deployment:
     name: Wait for Vercel preview deployment to be ready
     runs-on: ubuntu-latest
     outputs:
@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           max_timeout: 600
   test_e2e:
-    needs: test_setup
+    needs: wait_for_vercel_preview_deployment
     name: Playwright E2E Tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -37,3 +37,10 @@ jobs:
         run: pnpm run test:base:web:e2e
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ needs.test_setup.outputs.preview_url }}
+      - name: 📃 Upload Report
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

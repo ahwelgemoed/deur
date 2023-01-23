@@ -8,11 +8,10 @@
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs",
-    "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node -r esbuild-register ./dist/index.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "dev": "tsup --onSuccess \"node dist/index.js\""
+    "dev": "nodemon --exec \"node -r esbuild-register ./src/index.ts\" -e .ts"
   },
   "keywords": [],
   "author": "",
@@ -38,9 +37,33 @@
     "zod-to-json-schema": "^3.20.2"
   },
   "devDependencies": {
+    "esbuild": "^0.14.38",
+    "nodemon": "^2.0.15",
+    "esbuild-register": "^3.3.2",
     "@deur/shared-types": "*",
     "@deur/tsconfig": "*",
+    "@types/fastify-static": "^2.2.1",
     "@types/node": "^18.11.10",
-    "ts-node-dev": "^2.0.0"
+    "@types/tap": "^15.0.7",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "@deur/eslint-config": "*"
+  },
+  "eslintConfig": {
+    "extends": "@deur/eslint-config",
+    "ignorePatterns": [
+      "node_modules",
+      "dist"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.js"
+        ],
+        "env": {
+          "node": true
+        }
+      }
+    ]
   }
 }

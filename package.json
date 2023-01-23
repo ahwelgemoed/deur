@@ -13,10 +13,11 @@
     "dev:base:web": "turbo dev --filter=\"{./apps/base-web}...\"",
     "test:base:web:e2e": "turbo test:e2e --filter=\"{./apps/base-web}...\"",
     "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
-    "p": "turbo prune --scope=@deur/base-cloud",
     "seed:base:cloud": "cd ./packages/cloud-prisma-db && npm run db:seed",
     "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local",
     "cloud": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build;",
+    "prod:location:build": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose-base.yml build",
+    "prod:location:up": "docker-compose -f docker-compose-base.yml up -d",
     "up": "docker-compose -f docker-compose.yml up -d"
   },
   "devDependencies": {

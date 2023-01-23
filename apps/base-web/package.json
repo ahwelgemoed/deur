@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "test:e2e": "playwright test",
     "build": "next build",
     "start": "next start",

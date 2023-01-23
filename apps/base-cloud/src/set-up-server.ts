@@ -1,13 +1,11 @@
-import Fastify from 'fastify';
-import * as dotenv from 'dotenv';
-// import { PrismaClient } from "@prisma/client";
 import { PrismaClient } from '@deur/cloud-prisma-db';
 import autoload from '@fastify/autoload';
-import path from 'path';
 import cors from '@fastify/cors';
-import type { FastifySwaggerOptions } from '@fastify/swagger';
-import type { FastifyRedis } from '@fastify/redis';
-import { writeFileSync } from 'node:fs';
+// import type { FastifySwaggerOptions } from '@fastify/swagger';
+// import type { FastifyRedis } from '@fastify/redis';
+import * as dotenv from 'dotenv';
+import Fastify from 'fastify';
+import path from 'path';
 
 const PORT = 3030;
 
@@ -23,6 +21,8 @@ fastify.register(cors, {
   credentials: true,
   origin: '*',
 });
+
+// fastify.register(require('@fastify/redis'), { host: '127.0.0.1' });
 
 fastify.register(require('@fastify/redis'), { host: 'redis', port: 6379 });
 

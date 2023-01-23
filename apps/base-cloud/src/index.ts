@@ -1,5 +1,6 @@
-import { start } from './set-up-server';
 import * as dotenv from 'dotenv';
+
+import { start } from './set-up-server';
 
 dotenv.config();
 

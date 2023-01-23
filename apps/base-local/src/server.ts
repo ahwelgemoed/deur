@@ -3,7 +3,8 @@ import FastifySwagger from '@fastify/swagger';
 import { withRefResolver } from 'fastify-zod';
 import gateRoutes from './modules/gate/gate.route';
 import { gateLocalSchemas } from './modules/gate/gate.schema';
-import { version } from '../package.json';
+// Get away from RootDir in TSConfig
+const pjson = require('../package.json');
 
 export function bootstrap(): FastifyInstance {
   const server = Fastify();
@@ -25,7 +26,7 @@ export function bootstrap(): FastifyInstance {
         info: {
           title: 'Gate API',
           description: 'Gate API',
-          version: version,
+          version: pjson.version,
         },
       },
     })
