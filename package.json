@@ -6,14 +6,24 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "build": "turbo build",
+    "clean": "turbo clean",
     "build:mobile": "turbo build --filter=\"...{./apps/base-app}\"",
     "build:web": "turbo build --filter=\"...{./apps/base-web}\"",
-    "dev:base:app": "npm run dev -- --filter @deur/base-app",
-    "dev:base:servers": "npm run dev -- --filter @deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local"
+    "build:base:cloud": "turbo build --filter=\"...{./apps/base-cloud}\"",
+    "dev:base:web": "turbo dev --filter=\"{./apps/base-web}...\"",
+    "test:base:web:e2e": "turbo test:e2e --filter=\"{./apps/base-web}...\"",
+    "test:base:web:e2e:report": "turbo report --filter=\"{./apps/base-web}...\"",
+    "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
+    "seed:base:cloud": "cd ./packages/cloud-prisma-db && npm run db:seed",
+    "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local",
+    "cloud": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build;",
+    "prod:location:build": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose-base.yml build",
+    "prod:location:up": "docker-compose -f docker-compose-base.yml up -d",
+    "up": "docker-compose -f docker-compose.yml up -d"
   },
   "devDependencies": {
     "turbo": "^1.5.4",
-    "typescript": "^4.8.3"
+    "typescript": "^4.9.4"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -33,5 +43,6 @@
     "tabWidth": 2,
     "singleQuote": true,
     "trailingComma": "es5"
-  }
+  },
+  "dependencies": {}
 }

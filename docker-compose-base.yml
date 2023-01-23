@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  base-mqtt:
+    platform: linux/amd64
+    container_name: base-mqtt
+    build:
+      context: .
+      dockerfile: ./apps/base-mqtt/Dockerfile
+      args:
+        - CLUB_ID=123
+        - BASE_LOCAL_PORT=3032
+        - BASE_CLOUD_URL=http://127.0.0.1:3030
+        - BASE_LOCAL_URL=http://127.0.0.1:3032
+    restart: always
+    ports:
+      - 1881:1881
+      - 8080:8080
+    depends_on:
+      - redis
+  base-local:
+    platform: linux/amd64
+    container_name: base-local
+    build:
+      context: .
+      dockerfile: ./apps/base-local/Dockerfile
+      args:
+        - POST=3034
+        - CLUB_ID=123
+        - BASE_LOCAL_PORT=3032
+        - BASE_CLOUD_URL=http://127.0.0.1:3030
+        - BASE_LOCAL_URL=http://127.0.0.1:3032
+    restart: always
+    ports:
+      - 3034:3034
+    depends_on:
+      - redis

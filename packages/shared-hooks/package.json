@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
     "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
     "@deur/shared-types": "*",
@@ -14,7 +14,7 @@
     "@types/paho-mqtt": "^1.0.6",
     "@types/react": "^18.0.22",
     "@types/react-native": "^0.69.15",
-    "tsup": "^6.0.1",
+    "tsup": "^5.11.13",
     "typescript": "^4.7.4"
   },
   "dependencies": {

@@ -1,17 +1,11 @@
-import Head from 'next/head';
+import { HomeIcon } from '@deur/design-system';
 
-import styles from '../styles/Home.module.css';
-
-export default function Home() {
+export default function Web() {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Expo monorepo</title>
-        <meta name="description" content="Sharing code with Next.js" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}></main>
+    <div className="bg-red-300">
+      <h1>Welcome to Base-Web</h1>
+      Looopy
+      <HomeIcon />
     </div>
   );
 }

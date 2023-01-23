@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
+
 module.exports = {
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   webpack: (config) => {
     // Set the alias from `react-native` to `react-native-web`
     config.resolve.alias = {
@@ -17,7 +18,7 @@ module.exports = {
       '.web.tsx',
       ...config.resolve.extensions,
     ];
-
     return config;
   },
+  transpilePackages: ['@deur/design-system', 'nativewind'],
 };

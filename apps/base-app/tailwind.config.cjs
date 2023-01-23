@@ -1,8 +1,13 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {import("tailwindcss").Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  presets: [require('@deur/tailwind-config')],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        display: ['Ubuntu_500Medium_Italic'],
+        body: ['Ubuntu_500Medium'],
+        text: ['Ubuntu_300Light'],
+      },
+    },
   },
-  plugins: [],
 };

@@ -1,11 +1,11 @@
-import { EMQQTTTopics } from "@deur/shared-types";
-import { gates } from "../gates";
-import { mqttClient } from "../set-up-server";
+import { EMQQTTTopics } from '@deur/shared-types';
+import { gates } from '../gates';
+import { mqttClient } from '../set-up-server';
 
 export const publishGates = async () => {
   mqttClient.publish(
     {
-      cmd: "publish",
+      cmd: 'publish',
       qos: 0,
       dup: false,
       retain: false,
@@ -14,8 +14,8 @@ export const publishGates = async () => {
     },
     (err) => {
       if (err) {
-        console.log("err", err);
+        console.log('err', err);
       }
-    },
+    }
   );
 };

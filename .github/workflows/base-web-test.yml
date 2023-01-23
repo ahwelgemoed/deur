@@ -1,0 +1,45 @@
+name: Base-Web Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test_setup:
+    name: Wait for Vercel preview deployment to be ready
+    runs-on: ubuntu-latest
+    outputs:
+      preview_url: ${{ steps.waitForVercelPreviewDeployment.outputs.url }}
+    steps:
+      - name: Wait for Vercel preview deployment to be ready
+        uses: patrickedqvist/wait-for-vercel-preview@v1.2.0
+        id: waitForVercelPreviewDeployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 600
+  test_e2e:
+    needs: test_setup
+    name: Playwright E2E Tests
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repository
+        uses: actions/checkout@v3
+
+      - name: 🏗 Setup monorepo
+        uses: ./.github/actions/setup-monorepo
+      - run: npx playwright install --with-deps
+      - name: 👷 Run E2E Tests
+        run: pnpm run test:base:web:e2e
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ needs.test_setup.outputs.preview_url }}
+
+      - name: 🧑🏽‍🎤 Upload E2E Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: ./apps/base-web/playwright-report
+          retention-days: 30

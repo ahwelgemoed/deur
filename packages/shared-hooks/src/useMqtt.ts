@@ -26,7 +26,6 @@ export function useMqtt(): [
       }
     };
   }, []);
-
   const createClient = () => {
     mqttClient.current = new Paho.Client('127.0.0.1', Number(8080), '/', createMqttName('Mobile'));
 
@@ -120,6 +119,7 @@ export function useSendMqttMessage(
   ): void => {
     if (mqttClient && isConnected) {
       mqttClient.send(topic, message, qos, retained);
+
       mqttClient.onMessageDelivered = function (message) {
         callback && callback(message);
       };

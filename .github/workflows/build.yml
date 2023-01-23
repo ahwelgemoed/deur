@@ -1,25 +1,25 @@
 name: build
 
-on:
-  workflow_dispatch:
-    inputs:
-      platform:
-        description: Platform to build for (all/android/ios)
-        type: choice
-        required: true
-        default: all
-        options:
-          - all
-          - android
-          - ios
-      profile:
-        description: EAS build profile (development/production)
-        type: choice
-        required: true
-        default: development
-        options:
-          - development
-          - production
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       platform:
+#         description: Platform to build for (all/android/ios)
+#         type: choice
+#         required: true
+#         default: all
+#         options:
+#           - all
+#           - android
+#           - ios
+#       profile:
+#         description: EAS build profile (development/production)
+#         type: choice
+#         required: true
+#         default: development
+#         options:
+#           - development
+#           - production
 
 jobs:
   mobile:
@@ -36,6 +36,6 @@ jobs:
       - name: 👷 Build packages for mobile
         run: pnpm run -w build:mobile
 
-      - name: 🚀 Build mobile
-        working-directory: apps/mobile
+      - name: 🚀 Build base-app
+        working-directory: apps/base-app
         run: eas build --non-interactive --wait --platform=${{ github.event.inputs.platform }} --profile=${{ github.event.inputs.profile }}

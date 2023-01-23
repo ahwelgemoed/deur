@@ -1,61 +1,59 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance } from 'fastify';
 
-import { prisma } from "../set-up-server";
+import { prisma } from '../set-up-server';
 
 async function clientRoutes(fastify: FastifyInstance) {
   fastify.get<{
-    Params: { id: string };
+    Params: { locationId: string };
     Querystring: { clearCache: string };
   }>(
-    "/club-users/:id",
+    '/location-users/:locationId',
     {
       schema: {
         params: {
-          type: "object",
+          type: 'object',
           properties: {
-            id: { type: "string" },
+            id: { type: 'string' },
           },
         },
         querystring: {
-          type: "object",
+          type: 'object',
           properties: {
-            clearCache: { type: "string" },
+            clearCache: { type: 'string' },
           },
         },
         response: {
           200: {
-            type: "object",
+            type: 'object',
             properties: {
-              users: { type: "array" },
-              cached: { type: "boolean" },
+              users: { type: 'array' },
+              cached: { type: 'boolean' },
             },
           },
         },
       },
     },
     async function (request, reply) {
-      const { id } = request.params;
-      if (request.query.clearCache === "true") {
-        fastify.redis.del(`club-users:${request.params.id}`);
+      const { locationId } = request.params;
+      if (request.query.clearCache === 'true') {
+        fastify.redis.del(`club-users:${request.params.locationId}`);
       }
 
-      const cachedClubUsers = await fastify.redis.get(
-        `club-users:${request.params.id}`
-      );
+      const cachedClubUsers = await fastify.redis.get(`club-users:${request.params.locationId}`);
 
       if (cachedClubUsers) {
         return { users: JSON.parse(cachedClubUsers), cached: true };
       }
 
       const clubUsers = await prisma.user.findMany({
-        where: { clubId: Number(id) },
+        where: { locationId: Number(locationId) },
       });
 
-      await fastify.redis.setex(
-        `club-users:${request.params.id}`,
-        60 * 60,
-        JSON.stringify(clubUsers)
-      );
+      // await fastify.redis.setex(
+      //   `club-users:${request.params.locationId}`,
+      //   60 * 60,
+      //   JSON.stringify(clubUsers)
+      // );
 
       return { users: clubUsers, cached: false };
     }

@@ -1,7 +1,9 @@
 import { EMQQTTTopics } from '@deur/shared-types';
+import { CompleteUser } from '@deur/shared-types';
 import { mqttClient } from '../set-up-server';
 
-export const respondToOpenGateRequest = async (clientId: string, allowed: boolean) => {
+export const respondToOpenGateRequest = async (clientId: string, allowed: boolean | undefined) => {
+  // Publish to GATE
   mqttClient.publish(
     {
       cmd: 'publish',

@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  base-cloud:
+    platform: linux/amd64
+    container_name: base-cloud
+    build:
+      context: .
+      dockerfile: ./apps/base-cloud/Dockerfile
+      args:
+        - CLUB_ID=123
+    restart: always
+    ports:
+      - 3030:3030
+    depends_on:
+      - redis

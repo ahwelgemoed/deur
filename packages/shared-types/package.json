@@ -1,13 +1,17 @@
 {
   "name": "@deur/shared-types",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "dependencies": {
-    "typescript": "latest"
+    "@deur/tsconfig": "*",
+    "typescript": "latest",
+    "tsup": "^5.11.13",
+    "zod": "^3.20.2"
   },
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "clean:build": "rm -rf dist",
-    "build": "tsup"
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "build": "tsc"
   }
 }

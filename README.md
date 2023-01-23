@@ -1,3 +1,38 @@
+# RULES
+
+# Developer
+
+- TS Everywhere, C++ if you cant
+- Tailwind Everywhere
+- Easy to Deploy
+- Easy to update
+- Solid Github Actions
+- E2E All FE
+- TAP Testing Backend
+- One Dev can Run Everything
+- Design System with Storybook
+- Documentation in Repo
+
+# Business
+
+- Monetize new features
+- Cheap to Build
+- Easy to Maintain
+- Easy to Scale
+- Easy to Update
+- Fall Over Gracefully
+- Replaceable Parts (Module)
+
+Basic Kiosk Flow
+
+Get Data from Local Cloud -> Save It to Local Database -> Get From there and Display
+Create Person -> Save Locally -> In background pass To Local And Relay that up to cloud
+
+# Sign in at Gate -> Last Sign In Saved -> Tries to sign in 10min later 15 min later 10km away -> Denied
+
+Now - Last Sign In =  
+now Postal Code = Last Postal Code = travel time
+
 <div align="center">
   <h1>Expo monorepo</h1>
   <p>Fast pnpm monorepo for cross-platform apps built with Expo and React</p>
@@ -109,7 +144,6 @@ To workaround these issues, we have to change some config:
 2. Either disable [`strict-peer-dependencies`](https://pnpm.io/npmrc#strict-peer-dependencies) or add [`peerDependencyRules.ignoreMissing`](./package.json#L14-L22) rules in the **package.json**. This disables some of the expected implicit peer dependencies issues. Without these changes, pnpm will fail on install asking you to install various peer dependencies.
 
 3. Update the **metro.config.js** configuration for usage in monorepos. Full explanation per configuration option can be found in the [Expo docs](https://docs.expo.dev/guides/monorepos/#modify-the-metro-config). The only addition in this repository is the [`config.cacheStores`](./apps/mobile/metro.config.js#L22-L24). This change moves the Metro cache to a place which is accessible by Turborepo, our main cache handler (see [Why is it fast?](#-why-is-it-fast)).
-
 
 ### Precompile packages
 

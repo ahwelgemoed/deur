@@ -9,6 +9,7 @@ export function clientPublished(packet: AedesPublishPacket, client: Client | nul
   }
   if (packet.topic === EMQQTTTopics.GATES_ONLINE) {
   }
+
   if (packet.topic === EMQQTTTopics.CONFIRM_ENTRY) {
     if (client?.id && packet.payload) checkIfUserMayEnter(packet.payload.toString(), client.id);
   }
