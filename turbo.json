@@ -4,6 +4,7 @@
     "lint": {
       "outputs": []
     },
+    "report": {},
     "test:e2e": {},
     "test": {
       "dependsOn": ["build"],

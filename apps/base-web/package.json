@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "next start",
     "export": "next export",
+    "report": "npx playwright show-report",
     "lint": "next lint"
   },
   "dependencies": {

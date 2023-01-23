@@ -41,5 +41,4 @@ jobs:
           name: playwright-report
           path: apps/base-web/playwright-report/
           retention-days: 30
-        env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ needs.test_setup.outputs.preview_url }}
