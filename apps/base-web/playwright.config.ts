@@ -7,7 +7,11 @@ const baseURL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000';
 const config: PlaywrightTestConfig = {
   // Timeout per test
   timeout: 30 * 1000,
-  reporter: [['html', { outputFolder: 'playwright-report' }]],
+  reporter: [
+    ['list', { printSteps: true }],
+    ['html', { outputFolder: 'playwright-report' }],
+  ],
+
   // Test directory
   testDir: path.join(__dirname, 'e2e'),
   // If a test fails, retry it additional 2 times
