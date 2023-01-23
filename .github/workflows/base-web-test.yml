@@ -37,3 +37,9 @@ jobs:
         run: pnpm run test:base:web:e2e
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ needs.test_setup.outputs.preview_url }}
+      - name: 👷 Upload E2E Tests
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: apps/base-web/playwright-report/
+          retention-days: 30
