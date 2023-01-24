@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 
 import { getAllCountries } from './countries.controller';
-import { $ref } from './modules';
+import { $ref } from './countries.schemas';
 
 async function countryRoutes(server: FastifyInstance) {
   server.get(
