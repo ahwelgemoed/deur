@@ -2,7 +2,7 @@
   "expo": {
     "scheme": "myapp",
     "name": "base-app",
-    "slug": "base-app",
+    "slug": "deur",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,12 +16,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "bundleIdentifier": "io.welgemoed.base-app",
+      "bundleIdentifier": "io.welgemoed.baseApp",
       "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
-      "package": "io.welgemoed.base-app",
+      "package": "io.welgemoed.baseApp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -32,8 +32,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "d202a56f-0162-450d-af3b-a2d2e0678594"
+        "projectId": "2d02cbef-0d35-4813-aea7-b0b24225d09e"
       }
-    }
+    },
+    "owner": "ahwelgemoed"
   }
 }
