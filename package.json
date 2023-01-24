@@ -27,6 +27,13 @@
     "typescript": "^4.9.4"
   },
   "pnpm": {
+    "packageExtensions": {
+      "eslint-config-next@*": {
+        "dependencies": {
+          "next": "*"
+        }
+      }
+    },
     "peerDependencyRules": {
       "ignoreMissing": [
         "@babel/*",
