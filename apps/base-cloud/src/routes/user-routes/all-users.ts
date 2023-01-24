@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { UserCloudModel } from '@deur/shared-types';
-import { prisma } from '../../set-up-server';
+import { prisma } from '../../server';
 
 async function userRoutes(fastify: FastifyInstance) {
   fastify.get<{}>(

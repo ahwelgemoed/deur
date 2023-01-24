@@ -2,7 +2,7 @@ import { User } from '@deur/cloud-prisma-db';
 import { EReasons, GateUserResponse, UserCloudModel } from '@deur/shared-types';
 import { FastifyInstance, RequestGenericInterface } from 'fastify';
 import zodToJsonSchema from 'zod-to-json-schema';
-import { prisma } from '../../set-up-server';
+import { prisma } from '../../server';
 
 interface IGateUserRoutes extends RequestGenericInterface {
   Params: {

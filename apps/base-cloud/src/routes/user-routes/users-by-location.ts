@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { prisma } from '../../set-up-server';
+import { prisma } from '../../server';
 
 async function userLocationRoutes(fastify: FastifyInstance) {
   fastify.get<{

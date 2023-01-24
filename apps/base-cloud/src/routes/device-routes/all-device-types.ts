@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { prisma } from '../../set-up-server';
+import { prisma } from '../../server';
 
 async function countryRoutes(fastify: FastifyInstance) {
   fastify.get<{}>('/all-device-types', async function (request, reply) {
