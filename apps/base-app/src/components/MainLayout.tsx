@@ -1,4 +1,4 @@
-import { Heading, SubHeading } from '@deur/design-system';
+import { HomeIcon, Header } from '@deur/design-system';
 import { useNavigation } from 'expo-router';
 import React from 'react';
 import { View, Text, KeyboardAvoidingView } from 'react-native';
@@ -73,7 +73,6 @@ const MainLayout = ({
             headerComponent
           ) : (
             <>
-              <Heading classNames="text-white font-body text-[80px]">{headerMainText}</Heading>
               <Text className="uppercase text-[#DDDDE1] font-text text-[40px]">
                 {headerSubText}
               </Text>

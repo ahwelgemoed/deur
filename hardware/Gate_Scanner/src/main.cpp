@@ -8,7 +8,7 @@
 int randomNumber = random(100,500);
 
 #define JSON_CONFIG_FILE "/config.json"
-#define MQTT_HOST IPAddress(192, 168, 68, 101)
+#define MQTT_HOST IPAddress(192, 168, 68, 104)
 #define MQTT_PORT 1881
 
 AsyncMqttClient mqttClient;

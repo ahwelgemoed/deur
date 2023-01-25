@@ -1,7 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 
 import { prisma } from '../../server';
-// import { UserAllowedCheckRequest } from './countries.schema';
 
 export async function getAllCountries(request: FastifyRequest, reply: FastifyReply) {
   try {

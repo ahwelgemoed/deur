@@ -6,7 +6,7 @@ import LoadingFullScreen from '../components/idlePages/LoadingPage';
 
 type IdleStateProviderProps = { children: React.ReactNode };
 
-export const DEVICE_STORAGE_ID = '@deviceSetup';
+export const DEVICE_STORAGE_ID = '@deviceSetup_1';
 
 export type TDeviceSetupData = {
   deviceId: string;

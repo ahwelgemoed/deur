@@ -13,7 +13,7 @@ const AxiosInstance = ({ children }: { children: JSX.Element }) => {
   const { deviceDetails } = useDeviceSetupState();
   console.log('deviceDetails', deviceDetails);
   authApi.defaults.headers.common['Content-Type'] = 'application/json';
-  authApi.defaults.headers.common['x-origin-call'] = deviceDetails?.locationId;
+  authApi.defaults.headers.common['x-location'] = deviceDetails?.locationId;
   authApi.defaults.headers.common['x-device-call'] = deviceDetails?.deviceId;
   return children;
 };

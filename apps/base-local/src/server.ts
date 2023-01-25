@@ -10,7 +10,7 @@ export function bootstrap(): FastifyInstance {
   const server = Fastify();
 
   server.get('/healthcheck', async (request, reply) => {
-    return { status: 'OK' };
+    return { status: 'OK', version: pjson.version, uptime: process.uptime() };
   });
 
   // Add all schemas to the server
@@ -21,16 +21,18 @@ export function bootstrap(): FastifyInstance {
   server.register(
     FastifySwagger,
     withRefResolver({
-      routePrefix: '/swagger',
-      swagger: {
+      exposeRoute: true,
+      staticCSP: true,
+      openapi: {
         info: {
-          title: 'Gate API',
-          description: 'Gate API',
+          title: 'Local',
+          description: '@deur Local api',
           version: pjson.version,
         },
       },
     })
   );
+
   server.register(require('@fastify/swagger-ui'), {
     routePrefix: '/swagger',
   });

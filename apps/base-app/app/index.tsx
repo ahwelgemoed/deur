@@ -1,3 +1,4 @@
+import { Header } from '@deur/design-system';
 import { Link } from 'expo-router';
 import { useEffect } from 'react';
 import { View, Text, Animated, Easing } from 'react-native';
@@ -34,6 +35,7 @@ export default function Page() {
   return (
     <View className="bg-black w-full h-full flex ">
       <Text className="text-white font-body text-[100px]">Welcome</Text>
+      <Header classNames="text-white">Header</Header>
       <Text className="text-[#DDDDE1] font-text text-[40px]"></Text>
 
       <View className="w-full flex justify-center items-center h-full">

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders  1`] = `
+<View
+  testID="header_view"
+>
+  <Text
+    testID="header_text"
+  >
+    Hello Main Title
+  </Text>
+</View>
+`;

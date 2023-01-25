@@ -8,6 +8,10 @@ import countryRoutes from './modules/countries/countries.route';
 import { countrySchemas } from './modules/countries/countries.schemas';
 import deviceRoutes from './modules/devices/devices.route';
 import { deviceSchemas } from './modules/devices/devices.schemas';
+import locationRoutes from './modules/locations/locations.route';
+import { locationSchemas } from './modules/locations/locations.schemas';
+import userRoutes from './modules/users/users.route';
+import { userSchemas } from './modules/users/users.schemas';
 
 const pjson = require('../package.json');
 
@@ -24,18 +28,19 @@ export function bootstrap(): FastifyInstance {
   });
 
   // Add all schemas to the server
-  for (const schema of [...countrySchemas, ...deviceSchemas]) {
+  for (const schema of [...countrySchemas, ...deviceSchemas, ...userSchemas, ...locationSchemas]) {
     server.addSchema(schema);
   }
 
   server.register(
     FastifySwagger,
     withRefResolver({
-      routePrefix: '/swagger',
-      swagger: {
+      exposeRoute: true,
+      staticCSP: true,
+      openapi: {
         info: {
-          title: 'Cloud API',
-          description: 'Cloud API',
+          title: 'Cloud',
+          description: '@deur Cloud api',
           version: pjson.version,
         },
       },
@@ -51,6 +56,8 @@ export function bootstrap(): FastifyInstance {
     return { status: 'OK', version: pjson.version, uptime: process.uptime() };
   });
 
+  server.register(locationRoutes, { prefix: '/v1/location' });
+  server.register(userRoutes, { prefix: '/v1/user' });
   server.register(countryRoutes, { prefix: '/v1/country' });
   server.register(deviceRoutes, { prefix: '/v1/device' });
 

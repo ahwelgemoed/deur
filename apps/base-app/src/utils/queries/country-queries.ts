@@ -1,12 +1,12 @@
-import axios from 'axios';
+import { CompleteCountry } from '@deur/shared-types';
 
-import { BASE_URL } from '..';
+import { authApi } from '../../api/AxiosInstance';
 
-export const getAllCountries = async () => {
-  const response = await axios.get(`${BASE_URL}/country-routes/all-countries`, {
-    headers: {
-      'x-origin-call': '1',
-    },
-  });
-  return response.data;
+export const getAllCountries: () => Promise<CompleteCountry[]> = async () => {
+  try {
+    const response = await authApi.get(`/country/all-countries`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error getting all countries');
+  }
 };
