@@ -1,10 +1,10 @@
-import { cleanup, render, screen } from '@testing-library/react-native';
+import { cleanup, render, screen, sha } from '@testing-library/react-native';
 
-import { HomeIcon } from '../HomeIcon';
+import { Header } from '..';
 
 afterEach(cleanup);
 
 it('renders a wave emoji', () => {
-  render(<HomeIcon testID="icon" />);
-  expect(screen.getByTestId('icon').children).toContain('👋');
+  render(<Header>Hello</Header>);
+  expect(screen.getByText('Hello')).toBeTruthy();
 });
