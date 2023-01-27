@@ -58,6 +58,7 @@ export function bootstrap(): FastifyInstance {
 
   server.register(locationRoutes, { prefix: '/v1/location' });
   server.register(userRoutes, { prefix: '/v1/user' });
+
   server.register(countryRoutes, { prefix: '/v1/country' });
   server.register(deviceRoutes, { prefix: '/v1/device' });
 
