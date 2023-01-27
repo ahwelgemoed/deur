@@ -1,12 +1,13 @@
-import axios from 'axios';
-
-import { BASE_URL } from '..';
+import { authApi } from '../../api/AxiosInstance';
 
 export const getLocationByCountry = async (countryId: string) => {
-  const response = await axios.get(`${BASE_URL}/location-routes/location-by-country/${countryId}`, {
-    headers: {
-      'x-origin-call': '1',
-    },
-  });
-  return response.data;
+  console.log('device.countryId', countryId);
+  try {
+    const response = await authApi.get(`/location/location-by-country/${countryId}`);
+
+    console.log('getLocationByCountry', getLocationByCountry);
+    return response.data;
+  } catch (error) {
+    console.log('error', error);
+  }
 };

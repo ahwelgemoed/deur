@@ -1,10 +1,9 @@
-import axios from 'axios';
-
-import { BASE_URL } from '..';
+import { authApi } from '../../api/AxiosInstance';
 import { TDeviceSetupData } from '../../contexts/SetupDevice.Context';
 
 export const createDevice = async (device: TDeviceSetupData) => {
-  const response = await axios.post(`${BASE_URL}/device-routes/create-device`, {
+  console.log('device', device);
+  const response = await authApi.post(`/device/create-device`, {
     deviceId: device.deviceId,
     name: device.friendlyName,
     locationId: device.locationId,

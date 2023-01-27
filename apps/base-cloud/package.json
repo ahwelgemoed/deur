@@ -27,7 +27,7 @@
     "chance": "^1.1.9",
     "dotenv": "^16.0.3",
     "fastify": "^4.10.2",
-    "jest": "^29.3.1",
+    "jest": "^26.6.3",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
@@ -37,17 +37,18 @@
     "zod-to-json-schema": "^3.20.2"
   },
   "devDependencies": {
-    "esbuild": "^0.14.38",
-    "nodemon": "^2.0.15",
-    "esbuild-register": "^3.3.2",
+    "@deur/eslint-config": "*",
     "@deur/shared-types": "*",
     "@deur/tsconfig": "*",
+    "@playwright/test": "^1.30.0",
     "@types/fastify-static": "^2.2.1",
     "@types/node": "^18.11.10",
     "@types/tap": "^15.0.7",
+    "esbuild": "^0.14.38",
+    "esbuild-register": "^3.3.2",
+    "nodemon": "^2.0.15",
     "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
-    "@deur/eslint-config": "*"
+    "ts-node-dev": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "@deur/eslint-config",

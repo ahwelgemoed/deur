@@ -1,41 +1,31 @@
 import axios from 'axios';
-import { CompleteUser, EMQQTTTopics } from '@deur/shared-types';
 import { respondToOpenGateRequest } from '../publish/publishOpenGate';
-import { EReasons } from '@deur/shared-types';
-import { mqttClient } from '../set-up-server';
 
+/**
+ * Check if user may enter
+ * @param userId Scanned / Entered User ID
+ * @param clientId Client ID of the MQTT Client
+ */
 export async function checkIfUserMayEnter(userId: string, clientId: string) {
   // Do a Rest Call to Local Server to Check USER
-  const user = await getUser(userId);
-  await respondToOpenGateRequest(clientId, user?.allowed);
-
-  if (!user?.allowed) {
-    // Publish to REACT NATIVE
-    mqttClient.publish(
-      {
-        cmd: 'publish',
-        qos: 0,
-        dup: false,
-        retain: false,
-        topic: EMQQTTTopics.HELP_THIS_USER,
-        payload: JSON.stringify(user),
-      },
-      (err) => {
-        if (err) {
-          console.log('err', err);
-        }
-      }
-    );
-  }
+  const { isAllowed } = await getUser(userId);
+  // Publish Back to Gate
+  await respondToOpenGateRequest(clientId, isAllowed);
 }
 async function getUser(userId: string) {
   console.log('🦬 FETCHING USER ', userId);
-  const url = `${process.env.BASE_LOCAL_URL}/v1/get-user-for-gate/${userId}`;
+
+  const { id } = JSON.parse(userId) as { id: string };
+
+  const url = `http://127.0.0.1:${process.env.BASE_LOCAL_PORT}/gate/user-gate-check`;
   try {
-    const response = await axios.get(url);
-    const data: { user: CompleteUser; allowed: boolean; reason: EReasons } = await response.data;
-    return data;
+    const response = await axios.post(url, {
+      cardNumber: id,
+    });
+    const data: { isAllowed: boolean } = await response.data;
+    return { isAllowed: data.isAllowed };
   } catch (error) {
     console.error('error', error);
+    return { isAllowed: false };
   }
 }

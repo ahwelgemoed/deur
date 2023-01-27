@@ -1,4 +1,8 @@
+import * as dotenv from 'dotenv';
+
 import { bootstrap } from './server';
+
+dotenv.config();
 
 const server = bootstrap();
 

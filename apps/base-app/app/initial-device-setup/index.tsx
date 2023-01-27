@@ -36,8 +36,8 @@ const InitialSetup = () => {
   });
 
   useEffect(() => {
-    if (mutation?.data?.data) {
-      AsyncStorage.setItem(DEVICE_STORAGE_ID, JSON.stringify(mutation.data.data));
+    if (mutation?.data) {
+      AsyncStorage.setItem(DEVICE_STORAGE_ID, JSON.stringify(mutation.data));
       getDeviceSetupData();
     }
   }, [mutation.data]);
@@ -50,13 +50,19 @@ const InitialSetup = () => {
       return restDAta;
     },
   });
-  const { data: counties, isLoading: countiesLoading } = useQuery({
+
+  const {
+    data: counties,
+    isLoading: countiesLoading,
+    error: countriesError,
+  } = useQuery({
     queryKey: ['getCountry'],
     queryFn: () => {
       const restDAta = getAllCountries();
       return restDAta;
     },
   });
+
   const { data: locations, isLoading: locationsLoading } = useQuery({
     queryKey: ['getLocation'],
     queryFn: () => {
@@ -86,7 +92,7 @@ const InitialSetup = () => {
               Here Is the reason we could not let you in today...
             </Text>
             <View className="p-2 m-2 bg-[#0f0f0f] flex  rounded-md">
-              {countiesLoading ? (
+              {countiesLoading || countriesError ? (
                 <ActivityIndicator size="small" color="white" />
               ) : (
                 <>
@@ -101,7 +107,7 @@ const InitialSetup = () => {
                     }}
                   >
                     <Picker.Item label={'Empty'} value={''} />
-                    {counties?.counties?.map((country: any) => (
+                    {counties?.map((country: any) => (
                       <Picker.Item
                         key={country.id}
                         label={`${country.name} (${country.code})`}
@@ -114,8 +120,7 @@ const InitialSetup = () => {
             </View>
             <View className="p-2 m-2 bg-[#0f0f0f] flex rounded-md">
               <Text className="uppercase font-text text-xl text-white pt-4 text-center">
-                Chose a Location in{' '}
-                {counties?.counties?.find((c: any) => c.id === device.countryId)?.name}
+                Chose a Location in {counties?.find((c: any) => c.id === device.countryId)?.name}
               </Text>
               {!locations ? (
                 ''
@@ -132,7 +137,7 @@ const InitialSetup = () => {
                     }
                   >
                     <Picker.Item label={'Empty'} value={''} />
-                    {locations?.locations?.map((location: any) => (
+                    {locations?.map((location: any) => (
                       <Picker.Item
                         key={location.id}
                         label={`${location.name}`}
@@ -160,7 +165,7 @@ const InitialSetup = () => {
                     }
                   >
                     <Picker.Item label={'Empty'} value={''} />
-                    {deviceTypes?.deviceTypes?.map((deviceType: any) => (
+                    {deviceTypes?.map((deviceType: any) => (
                       <Picker.Item
                         key={deviceType.id}
                         label={`${deviceType.name}`}

@@ -2,7 +2,13 @@ import { EMQQTTTopics } from '@deur/shared-types';
 import { CompleteUser } from '@deur/shared-types';
 import { mqttClient } from '../set-up-server';
 
-export const respondToOpenGateRequest = async (clientId: string, allowed: boolean | undefined) => {
+/**
+ * Publish to GATE
+ * @param clientId
+ * @param isAllowed
+ */
+export const respondToOpenGateRequest = async (clientId: string, isAllowed: boolean) => {
+  console.log('isAllowed', isAllowed);
   // Publish to GATE
   mqttClient.publish(
     {
@@ -11,7 +17,7 @@ export const respondToOpenGateRequest = async (clientId: string, allowed: boolea
       dup: false,
       retain: false,
       topic: `${clientId}/${EMQQTTTopics.OPEN}`,
-      payload: allowed ? '1' : '0',
+      payload: isAllowed ? '1' : '0',
     },
     (err) => {
       if (err) {

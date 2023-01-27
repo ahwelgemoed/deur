@@ -8,6 +8,8 @@ async function countryRoutes(server: FastifyInstance) {
     '/all-countries',
     {
       schema: {
+        description: 'Get all operational Countries',
+        tags: ['Countries'],
         response: {
           200: $ref('getAllCountriesResponse'),
         },
