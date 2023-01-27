@@ -23,7 +23,7 @@
 - Fall Over Gracefully
 - Replaceable Parts (Module)
 
-Basic Kiosk Flow
+Basic Kiosk Flows
 
 Get Data from Local Cloud -> Save It to Local Database -> Get From there and Display
 Create Person -> Save Locally -> In background pass To Local And Relay that up to cloud
