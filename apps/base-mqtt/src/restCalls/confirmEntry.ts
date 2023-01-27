@@ -30,9 +30,11 @@ export async function checkIfUserMayEnter(userId: string, clientId: string) {
 }
 async function getUser(userId: string) {
   console.log('🦬 FETCHING USER ', userId);
-  const url = `${process.env.BASE_LOCAL_URL}/v1/get-user-for-gate/${userId}`;
+  const url = `localhost${process.env.BASE_LOCAL_PORT}/gate/user-gate-check`;
   try {
-    const response = await axios.get(url);
+    const response = await axios.post(url, {
+      cardNumber: userId,
+    });
     const data: { user: CompleteUser; allowed: boolean; reason: EReasons } = await response.data;
     return data;
   } catch (error) {

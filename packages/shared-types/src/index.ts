@@ -1,4 +1,5 @@
-import { CompleteUser } from './cloud-prisma-types';
+import { z } from 'zod';
+import { CompleteUser, UserCloudModel } from './cloud-prisma-types';
 
 export * from './cloud-prisma-types';
 
@@ -40,3 +41,10 @@ export type GateUserResponse = {
   reason: EReasons;
   error: Error | undefined;
 };
+
+export const CleanUserSchema = UserCloudModel.omit({
+  createdAt: true,
+  updatedAt: true,
+});
+
+export interface ICleanUserSchema extends z.infer<typeof CleanUserSchema> {}
