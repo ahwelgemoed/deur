@@ -2,13 +2,14 @@ import * as z from "zod"
 import { CompleteLocation, RelatedLocationCloudModel, CompleteVisitsToLocation, RelatedVisitsToLocationCloudModel } from "./index"
 
 export const UserCloudModel = z.object({
-  id: z.number().int(),
-  email: z.string(),
+  id: z.string(),
   birthDay: z.date(),
   name: z.string().nullish(),
-  locationId: z.number().int(),
+  locationId: z.string(),
   cardNumber: z.string(),
   isAllowed: z.boolean(),
+  memberShipType: z.number().int(),
+  email: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })

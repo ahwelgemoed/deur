@@ -3,15 +3,20 @@
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "dev": "tsc -w",
+    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "test": "jest"
+  },
   "dependencies": {
     "@deur/tsconfig": "*",
     "typescript": "latest",
     "tsup": "^5.11.13",
     "zod": "^3.20.2"
-  },
-  "scripts": {
-    "dev": "ts-node src/index.ts",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "build": "tsc"
   }
 }

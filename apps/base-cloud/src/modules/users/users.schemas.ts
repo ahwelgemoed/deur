@@ -3,10 +3,10 @@ import { buildJsonSchemas } from 'fastify-zod';
 import { z } from 'zod';
 
 export const usersByLocationHeader = z.object({
-  'x-location': z.number(),
+  'x-location': z.string(),
 });
 export const usersByCountryHeader = z.object({
-  'x-country': z.number(),
+  'x-country': z.string(),
 });
 
 export const cleanUserSchema = UserCloudModel.omit({

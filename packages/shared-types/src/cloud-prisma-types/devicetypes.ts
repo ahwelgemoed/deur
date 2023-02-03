@@ -2,7 +2,7 @@ import * as z from "zod"
 import { CompleteDevices, RelatedDevicesCloudModel } from "./index"
 
 export const DeviceTypesCloudModel = z.object({
-  id: z.number().int(),
+  id: z.string(),
   name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),

@@ -4,7 +4,7 @@ import { prisma } from '../../server';
 
 export async function getLocationsByCountry(request: FastifyRequest, reply: FastifyReply) {
   try {
-    const { countryId } = request.params as { countryId: number };
+    const { countryId } = request.params as { countryId: string };
     // Move to DTO
     const allLocationsByCountry = await prisma.location.findMany({
       where: {

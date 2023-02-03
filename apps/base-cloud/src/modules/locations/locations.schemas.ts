@@ -8,7 +8,7 @@ export const cleanLocationSchema = LocationCloudModel.omit({
 });
 
 export const getAllLocationsParams = z.object({
-  countryId: z.number(),
+  countryId: z.string(),
 });
 
 export const getAllLocationsResponse = z.array(cleanLocationSchema);

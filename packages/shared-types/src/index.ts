@@ -48,3 +48,8 @@ export const CleanUserSchema = UserCloudModel.omit({
 });
 
 export interface ICleanUserSchema extends z.infer<typeof CleanUserSchema> {}
+
+export const cloudHeaders = z.object({
+  'x-country': z.string(),
+  'x-location': z.string(),
+});

@@ -4,10 +4,9 @@ import { prisma } from '../../server';
 
 export async function getUsersByLocation(request: FastifyRequest, reply: FastifyReply) {
   const headers = request.headers;
-  const location = headers['x-location'] as string;
-  const locationId = parseInt(location, 10);
+  const locationId = headers['x-location'] as string;
 
-  if (isNaN(locationId)) {
+  if (!locationId) {
     throw new Error('Invalid location');
   }
   try {
@@ -25,10 +24,9 @@ export async function getUsersByLocation(request: FastifyRequest, reply: Fastify
 }
 export async function getUsersByCountry(request: FastifyRequest, reply: FastifyReply) {
   const headers = request.headers;
-  const country = headers['x-country'] as string;
-  const countryId = parseInt(country, 10);
+  const countryId = headers['x-country'] as string;
 
-  if (isNaN(countryId)) {
+  if (!countryId) {
     throw new Error('Invalid Country');
   }
   try {

@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Country" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "code" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -9,13 +9,14 @@ CREATE TABLE "Country" (
 
 -- CreateTable
 CREATE TABLE "User" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "email" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "birthDay" DATETIME NOT NULL,
     "name" TEXT,
-    "locationId" INTEGER NOT NULL,
+    "locationId" TEXT NOT NULL,
     "cardNumber" TEXT NOT NULL,
     "isAllowed" BOOLEAN NOT NULL DEFAULT false,
+    "memberShipType" INTEGER NOT NULL,
+    "email" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "User_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -23,9 +24,9 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "VisitsToLocation" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userId" INTEGER NOT NULL,
-    "locationId" INTEGER NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "locationId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "VisitsToLocation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -34,11 +35,11 @@ CREATE TABLE "VisitsToLocation" (
 
 -- CreateTable
 CREATE TABLE "Location" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "lat" TEXT NOT NULL,
     "long" TEXT NOT NULL,
-    "countryId" INTEGER NOT NULL,
+    "countryId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "Location_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "Country" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -46,11 +47,11 @@ CREATE TABLE "Location" (
 
 -- CreateTable
 CREATE TABLE "Devices" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "deviceId" TEXT NOT NULL,
-    "locationId" INTEGER NOT NULL,
-    "deviceTypeId" INTEGER NOT NULL,
+    "locationId" TEXT NOT NULL,
+    "deviceTypeId" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "Devices_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -59,7 +60,7 @@ CREATE TABLE "Devices" (
 
 -- CreateTable
 CREATE TABLE "DeviceTypes" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL

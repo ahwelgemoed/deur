@@ -1,7 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "./generated"
-  binaryTargets = ["linux-musl-openssl-3.0.x","darwin-arm64"]
+  provider      = "prisma-client-js"
+  output        = "./generated"
+  binaryTargets = ["linux-musl-openssl-3.0.x", "darwin-arm64"]
 }
 
 generator zod {
@@ -16,7 +16,7 @@ datasource db {
 }
 
 model Country {
-  id        Int        @id @default(autoincrement())
+  id        String     @id @default(uuid())
   name      String
   code      String
   locations Location[]
@@ -25,57 +25,58 @@ model Country {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  email      String
-  birthDay   DateTime
-  name       String?
-  locationId Int
-  cardNumber String   @unique
-  isAllowed  Boolean  @default(false)
-  location   Location @relation(fields: [locationId], references: [id])
-  visits     VisitsToLocation[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id             String             @id @default(uuid())
+  birthDay       DateTime
+  name           String?
+  locationId     String
+  cardNumber     String             @unique
+  isAllowed      Boolean            @default(false)
+  memberShipType Int
+  email          String
+  location       Location           @relation(fields: [locationId], references: [id])
+  visits         VisitsToLocation[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 }
 
 model VisitsToLocation {
-  id         Int      @id @default(autoincrement())
-  userId     Int
+  id         String   @id @default(uuid())
+  userId     String
   user       User     @relation(fields: [userId], references: [id])
-  locationId Int
+  locationId String
   location   Location @relation(fields: [locationId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 
 model Location {
-  id        Int       @id @default(autoincrement())
+  id        String             @id @default(uuid())
   name      String
   users     User[]
   devices   Devices[]
-  lat String
-  long String
-  countryId Int
-  country   Country   @relation(fields: [countryId], references: [id])
+  lat       String
+  long      String
+  countryId String
+  country   Country            @relation(fields: [countryId], references: [id])
   visits    VisitsToLocation[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 }
 
 model Devices {
-  id           Int         @id @default(autoincrement())
+  id           String      @id @default(uuid())
   name         String
   deviceId     String
-  locationId   Int
+  locationId   String
   location     Location    @relation(fields: [locationId], references: [id])
   deviceType   DeviceTypes @relation(fields: [deviceTypeId], references: [id])
-  deviceTypeId Int
+  deviceTypeId String
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 }
 
 model DeviceTypes {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(uuid())
   name      String
   devices   Devices[]
   createdAt DateTime  @default(now())

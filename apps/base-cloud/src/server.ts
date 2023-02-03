@@ -12,6 +12,8 @@ import locationRoutes from './modules/locations/locations.route';
 import { locationSchemas } from './modules/locations/locations.schemas';
 import userRoutes from './modules/users/users.route';
 import { userSchemas } from './modules/users/users.schemas';
+import visitRoutes from './modules/visits/visits.route';
+import { visitSchemas } from './modules/visits/visits.schemas';
 
 const pjson = require('../package.json');
 
@@ -28,7 +30,13 @@ export function bootstrap(): FastifyInstance {
   });
 
   // Add all schemas to the server
-  for (const schema of [...countrySchemas, ...deviceSchemas, ...userSchemas, ...locationSchemas]) {
+  for (const schema of [
+    ...countrySchemas,
+    ...deviceSchemas,
+    ...userSchemas,
+    ...locationSchemas,
+    ...visitSchemas,
+  ]) {
     server.addSchema(schema);
   }
 
@@ -52,15 +60,15 @@ export function bootstrap(): FastifyInstance {
   });
 
   // Register all routes
-  server.get('/healthcheck', async (request, reply) => {
+  server.get('/healthcheck', async () => {
     return { status: 'OK', version: pjson.version, uptime: process.uptime() };
   });
 
   server.register(locationRoutes, { prefix: '/v1/location' });
   server.register(userRoutes, { prefix: '/v1/user' });
-
   server.register(countryRoutes, { prefix: '/v1/country' });
   server.register(deviceRoutes, { prefix: '/v1/device' });
+  server.register(visitRoutes, { prefix: '/v1/visit' });
 
   return server;
 }

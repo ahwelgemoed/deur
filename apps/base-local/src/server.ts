@@ -1,6 +1,8 @@
 import Fastify, { FastifyInstance } from 'fastify';
+import { FastifyAdapter, createBullBoard, BullMQAdapter } from '@bull-board/fastify';
+import { Queue, Worker } from 'bullmq';
 import FastifySwagger from '@fastify/swagger';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { withRefResolver } from 'fastify-zod';
 import gateRoutes from './modules/gate/gate.route';
 import { gateLocalSchemas } from './modules/gate/gate.schema';
@@ -11,19 +13,43 @@ import cron from 'node-cron';
 const pjson = require('../package.json');
 
 export const REDIS_KEY = 'clubUsers';
+export const LOG_GATE_USER = 'Log_Gate_User';
 
-export const redisClient = new Redis({ host: 'localhost', port: 6379 });
+export const redisOptions = {
+  port: 6379,
+  host: 'localhost',
+};
 
-// Get away from RootDir in TSConfig
+export const redisClient = new Redis({ ...redisOptions });
+
+export const logGateUserQueue = new Queue(LOG_GATE_USER, {
+  connection: redisOptions,
+  defaultJobOptions: {
+    attempts: 5,
+    backoff: {
+      type: 'exponential',
+      delay: 1000 * 10,
+    },
+  },
+});
+
 export function bootstrap(): FastifyInstance {
   const server = Fastify();
+  const serverAdapter = new FastifyAdapter();
+
+  createBullBoard({
+    queues: [new BullMQAdapter(logGateUserQueue)],
+    serverAdapter,
+  });
+
   axios.defaults.headers.common = {
     'x-location': process.env.LOCATION_ID,
+    'x-country': process.env.COUNTRY_ID,
   };
 
   server.register(require('@fastify/redis'), { client: redisClient });
 
-  server.get('/healthcheck', async (request, reply) => {
+  server.get('/healthcheck', async () => {
     return { status: 'OK', version: pjson.version, uptime: process.uptime() };
   });
 
@@ -50,7 +76,9 @@ export function bootstrap(): FastifyInstance {
   server.register(require('@fastify/swagger-ui'), {
     routePrefix: '/swagger',
   });
-
+  serverAdapter.setBasePath('/ui');
+  // @ts-ignore
+  server.register(serverAdapter.registerPlugin(), { prefix: '/ui' });
   // Register all routes
   server.register(gateRoutes, { prefix: '/gate' });
 
@@ -105,3 +133,38 @@ async function reWriteAof() {
   if (!info.includes('aof_rewrite_in_progress:1')) {
   }
 }
+
+const worker = new Worker(
+  LOG_GATE_USER,
+  async (job) => {
+    if (job.name === 'USER_IS_ALLOWED') {
+      const url = `${process.env.BASE_CLOUD_URL}/v1/visit/log-visit`;
+      try {
+        await axios.post(url, { cardNumber: job.data.user.cardNumber });
+      } catch (err: unknown) {
+        if (isAxiosError(err)) {
+          console.log('🦀', err.response?.data);
+        }
+        throw new Error("Can't log visit");
+      }
+    }
+  },
+  {
+    limiter: {
+      max: 2, // We Limit the number of jobs that can be processed at the same time
+      duration: 5000,
+    },
+  }
+);
+
+worker.on('completed', (job) => {
+  console.log(`${job.id} has completed!`);
+});
+
+worker.on('failed', (job, err) => {
+  console.log(`${job?.id} has failed with ${err.message}`);
+});
+
+worker.on('drained', () => {
+  // console.log('🦀 All jobs have been processed');
+});

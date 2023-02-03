@@ -2,7 +2,7 @@ import * as z from "zod"
 import { CompleteLocation, RelatedLocationCloudModel } from "./index"
 
 export const CountryCloudModel = z.object({
-  id: z.number().int(),
+  id: z.string(),
   name: z.string(),
   code: z.string(),
   createdAt: z.date(),

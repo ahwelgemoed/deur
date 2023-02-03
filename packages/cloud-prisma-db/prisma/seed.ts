@@ -50,6 +50,10 @@ async function main() {
       for (let i = 0; i < 100; i++) {
         await prisma.user.create({
           data: {
+            memberShipType: faker.datatype.number({
+              min: 1,
+              max: 3,
+            }),
             cardNumber: faker.datatype.uuid(),
             name: faker.name.firstName(),
             birthDay: faker.date.past(),

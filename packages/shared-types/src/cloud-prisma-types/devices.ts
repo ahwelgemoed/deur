@@ -2,11 +2,11 @@ import * as z from "zod"
 import { CompleteLocation, RelatedLocationCloudModel, CompleteDeviceTypes, RelatedDeviceTypesCloudModel } from "./index"
 
 export const DevicesCloudModel = z.object({
-  id: z.number().int(),
+  id: z.string(),
   name: z.string(),
   deviceId: z.string(),
-  locationId: z.number().int(),
-  deviceTypeId: z.number().int(),
+  locationId: z.string(),
+  deviceTypeId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })
