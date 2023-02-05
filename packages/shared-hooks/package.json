@@ -20,6 +20,7 @@
   "dependencies": {
     "paho-mqtt": "^1.1.0",
     "react": "^18.1.0",
-    "react-native": "^0.70.3"
+    "react-native": "^0.70.3",
+    "zustand": "^4.3.2"
   }
 }

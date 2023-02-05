@@ -10,6 +10,8 @@ import deviceRoutes from './modules/devices/devices.route';
 import { deviceSchemas } from './modules/devices/devices.schemas';
 import locationRoutes from './modules/locations/locations.route';
 import { locationSchemas } from './modules/locations/locations.schemas';
+import subscriptionRoutes from './modules/subscriptions/subscriptions.route';
+import { subscriptionSchemas } from './modules/subscriptions/subscriptions.schemas';
 import userRoutes from './modules/users/users.route';
 import { userSchemas } from './modules/users/users.schemas';
 import visitRoutes from './modules/visits/visits.route';
@@ -31,11 +33,12 @@ export function bootstrap(): FastifyInstance {
 
   // Add all schemas to the server
   for (const schema of [
-    ...countrySchemas,
-    ...deviceSchemas,
     ...userSchemas,
-    ...locationSchemas,
     ...visitSchemas,
+    ...deviceSchemas,
+    ...countrySchemas,
+    ...locationSchemas,
+    ...subscriptionSchemas,
   ]) {
     server.addSchema(schema);
   }
@@ -69,6 +72,7 @@ export function bootstrap(): FastifyInstance {
   server.register(countryRoutes, { prefix: '/v1/country' });
   server.register(deviceRoutes, { prefix: '/v1/device' });
   server.register(visitRoutes, { prefix: '/v1/visit' });
+  server.register(subscriptionRoutes, { prefix: '/v1/subscription' });
 
   return server;
 }

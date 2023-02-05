@@ -1,19 +1,14 @@
 /** @type {import('next').NextConfig} */
-
-module.exports = {
-  i18n: {
-    locales: ['en', 'nl'],
-    defaultLocale: 'en',
+const nextConfig = {
+  experimental: {
+    appDir: true,
   },
-  reactStrictMode: true,
-  swcMinify: false,
   webpack: (config) => {
-    // Set the alias from `react-native` to `react-native-web`
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
+      // Transform all direct `react-native` imports to `react-native-web`
       'react-native$': 'react-native-web',
     };
-    // Add custom `.web.{jsx?,tsx?}` extension resolver
     config.resolve.extensions = [
       '.web.js',
       '.web.jsx',
@@ -24,7 +19,6 @@ module.exports = {
     return config;
   },
   transpilePackages: ['@deur/design-system', 'nativewind'],
-  experimental: {
-    appDir: true,
-  },
 };
+
+module.exports = nextConfig;

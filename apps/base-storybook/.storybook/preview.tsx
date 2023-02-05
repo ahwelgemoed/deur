@@ -47,6 +47,12 @@ export const decorators = [
 ];
 
 export const parameters = {
+  darkMode: {
+    stylePreview: true,
+    darkClass: 'dark',
+    lightClass: 'light',
+  },
+
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     matchers: {
@@ -74,7 +80,5 @@ export const parameters = {
 };
 
 export const globalTypes = {
-  themes: {
-    defaultValue: ['light', 'dark'],
-  },
+  themes: {},
 };

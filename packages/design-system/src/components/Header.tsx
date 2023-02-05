@@ -10,7 +10,10 @@ interface HeaderProps {
 export const Header = ({ children, classNames }: HeaderProps) => {
   return (
     <View testID="header_view">
-      <Text className={`text-[90px] font-body ${classNames} bg-red-200`} testID="header_text">
+      <Text
+        className={`text-[90px] font-body bg-red-900 dark:bg-blue-500 ${classNames}`}
+        testID="header_text"
+      >
         {children}
       </Text>
     </View>

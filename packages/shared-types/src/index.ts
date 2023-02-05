@@ -53,3 +53,11 @@ export const cloudHeaders = z.object({
   'x-country': z.string(),
   'x-location': z.string(),
 });
+
+export type TDeviceSetupData = {
+  deviceId: string;
+  deviceTypeId: number;
+  countryId: string;
+  locationId: string;
+  friendlyName: string;
+};

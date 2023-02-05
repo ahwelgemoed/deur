@@ -1,4 +1,3 @@
-import { HomeIcon, Header } from '@deur/design-system';
 import { useNavigation } from 'expo-router';
 import React from 'react';
 import { View, Text, KeyboardAvoidingView } from 'react-native';

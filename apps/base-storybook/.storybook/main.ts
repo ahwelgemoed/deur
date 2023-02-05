@@ -5,8 +5,10 @@ const config = {
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    'storybook-addon-theme-changer',
-    'storybook-addon-themes',
+    '@storybook/addon-controls',
+    '@storybook/addon-viewport',
+    '@storybook/addon-outline',
+    'storybook-tailwind-dark-mode',
     {
       name: '@storybook/addon-react-native-web',
       options: {
