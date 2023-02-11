@@ -1,6 +1,5 @@
+import { useDeviceState } from '@deur/shared-hooks';
 import axios from 'axios';
-
-import { useDeviceSetupState } from '../contexts/SetupDevice.Context';
 
 const BASE_URL = 'http://localhost:3030/v1';
 
@@ -10,11 +9,11 @@ const authApi = axios.create({
 });
 
 const AxiosInstance = ({ children }: { children: JSX.Element }) => {
-  const { deviceDetails } = useDeviceSetupState();
-  console.log('deviceDetails', deviceDetails);
+  const device = useDeviceState();
+  const deviceState = device.getState();
   authApi.defaults.headers.common['Content-Type'] = 'application/json';
-  authApi.defaults.headers.common['x-location'] = deviceDetails?.locationId;
-  authApi.defaults.headers.common['x-device-call'] = deviceDetails?.deviceId;
+  authApi.defaults.headers.common['x-location'] = deviceState?.locationId;
+  authApi.defaults.headers.common['x-device-call'] = deviceState?.deviceId;
   return children;
 };
 

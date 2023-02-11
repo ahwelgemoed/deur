@@ -1,5 +1,3 @@
-import { HomeIcon } from '@deur/design-system';
-
 import { useRouter } from 'expo-router';
 import { View, Text, Pressable } from 'react-native';
 
@@ -38,7 +36,6 @@ export default function IdlePage() {
           <Text className="text-[#DDDDE1] font-display text-[40px]">
             Press to Interact
             <View className="flex flex-row gap-2">
-              <HomeIcon />
               <View className="bg-[#73EFFC] w-10 h-10 rounded-full"></View>
               <View className="bg-[#701BDC] w-10 h-10 rounded-full"></View>
               <View className="bg-[#F5C045] w-10 h-10 rounded-full"></View>

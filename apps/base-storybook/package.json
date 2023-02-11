@@ -34,6 +34,7 @@
     "eslint-plugin-storybook": "^0.6.4",
     "postcss": "^8.4.16",
     "postcss-loader": "^7.0.1",
+    "storybook-addon-manual-mocks": "^0.0.6",
     "storybook-addon-theme-changer": "^0.1.2",
     "storybook-tailwind-dark-mode": "^1.0.15",
     "tailwindcss": "^3.1.8",

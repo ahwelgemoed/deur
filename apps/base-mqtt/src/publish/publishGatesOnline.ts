@@ -3,6 +3,7 @@ import { gates } from '../gates';
 import { mqttClient } from '../set-up-server';
 
 export const publishGates = async () => {
+  console.log('gates.getGates()', gates.getGates());
   mqttClient.publish(
     {
       cmd: 'publish',

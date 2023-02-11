@@ -9,6 +9,7 @@ const config = {
     '@storybook/addon-viewport',
     '@storybook/addon-outline',
     'storybook-tailwind-dark-mode',
+    'storybook-addon-manual-mocks',
     {
       name: '@storybook/addon-react-native-web',
       options: {

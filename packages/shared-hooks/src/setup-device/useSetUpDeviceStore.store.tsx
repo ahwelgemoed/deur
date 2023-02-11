@@ -1,16 +1,32 @@
 import { createStore } from 'zustand';
-import { useRouter } from 'next/router';
+import { MMKV } from 'react-native-mmkv';
 import React, { useEffect } from 'react';
-import { persist } from 'zustand/middleware';
+import { persist, StateStorage } from 'zustand/middleware';
 import { createContext, useContext } from 'react';
 
-interface DeviceSetupData {
+export interface DeviceSetupData {
   deviceId: string;
   deviceTypeId: number;
   countryId: string;
   locationId: string;
   friendlyName: string;
 }
+
+const storage = new MMKV();
+const zustandStorage: StateStorage = {
+  setItem: (name, value) => {
+    console.log('setItem', name, value);
+    return storage.set(name, value);
+  },
+  getItem: (name) => {
+    console.log('getItem', name);
+    const value = storage.getString(name);
+    return value ?? null;
+  },
+  removeItem: (name) => {
+    return storage.delete(name);
+  },
+};
 
 export const useSetUpDeviceStore = createStore<DeviceSetupData>()(
   persist(
@@ -22,32 +38,43 @@ export const useSetUpDeviceStore = createStore<DeviceSetupData>()(
       friendlyName: '',
     }),
     {
-      name: 'device-setup-data',
+      name: 'device-setup-dv',
+      getStorage: () => zustandStorage,
     }
   )
 );
 
 const StoreContext = createContext(useSetUpDeviceStore);
 
-export const DeviceStateProvider = ({ children }: { children: React.ReactNode }) => {
-  // const router = useRouter();
+export const DeviceStateProvider = ({
+  children,
+  useRouter,
+  setupUrl,
+}: {
+  children: React.ReactNode;
+  // TODO: Fix this type
+  useRouter: any;
+  setupUrl: string;
+}) => {
+  const router = useRouter();
   useEffect(() => {
     const { deviceId, countryId, locationId } = useSetUpDeviceStore.getState();
-
     if (!countryId || !locationId || !deviceId) {
-      // Push to setup device page
-      // router.push('/setup-device');
+      console.log('🚀 --- NO DEVICE  FOUND --- 🚀');
+      router.push(setupUrl);
     }
 
     const deviceStoreSub = useSetUpDeviceStore.subscribe((state, prevState) => {
       console.log('🚀 --- DEVICE STATE --- 🚀');
-      console.log('state', state);
+      if (state.countryId && state.locationId && state.deviceId) {
+        router.push('/');
+      }
     });
 
     return () => {
       deviceStoreSub();
     };
-  }, []);
+  }, [useSetUpDeviceStore]);
 
   return <StoreContext.Provider value={useSetUpDeviceStore}>{children}</StoreContext.Provider>;
 };

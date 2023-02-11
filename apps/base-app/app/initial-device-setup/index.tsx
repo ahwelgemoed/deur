@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDeviceState, DeviceSetupData } from '@deur/shared-hooks';
 import { Picker } from '@react-native-picker/picker';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
@@ -6,26 +6,18 @@ import { Text, ScrollView, ActivityIndicator, TextInput, View, Button } from 're
 import { v4 as uuidv4 } from 'uuid';
 
 import MainLayout from '../../src/components/MainLayout';
-import {
-  DEVICE_STORAGE_ID,
-  TDeviceSetupData,
-  useDeviceSetupState,
-} from '../../src/contexts/SetupDevice.Context';
 import { createDevice } from '../../src/utils/mutations/device-mutations';
 import { getAllCountries } from '../../src/utils/queries/country-queries';
 import { getAllDeviceTypes } from '../../src/utils/queries/device-queries';
 import { getLocationByCountry } from '../../src/utils/queries/location-queries';
 
 const InitialSetup = () => {
-  const [device, setDevice] = useState<TDeviceSetupData>({
+  const deviceState = useDeviceState();
+  const [device, setDevice] = useState<DeviceSetupData>({
     deviceId: uuidv4(),
     deviceTypeId: 0,
     countryId: '',
     locationId: '',
-    gps: {
-      lat: 0,
-      long: 0,
-    },
     friendlyName: '',
   });
 
@@ -37,12 +29,10 @@ const InitialSetup = () => {
 
   useEffect(() => {
     if (mutation?.data) {
-      AsyncStorage.setItem(DEVICE_STORAGE_ID, JSON.stringify(mutation.data));
-      getDeviceSetupData();
+      deviceState.setState({ ...device, ...mutation.data });
     }
   }, [mutation.data]);
 
-  const { getDeviceSetupData } = useDeviceSetupState();
   const { data: deviceTypes, isLoading: deviceTypesLoading } = useQuery({
     queryKey: ['getDeviceTypes'],
     queryFn: () => {

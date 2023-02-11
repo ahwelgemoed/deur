@@ -24,7 +24,4 @@ module.exports = {
     return config;
   },
   transpilePackages: ['@deur/design-system', 'nativewind'],
-  experimental: {
-    appDir: true,
-  },
 };

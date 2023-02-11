@@ -5,3 +5,5 @@ export {
   useSetUpDeviceStore,
   DeviceStateProvider,
 } from './setup-device/useSetUpDeviceStore.store';
+
+export type { DeviceSetupData } from './setup-device/useSetUpDeviceStore.store';

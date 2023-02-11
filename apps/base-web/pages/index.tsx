@@ -10,7 +10,7 @@ export default function Web() {
         Light Mode
       </button>
       <button onClick={() => setTheme('dark')}>Dark Mode</button>
-      <Header classNames="">Welcome to @deur</Header>
+      <Header classNames="">Welcome to @deur Web App</Header>
       <Link href={'/setup-device'}>setup-device</Link>
     </div>
   );
