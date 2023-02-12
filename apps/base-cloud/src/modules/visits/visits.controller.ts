@@ -14,13 +14,11 @@ export async function logUserVisit(request: FastifyRequest, reply: FastifyReply)
     //     id: locationId,
     //   },
     // });
-    console.log('cardNumber', cardNumber);
     const user = await prisma.user.findUnique({
       where: {
         cardNumber: cardNumber.trim(),
       },
     });
-    console.log('user', user, locationId);
     if (!user) {
       throw new Error('User not found');
     }

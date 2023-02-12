@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 
-import { getLocationsByCountry } from './locations.controller';
+import { getLocations, getLocationsByCountry } from './locations.controller';
 import { $ref } from './locations.schemas';
 
 async function locationRoutes(server: FastifyInstance) {
@@ -17,6 +17,20 @@ async function locationRoutes(server: FastifyInstance) {
       },
     },
     getLocationsByCountry
+  );
+  server.get(
+    '/all-locations',
+    {
+      schema: {
+        headers: $ref('usersByLocationHeader'),
+        description: 'Get all locations',
+        tags: ['Location'],
+        response: {
+          200: $ref('getAllLocationsResponse'),
+        },
+      },
+    },
+    getLocations
   );
 }
 

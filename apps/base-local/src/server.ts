@@ -84,6 +84,8 @@ export function bootstrap(): FastifyInstance {
 
   cacheData();
 
+  getAllLocations();
+
   cron.schedule('*/30 * * * * *', async function () {
     console.log('🦀 Cron Job is running every 30 seconds');
     cacheData();
@@ -128,7 +130,7 @@ async function cacheData() {
     console.log('cacheData error', error);
   }
 }
-
+// Write REDIS to AOF file
 async function reWriteAof() {
   const info = await redisClient.info();
   await redisClient.save();
@@ -177,3 +179,15 @@ worker.on('failed', (job, err) => {
 worker.on('drained', () => {
   console.log('🦀 All jobs have been processed');
 });
+
+// WE use this to get the latest Locations from the Cloud
+const getAllLocations = async () => {
+  const url = `${process.env.BASE_CLOUD_URL}/v1/location/all-locations`;
+  try {
+    const response = await axios.get(url);
+    const data = await response.data;
+    await redisClient.set(RedisKeys.ALL_LOCATIONS, JSON.stringify(data));
+  } catch (error) {
+    console.log('getAllLocations error', error);
+  }
+};

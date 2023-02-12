@@ -11,7 +11,16 @@ export async function getLocationsByCountry(request: FastifyRequest, reply: Fast
         countryId,
       },
     });
-    // const allCountries = await prisma.country.findMany();
+    return reply.code(200).send(allLocationsByCountry);
+  } catch (err) {
+    request.log.error(err);
+    return reply.code(500).send({ status: 'ERROR' });
+  }
+}
+export async function getLocations(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    // Move to DTO
+    const allLocationsByCountry = await prisma.location.findMany();
     return reply.code(200).send(allLocationsByCountry);
   } catch (err) {
     request.log.error(err);
