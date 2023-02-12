@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CompleteUser, UserCloudModel } from './cloud-prisma-types';
+import { CompleteUser, CompleteVisitsToLocation, UserCloudModel } from './cloud-prisma-types';
 
 export * from './cloud-prisma-types';
 
@@ -34,6 +34,10 @@ export enum EReasons {
   USER_NOT_HOME_NOT_ALLOWED = 'USER_NOT_HOME_NOT_ALLOWED',
   USER_HOME_NOT_ALLOWED = 'USER_HOME_NOT_ALLOWED',
 }
+
+export enum MQMessageTypes {
+  USER_IS_ALLOWED = 'USER_IS_ALLOWED',
+}
 type LimitedUser = Pick<CompleteUser, 'id' | 'name' | 'isAllowed'>;
 
 export type GateUserResponse = {
@@ -47,7 +51,9 @@ export const CleanUserSchema = UserCloudModel.omit({
   updatedAt: true,
 });
 
-export interface ICleanUserSchema extends z.infer<typeof CleanUserSchema> {}
+export interface ICleanUserSchema extends z.infer<typeof CleanUserSchema> {
+  visits: CompleteVisitsToLocation[];
+}
 
 export const cloudHeaders = z.object({
   'x-country': z.string(),

@@ -54,6 +54,7 @@ const CreateNewUser = () => {
 
   return (
     <MainLayout
+      bgColor="#FFBD12"
       showBackButton
       headerMainText="Create New User"
       headerSubText=""

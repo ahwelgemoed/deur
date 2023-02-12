@@ -15,6 +15,14 @@ export async function getUsersByLocation(request: FastifyRequest, reply: Fastify
       where: {
         locationId,
       },
+      include: {
+        visits: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 1,
+        },
+      },
     });
     return reply.code(200).send(allUsersAtLocation);
   } catch (err) {

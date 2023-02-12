@@ -6,7 +6,7 @@ import axios, { isAxiosError } from 'axios';
 import { withRefResolver } from 'fastify-zod';
 import gateRoutes from './modules/gate/gate.route';
 import { gateLocalSchemas } from './modules/gate/gate.schema';
-import { RedisKeys, ICleanUserSchema } from '@deur/shared-types';
+import { RedisKeys, ICleanUserSchema, MQMessageTypes } from '@deur/shared-types';
 import Redis from 'ioredis';
 import cron from 'node-cron';
 
@@ -121,6 +121,8 @@ async function cacheData() {
     if (data) {
       await redisClient.set(RedisKeys.LocalBaseUsers, JSON.stringify(data));
       await reWriteAof();
+      // We Clear the Just Signed In Users once we have the newest User data from the Cloud
+      await redisClient.del(RedisKeys.JUST_SIGNED_IN);
     }
   } catch (error) {
     console.log('cacheData error', error);
@@ -134,12 +136,19 @@ async function reWriteAof() {
   }
 }
 
+const setJustSignedInUser = async (user: ICleanUserSchema) => {
+  const data = await redisClient.get(RedisKeys.JUST_SIGNED_IN);
+  const parsedData = (JSON.parse(data as string) as ICleanUserSchema[]) || [];
+  await redisClient.set(RedisKeys.JUST_SIGNED_IN, JSON.stringify([...parsedData, user]));
+};
+
 const worker = new Worker(
   LOG_GATE_USER,
   async (job) => {
-    if (job.name === 'USER_IS_ALLOWED') {
+    if (job.name === MQMessageTypes.USER_IS_ALLOWED) {
       const url = `${process.env.BASE_CLOUD_URL}/v1/visit/log-visit`;
       try {
+        setJustSignedInUser(job.data.user);
         await axios.post(url, { cardNumber: job.data.user.cardNumber });
       } catch (err: unknown) {
         if (isAxiosError(err)) {
@@ -166,5 +175,5 @@ worker.on('failed', (job, err) => {
 });
 
 worker.on('drained', () => {
-  // console.log('🦀 All jobs have been processed');
+  console.log('🦀 All jobs have been processed');
 });

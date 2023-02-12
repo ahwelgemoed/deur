@@ -7,4 +7,5 @@ export enum RedisKeys {
   AllUsers = 'all-users',
   UsersInLocation = 'users-in-location',
   LocalBaseUsers = 'local-base-users',
+  JUST_SIGNED_IN = 'just-signed-in',
 }
