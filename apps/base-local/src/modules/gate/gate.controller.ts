@@ -3,6 +3,7 @@ import {
   ICleanUserSchema,
   LocationCloudModel,
   MQMessageTypes,
+  ReasonForVisit,
   RedisKeys,
 } from '@deur/shared-types';
 import { FastifyRequest, FastifyReply } from 'fastify';
@@ -17,13 +18,15 @@ export async function userAllowedCheck(
   }>,
   reply: FastifyReply
 ) {
+  const requestId = request.id;
   try {
     try {
+      // Random UUID for this request
       const body = request.body;
       const userInJustSignedInCache = await findUserInJustSignedInCache(body.cardNumber);
       if (userInJustSignedInCache) {
         // User Signed In recently
-        return reply.code(200).send({ isAllowed: false });
+        return reply.code(200).send({ isAllowed: false, requestId });
       }
       const data = await redisClient.get(RedisKeys.LocalBaseUsers);
       const users = JSON.parse(data as string) as ICleanUserSchema[] | undefined;
@@ -31,11 +34,13 @@ export async function userAllowedCheck(
       if (users && users.length > 0) {
         const user = users.find((user) => user.cardNumber === body.cardNumber);
         if (!user) {
-          return reply.code(200).send({ isAllowed: false });
+          addNotAllowedUserToCache(requestId, ReasonForVisit.NOT_USER, user);
+          return reply.code(200).send({ isAllowed: false, requestId });
         }
         const distanceCheck = await allowBasedOnLastSignedInLocation(user?.visits[0]);
         if (!distanceCheck) {
-          return reply.code(200).send({ isAllowed: false });
+          addNotAllowedUserToCache(requestId, ReasonForVisit.NOT_FEASIBLE, user);
+          return reply.code(200).send({ isAllowed: false, requestId });
         }
 
         if (user?.isAllowed) {
@@ -50,16 +55,17 @@ export async function userAllowedCheck(
               },
             }
           );
-          return reply.code(200).send({ isAllowed: true });
+          return reply.code(200).send({ isAllowed: true, requestId });
         }
-        if (user?.isAllowed || !user) {
+        if (!user?.isAllowed) {
           // WE SHOULD RE-CALL CLOUD API And make sure that the user is not allowed
-          return reply.code(200).send({ isAllowed: false });
+          addNotAllowedUserToCache(requestId, ReasonForVisit.NO_PAYMENT, user);
+          return reply.code(200).send({ isAllowed: false, reason: ReasonForVisit.NO_PAYMENT });
         }
       }
-      return reply.code(200).send({ isAllowed: false });
+      return reply.code(200).send({ isAllowed: false, requestId });
     } catch (error) {
-      return reply.code(200).send({ isAllowed: false });
+      return reply.code(200).send({ isAllowed: false, requestId });
     }
   } catch (error) {
     return reply.code(500).send({ status: 'ERROR' });
@@ -101,4 +107,17 @@ const allowBasedOnLastSignedInLocation = async (lastVisit: CompleteVisitsToLocat
     };
     return isFeasibleVisit(userLocationGPS, currentLocationGPS, lastVisit.createdAt);
   }
+};
+
+const addNotAllowedUserToCache = (
+  id: string,
+  reason: ReasonForVisit,
+  user: ICleanUserSchema | undefined
+) => {
+  const data = {
+    ...user,
+    errorId: id,
+    reason,
+  };
+  redisClient.set(id, JSON.stringify(data), 'ex', 10);
 };

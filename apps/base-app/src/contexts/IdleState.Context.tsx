@@ -27,7 +27,7 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
   };
 
   const [active, setActive] = useState(true);
-
+  console.log('active', active);
   useEffect(() => {
     if (active) {
       // GO TO HOME PAGE
@@ -45,8 +45,8 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
     <IdleContext.Provider value={{ isActive: active, setToInactive, setToActive }}>
       <UserInactivity
         isActive={active}
-        // timeForInactivity={pathName === '/' ? 5000 : 10_0000}
-        timeForInactivity={idleTime.current}
+        timeForInactivity={pathName === '/' ? 5000 : 10_0000}
+        // timeForInactivity={idleTime.current}
         onAction={(isActive: boolean) => {
           if (!isActive) {
             setActive(isActive);

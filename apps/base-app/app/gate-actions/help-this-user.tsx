@@ -8,25 +8,28 @@ import { getUserToHelpThem } from '../../src/utils/queries/gate-queries';
 
 const HelpThisUser = () => {
   const params = useSearchParams();
-  const { data, isLoading } = useQuery({
-    queryKey: ['getUserToHelp'],
-    queryFn: () => {
-      const restDAta = getUserToHelpThem(params.id);
-      return restDAta;
-    },
-  });
+  console.log('params', params.requestId);
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ['getUserToHelp'],
+  //   queryFn: () => {
+  //     const restDAta = getUserToHelpThem(params.id);
+  //     return restDAta;
+  //   },
+  // });
 
-  if (isLoading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <View>
+  //       <Text>Loading...</Text>
+  //     </View>
+  //   );
+  // }
   return (
     <MainLayout
+      bgColor="FF89BB"
       showBackButton
-      headerMainText={`Need some Help ${data.user.name}?`}
+      headerMainText="Need some Help?"
+      // headerMainText={`Need some Help ${data.user.name}?`}
       headerSubText=""
       body={
         <View className="flex w-full h-full items-center">

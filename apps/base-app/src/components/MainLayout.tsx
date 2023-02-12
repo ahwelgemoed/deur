@@ -58,7 +58,8 @@ const MainLayout = ({
       enabled
       // keyboardVerticalOffset={50}
     >
-      <View className={`bg-[${bgColor}] w-full h-full flex p-4`}>
+      <View className={`bg-[#00C6AE] w-full h-full flex p-4`}>
+        {/* <View className={`bg-[${bgColor}] w-full h-full flex p-4`}> */}
         <View className="">
           {showBackButton && (
             <Text

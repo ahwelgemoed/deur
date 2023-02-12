@@ -19,6 +19,7 @@ export default function Page() {
   return (
     <>
       <MainLayout
+        bgColor="#F95A2C"
         headerMainText="Welcome"
         body={
           <View className="w-full flex items-center flex-row h-full justify-evenly">

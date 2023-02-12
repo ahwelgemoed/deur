@@ -67,3 +67,5 @@ export type TDeviceSetupData = {
   locationId: string;
   friendlyName: string;
 };
+
+export { ReasonForVisit } from './reasonTypes';

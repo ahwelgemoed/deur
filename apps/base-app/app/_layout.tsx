@@ -16,16 +16,13 @@ import {
 } from '@expo-google-fonts/ubuntu';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Navigator, Slot, SplashScreen, useRouter } from 'expo-router';
-import AxiosInstance from '../src/api/AxiosInstance';
 
-import { HelpUserProvider } from '../src/contexts/HelpUser.Context';
+import AxiosInstance from '../src/api/AxiosInstance';
 import { IdleStateProvider } from '../src/contexts/IdleState.Context';
 
 const queryClient = new QueryClient();
 
 export default function Layout() {
-  const router = useRouter();
-
   const [fontsLoaded] = useFonts({
     Ubuntu_300Light,
     Ubuntu_300Light_Italic,
@@ -44,11 +41,9 @@ export default function Layout() {
     <QueryClientProvider client={queryClient}>
       <DeviceStateProvider useRouter={useRouter} setupUrl={'/initial-device-setup'}>
         <IdleStateProvider>
-          <HelpUserProvider>
-            <AxiosInstance>
-              <RootLayout />
-            </AxiosInstance>
-          </HelpUserProvider>
+          <AxiosInstance>
+            <RootLayout />
+          </AxiosInstance>
         </IdleStateProvider>
       </DeviceStateProvider>
     </QueryClientProvider>
