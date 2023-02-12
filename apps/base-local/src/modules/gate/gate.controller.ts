@@ -1,6 +1,14 @@
-import { ICleanUserSchema, MQMessageTypes, RedisKeys } from '@deur/shared-types';
+import {
+  CompleteVisitsToLocation,
+  ICleanUserSchema,
+  LocationCloudModel,
+  MQMessageTypes,
+  RedisKeys,
+} from '@deur/shared-types';
 import { FastifyRequest, FastifyReply } from 'fastify';
+import { z } from 'zod';
 import { logGateUserQueue, redisClient } from '../../server';
+import { GPSLocation, isFeasibleVisit } from '../../services/isFeasibleVisit';
 import { UserAllowedCheckRequest } from './gate.schema';
 
 export async function userAllowedCheck(
@@ -17,12 +25,18 @@ export async function userAllowedCheck(
         // User Signed In recently
         return reply.code(200).send({ isAllowed: false });
       }
-
       const data = await redisClient.get(RedisKeys.LocalBaseUsers);
-
       const users = JSON.parse(data as string) as ICleanUserSchema[] | undefined;
+
       if (users && users.length > 0) {
         const user = users.find((user) => user.cardNumber === body.cardNumber);
+        if (!user) {
+          return reply.code(200).send({ isAllowed: false });
+        }
+        const distanceCheck = await allowBasedOnLastSignedInLocation(user?.visits[0]);
+        if (!distanceCheck) {
+          return reply.code(200).send({ isAllowed: false });
+        }
 
         if (user?.isAllowed) {
           // Add User To Message Queue to Process it on the Cloud
@@ -51,7 +65,9 @@ export async function userAllowedCheck(
     return reply.code(500).send({ status: 'ERROR' });
   }
 }
-
+/**
+ * Find User in Just Signed In Cache
+ */
 const findUserInJustSignedInCache = async (cardNumber: string) => {
   const data = await redisClient.get(RedisKeys.JUST_SIGNED_IN);
   if (data) {
@@ -62,4 +78,27 @@ const findUserInJustSignedInCache = async (cardNumber: string) => {
     }
   }
   return;
+};
+
+const allowBasedOnLastSignedInLocation = async (lastVisit: CompleteVisitsToLocation) => {
+  // Get Location from Redis
+  const allLocations = await redisClient.get(RedisKeys.ALL_LOCATIONS);
+  const parsedLocations = JSON.parse(allLocations as string) as z.infer<
+    typeof LocationCloudModel
+  >[];
+
+  const findUsersLastSignedInLocation = parsedLocations.find((l) => l.id === lastVisit.locationId);
+  const currentLocation = parsedLocations.find((l) => l.id === process.env.LOCATION_ID);
+
+  if (findUsersLastSignedInLocation && currentLocation) {
+    const userLocationGPS: GPSLocation = {
+      lat: findUsersLastSignedInLocation.lat,
+      long: findUsersLastSignedInLocation.long,
+    };
+    const currentLocationGPS: GPSLocation = {
+      lat: currentLocation.lat,
+      long: currentLocation.long,
+    };
+    return isFeasibleVisit(userLocationGPS, currentLocationGPS, lastVisit.createdAt);
+  }
 };
