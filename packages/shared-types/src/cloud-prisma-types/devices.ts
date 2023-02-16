@@ -1,5 +1,11 @@
-import * as z from "zod"
-import { CompleteLocation, RelatedLocationCloudModel, CompleteDeviceTypes, RelatedDeviceTypesCloudModel } from "./index"
+import * as z from 'zod';
+
+import {
+  CompleteLocation,
+  RelatedLocationCloudModel,
+  CompleteDeviceTypes,
+  RelatedDeviceTypesCloudModel,
+} from './index';
 
 export const DevicesCloudModel = z.object({
   id: z.string(),
@@ -9,11 +15,11 @@ export const DevicesCloudModel = z.object({
   deviceTypeId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-})
+});
 
 export interface CompleteDevices extends z.infer<typeof DevicesCloudModel> {
-  location: CompleteLocation
-  deviceType: CompleteDeviceTypes
+  location: CompleteLocation;
+  deviceType: CompleteDeviceTypes;
 }
 
 /**
@@ -21,7 +27,9 @@ export interface CompleteDevices extends z.infer<typeof DevicesCloudModel> {
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedDevicesCloudModel: z.ZodSchema<CompleteDevices> = z.lazy(() => DevicesCloudModel.extend({
-  location: RelatedLocationCloudModel,
-  deviceType: RelatedDeviceTypesCloudModel,
-}))
+export const RelatedDevicesCloudModel: z.ZodSchema<CompleteDevices> = z.lazy(() =>
+  DevicesCloudModel.extend({
+    location: RelatedLocationCloudModel,
+    deviceType: RelatedDeviceTypesCloudModel,
+  })
+);

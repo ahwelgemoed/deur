@@ -10,13 +10,23 @@
     "build": "tsc",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsc -w",
-    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "lint": "TIMING=1 eslint --fix \"src/**/*.ts*\"",
     "test": "jest"
   },
-  "dependencies": {
+  "devDependencies": {
+    "@deur/eslint-config": "*",
     "@deur/tsconfig": "*",
     "typescript": "latest",
-    "tsup": "^5.11.13",
+    "tsup": "^5.11.13"
+  },
+  "dependencies": {
     "zod": "^3.20.2"
+  },
+  "eslintConfig": {
+    "extends": "@deur/eslint-config",
+    "ignorePatterns": [
+      "node_modules",
+      "build"
+    ]
   }
 }
