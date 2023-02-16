@@ -119,5 +119,5 @@ const addNotAllowedUserToCache = (
     errorId: id,
     reason,
   };
-  redisClient.set(id, JSON.stringify(data), 'ex', 10);
+  redisClient.set(id, JSON.stringify(data), 'EX', 10);
 };
