@@ -8,11 +8,13 @@ services:
   base-cloud:
     platform: linux/amd64
     container_name: base-cloud
+    environment:
+      - SERVER_PORT_CLOUD=3030
     build:
       context: .
       dockerfile: ./apps/base-cloud/Dockerfile
       args:
-        - CLUB_ID=123
+        - SERVER_PORT_CLOUD=3030
     restart: always
     ports:
       - 3030:3030

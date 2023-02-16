@@ -1,15 +1,16 @@
-import * as z from "zod"
-import { CompleteDevices, RelatedDevicesCloudModel } from "./index"
+import * as z from 'zod';
+
+import { CompleteDevices, RelatedDevicesCloudModel } from './index';
 
 export const DeviceTypesCloudModel = z.object({
-  id: z.number().int(),
+  id: z.string(),
   name: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-})
+});
 
 export interface CompleteDeviceTypes extends z.infer<typeof DeviceTypesCloudModel> {
-  devices: CompleteDevices[]
+  devices: CompleteDevices[];
 }
 
 /**
@@ -17,6 +18,8 @@ export interface CompleteDeviceTypes extends z.infer<typeof DeviceTypesCloudMode
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedDeviceTypesCloudModel: z.ZodSchema<CompleteDeviceTypes> = z.lazy(() => DeviceTypesCloudModel.extend({
-  devices: RelatedDevicesCloudModel.array(),
-}))
+export const RelatedDeviceTypesCloudModel: z.ZodSchema<CompleteDeviceTypes> = z.lazy(() =>
+  DeviceTypesCloudModel.extend({
+    devices: RelatedDevicesCloudModel.array(),
+  })
+);

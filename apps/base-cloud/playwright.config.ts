@@ -38,10 +38,6 @@ const config: PlaywrightTestConfig = {
   // outputDir: 'test-results/',
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm run dev',
-    port: process.env.SERVER_PORT_CLOUD as unknown as number,
-  },
 };
 
 export default config;

@@ -2,6 +2,7 @@
  * All Global Configs and Layouts from here
  */
 
+import { DeviceStateProvider } from '@deur/shared-hooks';
 import {
   useFonts,
   Ubuntu_300Light,
@@ -14,12 +15,10 @@ import {
   Ubuntu_700Bold_Italic,
 } from '@expo-google-fonts/ubuntu';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Navigator, Slot, SplashScreen } from 'expo-router';
-import AxiosInstance from '../src/api/AxiosInstance';
+import { Navigator, Slot, SplashScreen, useRouter } from 'expo-router';
 
-import { HelpUserProvider } from '../src/contexts/HelpUser.Context';
+import AxiosInstance from '../src/api/AxiosInstance';
 import { IdleStateProvider } from '../src/contexts/IdleState.Context';
-import { DeviceStateProvider } from '../src/contexts/SetupDevice.Context';
 
 const queryClient = new QueryClient();
 
@@ -40,20 +39,18 @@ export default function Layout() {
   }
   return (
     <QueryClientProvider client={queryClient}>
-      <DeviceStateProvider>
+      <DeviceStateProvider useRouter={useRouter} setupUrl={'/initial-device-setup'}>
         <IdleStateProvider>
-          <HelpUserProvider>
-            <AxiosInstance>
-              <RootLayout />
-            </AxiosInstance>
-          </HelpUserProvider>
+          <AxiosInstance>
+            <RootLayout />
+          </AxiosInstance>
         </IdleStateProvider>
       </DeviceStateProvider>
     </QueryClientProvider>
   );
 }
 
-function RootLayout({}) {
+function RootLayout() {
   return (
     <Navigator>
       <Slot />

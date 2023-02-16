@@ -17,7 +17,7 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
  * 
  */
 export type Country = {
-  id: number
+  id: string
   name: string
   code: string
   createdAt: Date
@@ -29,13 +29,14 @@ export type Country = {
  * 
  */
 export type User = {
-  id: number
-  email: string
+  id: string
   birthDay: Date
   name: string | null
-  locationId: number
+  locationId: string
   cardNumber: string
   isAllowed: boolean
+  memberShipType: number
+  email: string
   createdAt: Date
   updatedAt: Date
 }
@@ -45,9 +46,9 @@ export type User = {
  * 
  */
 export type VisitsToLocation = {
-  id: number
-  userId: number
-  locationId: number
+  id: string
+  userId: string
+  locationId: string
   createdAt: Date
   updatedAt: Date
 }
@@ -57,11 +58,11 @@ export type VisitsToLocation = {
  * 
  */
 export type Location = {
-  id: number
+  id: string
   name: string
   lat: string
   long: string
-  countryId: number
+  countryId: string
   createdAt: Date
   updatedAt: Date
 }
@@ -71,11 +72,11 @@ export type Location = {
  * 
  */
 export type Devices = {
-  id: number
+  id: string
   name: string
   deviceId: string
-  locationId: number
-  deviceTypeId: number
+  locationId: string
+  deviceTypeId: string
   createdAt: Date
   updatedAt: Date
 }
@@ -85,7 +86,7 @@ export type Devices = {
  * 
  */
 export type DeviceTypes = {
-  id: number
+  id: string
   name: string
   createdAt: Date
   updatedAt: Date
@@ -1101,22 +1102,12 @@ export namespace Prisma {
 
   export type AggregateCountry = {
     _count: CountryCountAggregateOutputType | null
-    _avg: CountryAvgAggregateOutputType | null
-    _sum: CountrySumAggregateOutputType | null
     _min: CountryMinAggregateOutputType | null
     _max: CountryMaxAggregateOutputType | null
   }
 
-  export type CountryAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type CountrySumAggregateOutputType = {
-    id: number | null
-  }
-
   export type CountryMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     code: string | null
     createdAt: Date | null
@@ -1124,7 +1115,7 @@ export namespace Prisma {
   }
 
   export type CountryMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     code: string | null
     createdAt: Date | null
@@ -1140,14 +1131,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type CountryAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type CountrySumAggregateInputType = {
-    id?: true
-  }
 
   export type CountryMinAggregateInputType = {
     id?: true
@@ -1212,18 +1195,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: CountryAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: CountrySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: CountryMinAggregateInputType
@@ -1254,22 +1225,18 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: CountryCountAggregateInputType | true
-    _avg?: CountryAvgAggregateInputType
-    _sum?: CountrySumAggregateInputType
     _min?: CountryMinAggregateInputType
     _max?: CountryMaxAggregateInputType
   }
 
 
   export type CountryGroupByOutputType = {
-    id: number
+    id: string
     name: string
     code: string
     createdAt: Date
     updatedAt: Date
     _count: CountryCountAggregateOutputType | null
-    _avg: CountryAvgAggregateOutputType | null
-    _sum: CountrySumAggregateOutputType | null
     _min: CountryMinAggregateOutputType | null
     _max: CountryMaxAggregateOutputType | null
   }
@@ -2072,47 +2039,48 @@ export namespace Prisma {
   }
 
   export type UserAvgAggregateOutputType = {
-    id: number | null
-    locationId: number | null
+    memberShipType: number | null
   }
 
   export type UserSumAggregateOutputType = {
-    id: number | null
-    locationId: number | null
+    memberShipType: number | null
   }
 
   export type UserMinAggregateOutputType = {
-    id: number | null
-    email: string | null
+    id: string | null
     birthDay: Date | null
     name: string | null
-    locationId: number | null
+    locationId: string | null
     cardNumber: string | null
     isAllowed: boolean | null
+    memberShipType: number | null
+    email: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
-    id: number | null
-    email: string | null
+    id: string | null
     birthDay: Date | null
     name: string | null
-    locationId: number | null
+    locationId: string | null
     cardNumber: string | null
     isAllowed: boolean | null
+    memberShipType: number | null
+    email: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
-    email: number
     birthDay: number
     name: number
     locationId: number
     cardNumber: number
     isAllowed: number
+    memberShipType: number
+    email: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2120,47 +2088,48 @@ export namespace Prisma {
 
 
   export type UserAvgAggregateInputType = {
-    id?: true
-    locationId?: true
+    memberShipType?: true
   }
 
   export type UserSumAggregateInputType = {
-    id?: true
-    locationId?: true
+    memberShipType?: true
   }
 
   export type UserMinAggregateInputType = {
     id?: true
-    email?: true
     birthDay?: true
     name?: true
     locationId?: true
     cardNumber?: true
     isAllowed?: true
+    memberShipType?: true
+    email?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
-    email?: true
     birthDay?: true
     name?: true
     locationId?: true
     cardNumber?: true
     isAllowed?: true
+    memberShipType?: true
+    email?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
-    email?: true
     birthDay?: true
     name?: true
     locationId?: true
     cardNumber?: true
     isAllowed?: true
+    memberShipType?: true
+    email?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2254,13 +2223,14 @@ export namespace Prisma {
 
 
   export type UserGroupByOutputType = {
-    id: number
-    email: string
+    id: string
     birthDay: Date
     name: string | null
-    locationId: number
+    locationId: string
     cardNumber: string
     isAllowed: boolean
+    memberShipType: number
+    email: string
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -2286,12 +2256,13 @@ export namespace Prisma {
 
   export type UserSelect = {
     id?: boolean
-    email?: boolean
     birthDay?: boolean
     name?: boolean
     locationId?: boolean
     cardNumber?: boolean
     isAllowed?: boolean
+    memberShipType?: boolean
+    email?: boolean
     location?: boolean | LocationArgs
     visits?: boolean | User$visitsArgs
     createdAt?: boolean
@@ -3071,36 +3042,22 @@ export namespace Prisma {
 
   export type AggregateVisitsToLocation = {
     _count: VisitsToLocationCountAggregateOutputType | null
-    _avg: VisitsToLocationAvgAggregateOutputType | null
-    _sum: VisitsToLocationSumAggregateOutputType | null
     _min: VisitsToLocationMinAggregateOutputType | null
     _max: VisitsToLocationMaxAggregateOutputType | null
   }
 
-  export type VisitsToLocationAvgAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    locationId: number | null
-  }
-
-  export type VisitsToLocationSumAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    locationId: number | null
-  }
-
   export type VisitsToLocationMinAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    locationId: number | null
+    id: string | null
+    userId: string | null
+    locationId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type VisitsToLocationMaxAggregateOutputType = {
-    id: number | null
-    userId: number | null
-    locationId: number | null
+    id: string | null
+    userId: string | null
+    locationId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3114,18 +3071,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type VisitsToLocationAvgAggregateInputType = {
-    id?: true
-    userId?: true
-    locationId?: true
-  }
-
-  export type VisitsToLocationSumAggregateInputType = {
-    id?: true
-    userId?: true
-    locationId?: true
-  }
 
   export type VisitsToLocationMinAggregateInputType = {
     id?: true
@@ -3190,18 +3135,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: VisitsToLocationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: VisitsToLocationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: VisitsToLocationMinAggregateInputType
@@ -3232,22 +3165,18 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: VisitsToLocationCountAggregateInputType | true
-    _avg?: VisitsToLocationAvgAggregateInputType
-    _sum?: VisitsToLocationSumAggregateInputType
     _min?: VisitsToLocationMinAggregateInputType
     _max?: VisitsToLocationMaxAggregateInputType
   }
 
 
   export type VisitsToLocationGroupByOutputType = {
-    id: number
-    userId: number
-    locationId: number
+    id: string
+    userId: string
+    locationId: string
     createdAt: Date
     updatedAt: Date
     _count: VisitsToLocationCountAggregateOutputType | null
-    _avg: VisitsToLocationAvgAggregateOutputType | null
-    _sum: VisitsToLocationSumAggregateOutputType | null
     _min: VisitsToLocationMinAggregateOutputType | null
     _max: VisitsToLocationMaxAggregateOutputType | null
   }
@@ -4024,38 +3953,26 @@ export namespace Prisma {
 
   export type AggregateLocation = {
     _count: LocationCountAggregateOutputType | null
-    _avg: LocationAvgAggregateOutputType | null
-    _sum: LocationSumAggregateOutputType | null
     _min: LocationMinAggregateOutputType | null
     _max: LocationMaxAggregateOutputType | null
   }
 
-  export type LocationAvgAggregateOutputType = {
-    id: number | null
-    countryId: number | null
-  }
-
-  export type LocationSumAggregateOutputType = {
-    id: number | null
-    countryId: number | null
-  }
-
   export type LocationMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     lat: string | null
     long: string | null
-    countryId: number | null
+    countryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type LocationMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     lat: string | null
     long: string | null
-    countryId: number | null
+    countryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4071,16 +3988,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type LocationAvgAggregateInputType = {
-    id?: true
-    countryId?: true
-  }
-
-  export type LocationSumAggregateInputType = {
-    id?: true
-    countryId?: true
-  }
 
   export type LocationMinAggregateInputType = {
     id?: true
@@ -4151,18 +4058,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: LocationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: LocationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: LocationMinAggregateInputType
@@ -4193,24 +4088,20 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: LocationCountAggregateInputType | true
-    _avg?: LocationAvgAggregateInputType
-    _sum?: LocationSumAggregateInputType
     _min?: LocationMinAggregateInputType
     _max?: LocationMaxAggregateInputType
   }
 
 
   export type LocationGroupByOutputType = {
-    id: number
+    id: string
     name: string
     lat: string
     long: string
-    countryId: number
+    countryId: string
     createdAt: Date
     updatedAt: Date
     _count: LocationCountAggregateOutputType | null
-    _avg: LocationAvgAggregateOutputType | null
-    _sum: LocationSumAggregateOutputType | null
     _min: LocationMinAggregateOutputType | null
     _max: LocationMaxAggregateOutputType | null
   }
@@ -5068,40 +4959,26 @@ export namespace Prisma {
 
   export type AggregateDevices = {
     _count: DevicesCountAggregateOutputType | null
-    _avg: DevicesAvgAggregateOutputType | null
-    _sum: DevicesSumAggregateOutputType | null
     _min: DevicesMinAggregateOutputType | null
     _max: DevicesMaxAggregateOutputType | null
   }
 
-  export type DevicesAvgAggregateOutputType = {
-    id: number | null
-    locationId: number | null
-    deviceTypeId: number | null
-  }
-
-  export type DevicesSumAggregateOutputType = {
-    id: number | null
-    locationId: number | null
-    deviceTypeId: number | null
-  }
-
   export type DevicesMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     deviceId: string | null
-    locationId: number | null
-    deviceTypeId: number | null
+    locationId: string | null
+    deviceTypeId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type DevicesMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     deviceId: string | null
-    locationId: number | null
-    deviceTypeId: number | null
+    locationId: string | null
+    deviceTypeId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5117,18 +4994,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type DevicesAvgAggregateInputType = {
-    id?: true
-    locationId?: true
-    deviceTypeId?: true
-  }
-
-  export type DevicesSumAggregateInputType = {
-    id?: true
-    locationId?: true
-    deviceTypeId?: true
-  }
 
   export type DevicesMinAggregateInputType = {
     id?: true
@@ -5199,18 +5064,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: DevicesAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: DevicesSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: DevicesMinAggregateInputType
@@ -5241,24 +5094,20 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: DevicesCountAggregateInputType | true
-    _avg?: DevicesAvgAggregateInputType
-    _sum?: DevicesSumAggregateInputType
     _min?: DevicesMinAggregateInputType
     _max?: DevicesMaxAggregateInputType
   }
 
 
   export type DevicesGroupByOutputType = {
-    id: number
+    id: string
     name: string
     deviceId: string
-    locationId: number
-    deviceTypeId: number
+    locationId: string
+    deviceTypeId: string
     createdAt: Date
     updatedAt: Date
     _count: DevicesCountAggregateOutputType | null
-    _avg: DevicesAvgAggregateOutputType | null
-    _sum: DevicesSumAggregateOutputType | null
     _min: DevicesMinAggregateOutputType | null
     _max: DevicesMaxAggregateOutputType | null
   }
@@ -6037,29 +5886,19 @@ export namespace Prisma {
 
   export type AggregateDeviceTypes = {
     _count: DeviceTypesCountAggregateOutputType | null
-    _avg: DeviceTypesAvgAggregateOutputType | null
-    _sum: DeviceTypesSumAggregateOutputType | null
     _min: DeviceTypesMinAggregateOutputType | null
     _max: DeviceTypesMaxAggregateOutputType | null
   }
 
-  export type DeviceTypesAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type DeviceTypesSumAggregateOutputType = {
-    id: number | null
-  }
-
   export type DeviceTypesMinAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type DeviceTypesMaxAggregateOutputType = {
-    id: number | null
+    id: string | null
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6073,14 +5912,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type DeviceTypesAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type DeviceTypesSumAggregateInputType = {
-    id?: true
-  }
 
   export type DeviceTypesMinAggregateInputType = {
     id?: true
@@ -6142,18 +5973,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: DeviceTypesAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: DeviceTypesSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: DeviceTypesMinAggregateInputType
@@ -6184,21 +6003,17 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: DeviceTypesCountAggregateInputType | true
-    _avg?: DeviceTypesAvgAggregateInputType
-    _sum?: DeviceTypesSumAggregateInputType
     _min?: DeviceTypesMinAggregateInputType
     _max?: DeviceTypesMaxAggregateInputType
   }
 
 
   export type DeviceTypesGroupByOutputType = {
-    id: number
+    id: string
     name: string
     createdAt: Date
     updatedAt: Date
     _count: DeviceTypesCountAggregateOutputType | null
-    _avg: DeviceTypesAvgAggregateOutputType | null
-    _sum: DeviceTypesSumAggregateOutputType | null
     _min: DeviceTypesMinAggregateOutputType | null
     _max: DeviceTypesMaxAggregateOutputType | null
   }
@@ -7057,12 +6872,13 @@ export namespace Prisma {
 
   export const UserScalarFieldEnum: {
     id: 'id',
-    email: 'email',
     birthDay: 'birthDay',
     name: 'name',
     locationId: 'locationId',
     cardNumber: 'cardNumber',
     isAllowed: 'isAllowed',
+    memberShipType: 'memberShipType',
+    email: 'email',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -7090,7 +6906,7 @@ export namespace Prisma {
     AND?: Enumerable<CountryWhereInput>
     OR?: Enumerable<CountryWhereInput>
     NOT?: Enumerable<CountryWhereInput>
-    id?: IntFilter | number
+    id?: StringFilter | string
     name?: StringFilter | string
     code?: StringFilter | string
     locations?: LocationListRelationFilter
@@ -7108,7 +6924,7 @@ export namespace Prisma {
   }
 
   export type CountryWhereUniqueInput = {
-    id?: number
+    id?: string
   }
 
   export type CountryOrderByWithAggregationInput = {
@@ -7118,17 +6934,15 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CountryCountOrderByAggregateInput
-    _avg?: CountryAvgOrderByAggregateInput
     _max?: CountryMaxOrderByAggregateInput
     _min?: CountryMinOrderByAggregateInput
-    _sum?: CountrySumOrderByAggregateInput
   }
 
   export type CountryScalarWhereWithAggregatesInput = {
     AND?: Enumerable<CountryScalarWhereWithAggregatesInput>
     OR?: Enumerable<CountryScalarWhereWithAggregatesInput>
     NOT?: Enumerable<CountryScalarWhereWithAggregatesInput>
-    id?: IntWithAggregatesFilter | number
+    id?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     code?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
@@ -7139,13 +6953,14 @@ export namespace Prisma {
     AND?: Enumerable<UserWhereInput>
     OR?: Enumerable<UserWhereInput>
     NOT?: Enumerable<UserWhereInput>
-    id?: IntFilter | number
-    email?: StringFilter | string
+    id?: StringFilter | string
     birthDay?: DateTimeFilter | Date | string
     name?: StringNullableFilter | string | null
-    locationId?: IntFilter | number
+    locationId?: StringFilter | string
     cardNumber?: StringFilter | string
     isAllowed?: BoolFilter | boolean
+    memberShipType?: IntFilter | number
+    email?: StringFilter | string
     location?: XOR<LocationRelationFilter, LocationWhereInput>
     visits?: VisitsToLocationListRelationFilter
     createdAt?: DateTimeFilter | Date | string
@@ -7154,12 +6969,13 @@ export namespace Prisma {
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
-    email?: SortOrder
     birthDay?: SortOrder
     name?: SortOrder
     locationId?: SortOrder
     cardNumber?: SortOrder
     isAllowed?: SortOrder
+    memberShipType?: SortOrder
+    email?: SortOrder
     location?: LocationOrderByWithRelationInput
     visits?: VisitsToLocationOrderByRelationAggregateInput
     createdAt?: SortOrder
@@ -7167,18 +6983,19 @@ export namespace Prisma {
   }
 
   export type UserWhereUniqueInput = {
-    id?: number
+    id?: string
     cardNumber?: string
   }
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
-    email?: SortOrder
     birthDay?: SortOrder
     name?: SortOrder
     locationId?: SortOrder
     cardNumber?: SortOrder
     isAllowed?: SortOrder
+    memberShipType?: SortOrder
+    email?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -7192,13 +7009,14 @@ export namespace Prisma {
     AND?: Enumerable<UserScalarWhereWithAggregatesInput>
     OR?: Enumerable<UserScalarWhereWithAggregatesInput>
     NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
-    id?: IntWithAggregatesFilter | number
-    email?: StringWithAggregatesFilter | string
+    id?: StringWithAggregatesFilter | string
     birthDay?: DateTimeWithAggregatesFilter | Date | string
     name?: StringNullableWithAggregatesFilter | string | null
-    locationId?: IntWithAggregatesFilter | number
+    locationId?: StringWithAggregatesFilter | string
     cardNumber?: StringWithAggregatesFilter | string
     isAllowed?: BoolWithAggregatesFilter | boolean
+    memberShipType?: IntWithAggregatesFilter | number
+    email?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
@@ -7207,10 +7025,10 @@ export namespace Prisma {
     AND?: Enumerable<VisitsToLocationWhereInput>
     OR?: Enumerable<VisitsToLocationWhereInput>
     NOT?: Enumerable<VisitsToLocationWhereInput>
-    id?: IntFilter | number
-    userId?: IntFilter | number
+    id?: StringFilter | string
+    userId?: StringFilter | string
     user?: XOR<UserRelationFilter, UserWhereInput>
-    locationId?: IntFilter | number
+    locationId?: StringFilter | string
     location?: XOR<LocationRelationFilter, LocationWhereInput>
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
@@ -7227,7 +7045,7 @@ export namespace Prisma {
   }
 
   export type VisitsToLocationWhereUniqueInput = {
-    id?: number
+    id?: string
   }
 
   export type VisitsToLocationOrderByWithAggregationInput = {
@@ -7237,19 +7055,17 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: VisitsToLocationCountOrderByAggregateInput
-    _avg?: VisitsToLocationAvgOrderByAggregateInput
     _max?: VisitsToLocationMaxOrderByAggregateInput
     _min?: VisitsToLocationMinOrderByAggregateInput
-    _sum?: VisitsToLocationSumOrderByAggregateInput
   }
 
   export type VisitsToLocationScalarWhereWithAggregatesInput = {
     AND?: Enumerable<VisitsToLocationScalarWhereWithAggregatesInput>
     OR?: Enumerable<VisitsToLocationScalarWhereWithAggregatesInput>
     NOT?: Enumerable<VisitsToLocationScalarWhereWithAggregatesInput>
-    id?: IntWithAggregatesFilter | number
-    userId?: IntWithAggregatesFilter | number
-    locationId?: IntWithAggregatesFilter | number
+    id?: StringWithAggregatesFilter | string
+    userId?: StringWithAggregatesFilter | string
+    locationId?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
@@ -7258,13 +7074,13 @@ export namespace Prisma {
     AND?: Enumerable<LocationWhereInput>
     OR?: Enumerable<LocationWhereInput>
     NOT?: Enumerable<LocationWhereInput>
-    id?: IntFilter | number
+    id?: StringFilter | string
     name?: StringFilter | string
     users?: UserListRelationFilter
     devices?: DevicesListRelationFilter
     lat?: StringFilter | string
     long?: StringFilter | string
-    countryId?: IntFilter | number
+    countryId?: StringFilter | string
     country?: XOR<CountryRelationFilter, CountryWhereInput>
     visits?: VisitsToLocationListRelationFilter
     createdAt?: DateTimeFilter | Date | string
@@ -7286,7 +7102,7 @@ export namespace Prisma {
   }
 
   export type LocationWhereUniqueInput = {
-    id?: number
+    id?: string
   }
 
   export type LocationOrderByWithAggregationInput = {
@@ -7298,21 +7114,19 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LocationCountOrderByAggregateInput
-    _avg?: LocationAvgOrderByAggregateInput
     _max?: LocationMaxOrderByAggregateInput
     _min?: LocationMinOrderByAggregateInput
-    _sum?: LocationSumOrderByAggregateInput
   }
 
   export type LocationScalarWhereWithAggregatesInput = {
     AND?: Enumerable<LocationScalarWhereWithAggregatesInput>
     OR?: Enumerable<LocationScalarWhereWithAggregatesInput>
     NOT?: Enumerable<LocationScalarWhereWithAggregatesInput>
-    id?: IntWithAggregatesFilter | number
+    id?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     lat?: StringWithAggregatesFilter | string
     long?: StringWithAggregatesFilter | string
-    countryId?: IntWithAggregatesFilter | number
+    countryId?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
@@ -7321,13 +7135,13 @@ export namespace Prisma {
     AND?: Enumerable<DevicesWhereInput>
     OR?: Enumerable<DevicesWhereInput>
     NOT?: Enumerable<DevicesWhereInput>
-    id?: IntFilter | number
+    id?: StringFilter | string
     name?: StringFilter | string
     deviceId?: StringFilter | string
-    locationId?: IntFilter | number
+    locationId?: StringFilter | string
     location?: XOR<LocationRelationFilter, LocationWhereInput>
     deviceType?: XOR<DeviceTypesRelationFilter, DeviceTypesWhereInput>
-    deviceTypeId?: IntFilter | number
+    deviceTypeId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
@@ -7345,7 +7159,7 @@ export namespace Prisma {
   }
 
   export type DevicesWhereUniqueInput = {
-    id?: number
+    id?: string
   }
 
   export type DevicesOrderByWithAggregationInput = {
@@ -7357,21 +7171,19 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: DevicesCountOrderByAggregateInput
-    _avg?: DevicesAvgOrderByAggregateInput
     _max?: DevicesMaxOrderByAggregateInput
     _min?: DevicesMinOrderByAggregateInput
-    _sum?: DevicesSumOrderByAggregateInput
   }
 
   export type DevicesScalarWhereWithAggregatesInput = {
     AND?: Enumerable<DevicesScalarWhereWithAggregatesInput>
     OR?: Enumerable<DevicesScalarWhereWithAggregatesInput>
     NOT?: Enumerable<DevicesScalarWhereWithAggregatesInput>
-    id?: IntWithAggregatesFilter | number
+    id?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     deviceId?: StringWithAggregatesFilter | string
-    locationId?: IntWithAggregatesFilter | number
-    deviceTypeId?: IntWithAggregatesFilter | number
+    locationId?: StringWithAggregatesFilter | string
+    deviceTypeId?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
@@ -7380,7 +7192,7 @@ export namespace Prisma {
     AND?: Enumerable<DeviceTypesWhereInput>
     OR?: Enumerable<DeviceTypesWhereInput>
     NOT?: Enumerable<DeviceTypesWhereInput>
-    id?: IntFilter | number
+    id?: StringFilter | string
     name?: StringFilter | string
     devices?: DevicesListRelationFilter
     createdAt?: DateTimeFilter | Date | string
@@ -7396,7 +7208,7 @@ export namespace Prisma {
   }
 
   export type DeviceTypesWhereUniqueInput = {
-    id?: number
+    id?: string
   }
 
   export type DeviceTypesOrderByWithAggregationInput = {
@@ -7405,23 +7217,22 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: DeviceTypesCountOrderByAggregateInput
-    _avg?: DeviceTypesAvgOrderByAggregateInput
     _max?: DeviceTypesMaxOrderByAggregateInput
     _min?: DeviceTypesMinOrderByAggregateInput
-    _sum?: DeviceTypesSumOrderByAggregateInput
   }
 
   export type DeviceTypesScalarWhereWithAggregatesInput = {
     AND?: Enumerable<DeviceTypesScalarWhereWithAggregatesInput>
     OR?: Enumerable<DeviceTypesScalarWhereWithAggregatesInput>
     NOT?: Enumerable<DeviceTypesScalarWhereWithAggregatesInput>
-    id?: IntWithAggregatesFilter | number
+    id?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type CountryCreateInput = {
+    id?: string
     name: string
     code: string
     locations?: LocationCreateNestedManyWithoutCountryInput
@@ -7430,7 +7241,7 @@ export namespace Prisma {
   }
 
   export type CountryUncheckedCreateInput = {
-    id?: number
+    id?: string
     name: string
     code: string
     locations?: LocationUncheckedCreateNestedManyWithoutCountryInput
@@ -7439,6 +7250,7 @@ export namespace Prisma {
   }
 
   export type CountryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     locations?: LocationUpdateManyWithoutCountryNestedInput
@@ -7447,7 +7259,7 @@ export namespace Prisma {
   }
 
   export type CountryUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     locations?: LocationUncheckedUpdateManyWithoutCountryNestedInput
@@ -7456,6 +7268,7 @@ export namespace Prisma {
   }
 
   export type CountryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7463,7 +7276,7 @@ export namespace Prisma {
   }
 
   export type CountryUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7471,11 +7284,13 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
-    email: string
+    id?: string
     birthDay: Date | string
     name?: string | null
     cardNumber: string
     isAllowed?: boolean
+    memberShipType: number
+    email: string
     location: LocationCreateNestedOneWithoutUsersInput
     visits?: VisitsToLocationCreateNestedManyWithoutUserInput
     createdAt?: Date | string
@@ -7483,24 +7298,27 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateInput = {
-    id?: number
-    email: string
+    id?: string
     birthDay: Date | string
     name?: string | null
-    locationId: number
+    locationId: string
     cardNumber: string
     isAllowed?: boolean
+    memberShipType: number
+    email: string
     visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUpdateInput = {
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     location?: LocationUpdateOneRequiredWithoutUsersNestedInput
     visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7508,41 +7326,46 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    locationId?: IntFieldUpdateOperationsInput | number
+    locationId?: StringFieldUpdateOperationsInput | string
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUpdateManyMutationInput = {
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    locationId?: IntFieldUpdateOperationsInput | number
+    locationId?: StringFieldUpdateOperationsInput | string
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationCreateInput = {
+    id?: string
     user: UserCreateNestedOneWithoutVisitsInput
     location: LocationCreateNestedOneWithoutVisitsInput
     createdAt?: Date | string
@@ -7550,14 +7373,15 @@ export namespace Prisma {
   }
 
   export type VisitsToLocationUncheckedCreateInput = {
-    id?: number
-    userId: number
-    locationId: number
+    id?: string
+    userId: string
+    locationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type VisitsToLocationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutVisitsNestedInput
     location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7565,27 +7389,29 @@ export namespace Prisma {
   }
 
   export type VisitsToLocationUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
-    locationId?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    locationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
-    locationId?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    locationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LocationCreateInput = {
+    id?: string
     name: string
     users?: UserCreateNestedManyWithoutLocationInput
     devices?: DevicesCreateNestedManyWithoutLocationInput
@@ -7598,19 +7424,20 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedCreateInput = {
-    id?: number
+    id?: string
     name: string
     users?: UserUncheckedCreateNestedManyWithoutLocationInput
     devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    countryId: number
+    countryId: string
     visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type LocationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutLocationNestedInput
     devices?: DevicesUpdateManyWithoutLocationNestedInput
@@ -7623,19 +7450,20 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutLocationNestedInput
     devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    countryId?: IntFieldUpdateOperationsInput | number
+    countryId?: StringFieldUpdateOperationsInput | string
     visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LocationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
@@ -7644,16 +7472,17 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    countryId?: IntFieldUpdateOperationsInput | number
+    countryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DevicesCreateInput = {
+    id?: string
     name: string
     deviceId: string
     location: LocationCreateNestedOneWithoutDevicesInput
@@ -7663,16 +7492,17 @@ export namespace Prisma {
   }
 
   export type DevicesUncheckedCreateInput = {
-    id?: number
+    id?: string
     name: string
     deviceId: string
-    locationId: number
-    deviceTypeId: number
+    locationId: string
+    deviceTypeId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type DevicesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     location?: LocationUpdateOneRequiredWithoutDevicesNestedInput
@@ -7682,16 +7512,17 @@ export namespace Prisma {
   }
 
   export type DevicesUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    locationId?: IntFieldUpdateOperationsInput | number
-    deviceTypeId?: IntFieldUpdateOperationsInput | number
+    locationId?: StringFieldUpdateOperationsInput | string
+    deviceTypeId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DevicesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7699,16 +7530,17 @@ export namespace Prisma {
   }
 
   export type DevicesUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    locationId?: IntFieldUpdateOperationsInput | number
-    deviceTypeId?: IntFieldUpdateOperationsInput | number
+    locationId?: StringFieldUpdateOperationsInput | string
+    deviceTypeId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DeviceTypesCreateInput = {
+    id?: string
     name: string
     devices?: DevicesCreateNestedManyWithoutDeviceTypeInput
     createdAt?: Date | string
@@ -7716,7 +7548,7 @@ export namespace Prisma {
   }
 
   export type DeviceTypesUncheckedCreateInput = {
-    id?: number
+    id?: string
     name: string
     devices?: DevicesUncheckedCreateNestedManyWithoutDeviceTypeInput
     createdAt?: Date | string
@@ -7724,6 +7556,7 @@ export namespace Prisma {
   }
 
   export type DeviceTypesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     devices?: DevicesUpdateManyWithoutDeviceTypeNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7731,7 +7564,7 @@ export namespace Prisma {
   }
 
   export type DeviceTypesUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     devices?: DevicesUncheckedUpdateManyWithoutDeviceTypeNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7739,27 +7572,17 @@ export namespace Prisma {
   }
 
   export type DeviceTypesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DeviceTypesUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IntFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntFilter | number
   }
 
   export type StringFilter = {
@@ -7805,10 +7628,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type CountryAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type CountryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -7823,26 +7642,6 @@ export namespace Prisma {
     code?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type CountrySumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntWithAggregatesFilter | number
-    _count?: NestedIntFilter
-    _avg?: NestedFloatFilter
-    _sum?: NestedIntFilter
-    _min?: NestedIntFilter
-    _max?: NestedIntFilter
   }
 
   export type StringWithAggregatesFilter = {
@@ -7895,6 +7694,17 @@ export namespace Prisma {
     not?: NestedBoolFilter | boolean
   }
 
+  export type IntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
+  }
+
   export type LocationRelationFilter = {
     is?: LocationWhereInput
     isNot?: LocationWhereInput
@@ -7912,48 +7722,49 @@ export namespace Prisma {
 
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     birthDay?: SortOrder
     name?: SortOrder
     locationId?: SortOrder
     cardNumber?: SortOrder
     isAllowed?: SortOrder
+    memberShipType?: SortOrder
+    email?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
-    id?: SortOrder
-    locationId?: SortOrder
+    memberShipType?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     birthDay?: SortOrder
     name?: SortOrder
     locationId?: SortOrder
     cardNumber?: SortOrder
     isAllowed?: SortOrder
+    memberShipType?: SortOrder
+    email?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     birthDay?: SortOrder
     name?: SortOrder
     locationId?: SortOrder
     cardNumber?: SortOrder
     isAllowed?: SortOrder
+    memberShipType?: SortOrder
+    email?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
-    id?: SortOrder
-    locationId?: SortOrder
+    memberShipType?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter = {
@@ -7981,6 +7792,22 @@ export namespace Prisma {
     _max?: NestedBoolFilter
   }
 
+  export type IntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
+  }
+
   export type UserRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -7992,12 +7819,6 @@ export namespace Prisma {
     locationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type VisitsToLocationAvgOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    locationId?: SortOrder
   }
 
   export type VisitsToLocationMaxOrderByAggregateInput = {
@@ -8014,12 +7835,6 @@ export namespace Prisma {
     locationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type VisitsToLocationSumOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    locationId?: SortOrder
   }
 
   export type UserListRelationFilter = {
@@ -8057,11 +7872,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type LocationAvgOrderByAggregateInput = {
-    id?: SortOrder
-    countryId?: SortOrder
-  }
-
   export type LocationMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -8082,11 +7892,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type LocationSumOrderByAggregateInput = {
-    id?: SortOrder
-    countryId?: SortOrder
-  }
-
   export type DeviceTypesRelationFilter = {
     is?: DeviceTypesWhereInput
     isNot?: DeviceTypesWhereInput
@@ -8100,12 +7905,6 @@ export namespace Prisma {
     deviceTypeId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type DevicesAvgOrderByAggregateInput = {
-    id?: SortOrder
-    locationId?: SortOrder
-    deviceTypeId?: SortOrder
   }
 
   export type DevicesMaxOrderByAggregateInput = {
@@ -8128,21 +7927,11 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type DevicesSumOrderByAggregateInput = {
-    id?: SortOrder
-    locationId?: SortOrder
-    deviceTypeId?: SortOrder
-  }
-
   export type DeviceTypesCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type DeviceTypesAvgOrderByAggregateInput = {
-    id?: SortOrder
   }
 
   export type DeviceTypesMaxOrderByAggregateInput = {
@@ -8157,10 +7946,6 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type DeviceTypesSumOrderByAggregateInput = {
-    id?: SortOrder
   }
 
   export type LocationCreateNestedManyWithoutCountryInput = {
@@ -8194,14 +7979,6 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type LocationUncheckedUpdateManyWithoutCountryNestedInput = {
@@ -8241,6 +8018,14 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type LocationUpdateOneRequiredWithoutUsersNestedInput = {
@@ -8499,17 +8284,6 @@ export namespace Prisma {
     deleteMany?: Enumerable<DevicesScalarWhereInput>
   }
 
-  export type NestedIntFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntFilter | number
-  }
-
   export type NestedStringFilter = {
     equals?: string
     in?: Enumerable<string>
@@ -8535,33 +8309,6 @@ export namespace Prisma {
     not?: NestedDateTimeFilter | Date | string
   }
 
-  export type NestedIntWithAggregatesFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntWithAggregatesFilter | number
-    _count?: NestedIntFilter
-    _avg?: NestedFloatFilter
-    _sum?: NestedIntFilter
-    _min?: NestedIntFilter
-    _max?: NestedIntFilter
-  }
-
-  export type NestedFloatFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedFloatFilter | number
-  }
-
   export type NestedStringWithAggregatesFilter = {
     equals?: string
     in?: Enumerable<string>
@@ -8577,6 +8324,17 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedStringFilter
     _max?: NestedStringFilter
+  }
+
+  export type NestedIntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
   export type NestedDateTimeWithAggregatesFilter = {
@@ -8648,7 +8406,35 @@ export namespace Prisma {
     _max?: NestedBoolFilter
   }
 
+  export type NestedIntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
+  }
+
+  export type NestedFloatFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatFilter | number
+  }
+
   export type LocationCreateWithoutCountryInput = {
+    id?: string
     name: string
     users?: UserCreateNestedManyWithoutLocationInput
     devices?: DevicesCreateNestedManyWithoutLocationInput
@@ -8660,7 +8446,7 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedCreateWithoutCountryInput = {
-    id?: number
+    id?: string
     name: string
     users?: UserUncheckedCreateNestedManyWithoutLocationInput
     devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
@@ -8696,16 +8482,17 @@ export namespace Prisma {
     AND?: Enumerable<LocationScalarWhereInput>
     OR?: Enumerable<LocationScalarWhereInput>
     NOT?: Enumerable<LocationScalarWhereInput>
-    id?: IntFilter | number
+    id?: StringFilter | string
     name?: StringFilter | string
     lat?: StringFilter | string
     long?: StringFilter | string
-    countryId?: IntFilter | number
+    countryId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
 
   export type LocationCreateWithoutUsersInput = {
+    id?: string
     name: string
     devices?: DevicesCreateNestedManyWithoutLocationInput
     lat: string
@@ -8717,12 +8504,12 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedCreateWithoutUsersInput = {
-    id?: number
+    id?: string
     name: string
     devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    countryId: number
+    countryId: string
     visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8734,14 +8521,15 @@ export namespace Prisma {
   }
 
   export type VisitsToLocationCreateWithoutUserInput = {
+    id?: string
     location: LocationCreateNestedOneWithoutVisitsInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type VisitsToLocationUncheckedCreateWithoutUserInput = {
-    id?: number
-    locationId: number
+    id?: string
+    locationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8757,6 +8545,7 @@ export namespace Prisma {
   }
 
   export type LocationUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     devices?: DevicesUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
@@ -8768,12 +8557,12 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedUpdateWithoutUsersInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    countryId?: IntFieldUpdateOperationsInput | number
+    countryId?: StringFieldUpdateOperationsInput | string
     visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8799,32 +8588,35 @@ export namespace Prisma {
     AND?: Enumerable<VisitsToLocationScalarWhereInput>
     OR?: Enumerable<VisitsToLocationScalarWhereInput>
     NOT?: Enumerable<VisitsToLocationScalarWhereInput>
-    id?: IntFilter | number
-    userId?: IntFilter | number
-    locationId?: IntFilter | number
+    id?: StringFilter | string
+    userId?: StringFilter | string
+    locationId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
 
   export type UserCreateWithoutVisitsInput = {
-    email: string
+    id?: string
     birthDay: Date | string
     name?: string | null
     cardNumber: string
     isAllowed?: boolean
+    memberShipType: number
+    email: string
     location: LocationCreateNestedOneWithoutUsersInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUncheckedCreateWithoutVisitsInput = {
-    id?: number
-    email: string
+    id?: string
     birthDay: Date | string
     name?: string | null
-    locationId: number
+    locationId: string
     cardNumber: string
     isAllowed?: boolean
+    memberShipType: number
+    email: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8835,6 +8627,7 @@ export namespace Prisma {
   }
 
   export type LocationCreateWithoutVisitsInput = {
+    id?: string
     name: string
     users?: UserCreateNestedManyWithoutLocationInput
     devices?: DevicesCreateNestedManyWithoutLocationInput
@@ -8846,13 +8639,13 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedCreateWithoutVisitsInput = {
-    id?: number
+    id?: string
     name: string
     users?: UserUncheckedCreateNestedManyWithoutLocationInput
     devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    countryId: number
+    countryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8868,24 +8661,27 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutVisitsInput = {
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     location?: LocationUpdateOneRequiredWithoutUsersNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateWithoutVisitsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
-    locationId?: IntFieldUpdateOperationsInput | number
+    locationId?: StringFieldUpdateOperationsInput | string
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8896,6 +8692,7 @@ export namespace Prisma {
   }
 
   export type LocationUpdateWithoutVisitsInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutLocationNestedInput
     devices?: DevicesUpdateManyWithoutLocationNestedInput
@@ -8907,35 +8704,38 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedUpdateWithoutVisitsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutLocationNestedInput
     devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    countryId?: IntFieldUpdateOperationsInput | number
+    countryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutLocationInput = {
-    email: string
+    id?: string
     birthDay: Date | string
     name?: string | null
     cardNumber: string
     isAllowed?: boolean
+    memberShipType: number
+    email: string
     visits?: VisitsToLocationCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type UserUncheckedCreateWithoutLocationInput = {
-    id?: number
-    email: string
+    id?: string
     birthDay: Date | string
     name?: string | null
     cardNumber: string
     isAllowed?: boolean
+    memberShipType: number
+    email: string
     visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8947,6 +8747,7 @@ export namespace Prisma {
   }
 
   export type DevicesCreateWithoutLocationInput = {
+    id?: string
     name: string
     deviceId: string
     deviceType: DeviceTypesCreateNestedOneWithoutDevicesInput
@@ -8955,10 +8756,10 @@ export namespace Prisma {
   }
 
   export type DevicesUncheckedCreateWithoutLocationInput = {
-    id?: number
+    id?: string
     name: string
     deviceId: string
-    deviceTypeId: number
+    deviceTypeId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8969,6 +8770,7 @@ export namespace Prisma {
   }
 
   export type CountryCreateWithoutLocationsInput = {
+    id?: string
     name: string
     code: string
     createdAt?: Date | string
@@ -8976,7 +8778,7 @@ export namespace Prisma {
   }
 
   export type CountryUncheckedCreateWithoutLocationsInput = {
-    id?: number
+    id?: string
     name: string
     code: string
     createdAt?: Date | string
@@ -8989,14 +8791,15 @@ export namespace Prisma {
   }
 
   export type VisitsToLocationCreateWithoutLocationInput = {
+    id?: string
     user: UserCreateNestedOneWithoutVisitsInput
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type VisitsToLocationUncheckedCreateWithoutLocationInput = {
-    id?: number
-    userId: number
+    id?: string
+    userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9026,13 +8829,14 @@ export namespace Prisma {
     AND?: Enumerable<UserScalarWhereInput>
     OR?: Enumerable<UserScalarWhereInput>
     NOT?: Enumerable<UserScalarWhereInput>
-    id?: IntFilter | number
-    email?: StringFilter | string
+    id?: StringFilter | string
     birthDay?: DateTimeFilter | Date | string
     name?: StringNullableFilter | string | null
-    locationId?: IntFilter | number
+    locationId?: StringFilter | string
     cardNumber?: StringFilter | string
     isAllowed?: BoolFilter | boolean
+    memberShipType?: IntFilter | number
+    email?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
@@ -9057,11 +8861,11 @@ export namespace Prisma {
     AND?: Enumerable<DevicesScalarWhereInput>
     OR?: Enumerable<DevicesScalarWhereInput>
     NOT?: Enumerable<DevicesScalarWhereInput>
-    id?: IntFilter | number
+    id?: StringFilter | string
     name?: StringFilter | string
     deviceId?: StringFilter | string
-    locationId?: IntFilter | number
-    deviceTypeId?: IntFilter | number
+    locationId?: StringFilter | string
+    deviceTypeId?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
@@ -9072,6 +8876,7 @@ export namespace Prisma {
   }
 
   export type CountryUpdateWithoutLocationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9079,7 +8884,7 @@ export namespace Prisma {
   }
 
   export type CountryUncheckedUpdateWithoutLocationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9103,6 +8908,7 @@ export namespace Prisma {
   }
 
   export type LocationCreateWithoutDevicesInput = {
+    id?: string
     name: string
     users?: UserCreateNestedManyWithoutLocationInput
     lat: string
@@ -9114,12 +8920,12 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedCreateWithoutDevicesInput = {
-    id?: number
+    id?: string
     name: string
     users?: UserUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    countryId: number
+    countryId: string
     visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9131,13 +8937,14 @@ export namespace Prisma {
   }
 
   export type DeviceTypesCreateWithoutDevicesInput = {
+    id?: string
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type DeviceTypesUncheckedCreateWithoutDevicesInput = {
-    id?: number
+    id?: string
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9154,6 +8961,7 @@ export namespace Prisma {
   }
 
   export type LocationUpdateWithoutDevicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
@@ -9165,12 +8973,12 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedUpdateWithoutDevicesInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    countryId?: IntFieldUpdateOperationsInput | number
+    countryId?: StringFieldUpdateOperationsInput | string
     visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9182,19 +8990,21 @@ export namespace Prisma {
   }
 
   export type DeviceTypesUpdateWithoutDevicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DeviceTypesUncheckedUpdateWithoutDevicesInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DevicesCreateWithoutDeviceTypeInput = {
+    id?: string
     name: string
     deviceId: string
     location: LocationCreateNestedOneWithoutDevicesInput
@@ -9203,10 +9013,10 @@ export namespace Prisma {
   }
 
   export type DevicesUncheckedCreateWithoutDeviceTypeInput = {
-    id?: number
+    id?: string
     name: string
     deviceId: string
-    locationId: number
+    locationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9233,6 +9043,7 @@ export namespace Prisma {
   }
 
   export type LocationUpdateWithoutCountryInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUpdateManyWithoutLocationNestedInput
     devices?: DevicesUpdateManyWithoutLocationNestedInput
@@ -9244,7 +9055,7 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedUpdateWithoutCountryInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     users?: UserUncheckedUpdateManyWithoutLocationNestedInput
     devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
@@ -9256,7 +9067,7 @@ export namespace Prisma {
   }
 
   export type LocationUncheckedUpdateManyWithoutLocationsInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
@@ -9265,60 +9076,66 @@ export namespace Prisma {
   }
 
   export type VisitsToLocationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    locationId?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
+    locationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationUncheckedUpdateManyWithoutVisitsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    locationId?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
+    locationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUpdateWithoutLocationInput = {
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateWithoutLocationInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyWithoutUsersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
     birthDay?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cardNumber?: StringFieldUpdateOperationsInput | string
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
+    memberShipType?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DevicesUpdateWithoutLocationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     deviceType?: DeviceTypesUpdateOneRequiredWithoutDevicesNestedInput
@@ -9327,37 +9144,39 @@ export namespace Prisma {
   }
 
   export type DevicesUncheckedUpdateWithoutLocationInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    deviceTypeId?: IntFieldUpdateOperationsInput | number
+    deviceTypeId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DevicesUncheckedUpdateManyWithoutDevicesInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    deviceTypeId?: IntFieldUpdateOperationsInput | number
+    deviceTypeId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationUpdateWithoutLocationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutVisitsNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationUncheckedUpdateWithoutLocationInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DevicesUpdateWithoutDeviceTypeInput = {
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     location?: LocationUpdateOneRequiredWithoutDevicesNestedInput
@@ -9366,10 +9185,10 @@ export namespace Prisma {
   }
 
   export type DevicesUncheckedUpdateWithoutDeviceTypeInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    locationId?: IntFieldUpdateOperationsInput | number
+    locationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

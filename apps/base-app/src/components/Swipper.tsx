@@ -13,7 +13,8 @@ const Swipper = ({ successCallback }: ISwipper) => {
   const [gatesOnline, setGatesOnline] = useState<string[]>();
   const [sendMessage] = useSendMqttMessage((e) => console.log('e', e));
   useMqttMessageListener(EMQQTTTopics.GATES_ONLINE, (message) => {
-    setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as any as string[]);
+    console.log('message', message);
+    setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as unknown as string[]);
   });
   useMqttMessageListener(uuid.current, (message) => {
     console.log('message', message);
@@ -21,7 +22,7 @@ const Swipper = ({ successCallback }: ISwipper) => {
   });
 
   // TODO Display success when gate is opened
-  console.log('uuid.current', uuid.current);
+  console.log('uuid.current', uuid.current, gatesOnline);
 
   return (
     <View className="w-[400px]">

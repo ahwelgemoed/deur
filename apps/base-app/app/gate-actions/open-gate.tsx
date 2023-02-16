@@ -48,6 +48,7 @@ const OpenGate = () => {
 
   return (
     <MainLayout
+      bgColor="#FFBD12"
       showBackButton
       headerMainText={`Congratulations ${memberName}`}
       headerSubText=""

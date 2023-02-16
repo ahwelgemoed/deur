@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 
 module.exports = {
+  i18n: {
+    locales: ['en', 'nl'],
+    defaultLocale: 'en',
+  },
   reactStrictMode: true,
   swcMinify: false,
   webpack: (config) => {
@@ -9,7 +13,6 @@ module.exports = {
       ...(config.resolve.alias || {}),
       'react-native$': 'react-native-web',
     };
-
     // Add custom `.web.{jsx?,tsx?}` extension resolver
     config.resolve.extensions = [
       '.web.js',

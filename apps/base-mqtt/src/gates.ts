@@ -1,4 +1,4 @@
-export const GATE_PREFIX = ' ';
+export const GATE_PREFIX = '@deur_';
 class Gates {
   private gates: string[] = [];
   constructor() {

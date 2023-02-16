@@ -170,3 +170,5 @@ Since Expo SDK 47, and therefore React Native 0.70.5, the codegen code is split 
   with&nbsp;:heart:&nbsp;&nbsp;<strong>byCedric</strong>
   <br />
 </div>
+
+If dayly work is delivierd with cms, we can add reboot ipads

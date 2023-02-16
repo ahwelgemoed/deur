@@ -15,11 +15,21 @@
     "@types/react": "^18.0.22",
     "@types/react-native": "^0.69.15",
     "tsup": "^5.11.13",
+    "@deur/eslint-config": "*",
     "typescript": "^4.7.4"
   },
   "dependencies": {
     "paho-mqtt": "^1.1.0",
     "react": "^18.1.0",
-    "react-native": "^0.70.3"
+    "react-native": "^0.70.3",
+    "react-native-mmkv": "^2.6.1",
+    "zustand": "^4.3.2"
+  },
+  "eslintConfig": {
+    "extends": "@deur/eslint-config",
+    "ignorePatterns": [
+      "node_modules",
+      "build"
+    ]
   }
 }

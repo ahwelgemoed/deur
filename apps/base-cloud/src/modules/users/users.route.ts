@@ -14,7 +14,7 @@ async function userRoutes(server: FastifyInstance) {
         description: 'Get users by location',
         tags: ['Location', 'User'],
         response: {
-          200: $ref('getUsersByLocation'),
+          200: $ref('getUsersByLocationWithVisits'),
         },
       },
     },

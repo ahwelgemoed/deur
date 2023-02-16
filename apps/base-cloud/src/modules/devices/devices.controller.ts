@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
+
 import { CompleteDevice } from './devices.schemas';
 import { prisma } from '../../server';
-
 
 export async function getAllDeviceTypes(request: FastifyRequest, reply: FastifyReply) {
   try {

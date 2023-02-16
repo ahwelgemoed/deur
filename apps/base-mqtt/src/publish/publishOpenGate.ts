@@ -9,6 +9,7 @@ import { mqttClient } from '../set-up-server';
  */
 export const respondToOpenGateRequest = async (clientId: string, isAllowed: boolean) => {
   console.log('isAllowed', isAllowed);
+
   // Publish to GATE
   mqttClient.publish(
     {

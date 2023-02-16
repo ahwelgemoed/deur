@@ -1,0 +1,13 @@
+{
+  "name": "@deur/scripts",
+  "dependencies": {
+    "@deur/cloud-prisma-db": "*",
+    "@deur/tsconfig": "*",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "sign-random-user-in": "nodemon --exec \"node -r esbuild-register ./src/sign-random-user-in.ts\" -e .ts",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "build": "tsc"
+  }
+}

@@ -1,8 +1,8 @@
-import { authApi } from '../../api/AxiosInstance';
-import { TDeviceSetupData } from '../../contexts/SetupDevice.Context';
+import { DeviceSetupData } from '@deur/shared-hooks';
 
-export const createDevice = async (device: TDeviceSetupData) => {
-  console.log('device', device);
+import { authApi } from '../../api/AxiosInstance';
+
+export const createDevice = async (device: DeviceSetupData) => {
   const response = await authApi.post(`/device/create-device`, {
     deviceId: device.deviceId,
     name: device.friendlyName,

@@ -1,4 +1,4 @@
-import { HomeIcon, Header } from '@deur/design-system';
+import { Header } from '@deur/design-system';
 import { useNavigation } from 'expo-router';
 import React from 'react';
 import { View, Text, KeyboardAvoidingView } from 'react-native';
@@ -7,11 +7,12 @@ interface MainLayoutProps_HeaderText {
   showBackButton?: boolean;
   headerComponent?: never;
   headerMainText: string;
-  headerSubText: string;
+  headerSubText?: string;
   body: React.ReactNode;
   footerComponent?: React.ReactNode;
   footerMainText?: never;
   footerSubText?: never;
+  bgColor?: string;
 }
 interface MainLayoutProps_HeaderNode {
   showBackButton?: boolean;
@@ -22,6 +23,7 @@ interface MainLayoutProps_HeaderNode {
   footerComponent?: React.ReactNode;
   footerMainText?: never;
   footerSubText?: never;
+  bgColor?: string;
 }
 interface MainLayoutProps_FooterText {
   showBackButton?: boolean;
@@ -32,6 +34,7 @@ interface MainLayoutProps_FooterText {
   footerComponent?: never;
   footerMainText?: string;
   footerSubText?: string;
+  bgColor?: string;
 }
 type MainLayoutProps =
   | MainLayoutProps_HeaderText
@@ -40,11 +43,9 @@ type MainLayoutProps =
 
 const MainLayout = ({
   body,
+  bgColor = '#00C6AE',
   headerSubText,
-  footerSubText,
   headerMainText,
-  footerMainText,
-  footerComponent,
   headerComponent,
   showBackButton = false,
 }: MainLayoutProps) => {
@@ -57,7 +58,8 @@ const MainLayout = ({
       enabled
       // keyboardVerticalOffset={50}
     >
-      <View className="bg-black w-full h-full flex p-2">
+      <View className={`bg-[#00C6AE] w-full h-full flex p-4`}>
+        {/* <View className={`bg-[${bgColor}] w-full h-full flex p-4`}> */}
         <View className="">
           {showBackButton && (
             <Text
@@ -73,12 +75,12 @@ const MainLayout = ({
             headerComponent
           ) : (
             <>
-              <Text className="uppercase text-[#DDDDE1] font-text text-[40px]">
-                {headerSubText}
-              </Text>
+              <Header classNames="text-white">{headerMainText}</Header>
+              <Text className="">{headerSubText}</Text>
             </>
           )}
         </View>
+
         <View className="flex-1 ">{body}</View>
       </View>
     </KeyboardAvoidingView>

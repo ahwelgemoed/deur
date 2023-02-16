@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { useNavigation, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
 
@@ -54,6 +54,7 @@ const CreateNewUser = () => {
 
   return (
     <MainLayout
+      bgColor="#FFBD12"
       showBackButton
       headerMainText="Create New User"
       headerSubText=""

@@ -27,7 +27,6 @@ export const { schemas: deviceSchemas, $ref } = buildJsonSchemas(
     getAllDeviceTypes,
     cleanDeviceSchema,
     createDeviceBody,
-    getAllDeviceTypes,
   },
   { $id: 'deviceSchemas' }
 );

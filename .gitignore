@@ -1,44 +1,27 @@
-# Monorepo
 apps/*/credentials.json
 apps/*/build
 packages/*/build
 .nyc_output
-# Turborepo
 .turbo
 playwright-report
 test-results
-
-# Expo
+public/sw.js
+public/workbox-*.js
 .expo
 __generated__
 web-build
-
-# macOS
 .DS_Store
 .db
 db
-# Node
 node_modules
 npm-debug.log
 yarn-error.log
 package-lock.json
-
-# Ruby
-.direnv
-
-# Emacs
 *~
-
-# Vim
 .*.swp
 .*.swo
 .*.swn
 .*.swm
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
 # Xcode
 *.pbxuser
 !default.pbxuser

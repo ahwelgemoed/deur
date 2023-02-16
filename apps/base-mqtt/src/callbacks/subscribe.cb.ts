@@ -11,6 +11,8 @@ export function clientSubscribed(subscriptions: Subscription[], client: Client) 
       subscription.topic === EMQQTTTopics.GATES_ONLINE &&
       client.id.toLowerCase().includes('mobile')
     ) {
+      console.log('🧘‍♀️Publishing gates');
+
       publishGates();
     }
   });
