@@ -1,7 +1,7 @@
 import { DeviceStateProvider } from '@deur/shared-hooks';
 import type { AppProps } from 'next/app';
-import { ThemeProvider } from 'next-themes';
 import { useRouter } from 'next/router';
+import { ThemeProvider } from 'next-themes';
 
 import '../styles/global.css';
 
