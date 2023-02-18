@@ -12,4 +12,5 @@ export const Basic: any = Template.bind({});
 Basic.args = {
   children: '@deur header',
   classNames: '',
+  isBig: false,
 };

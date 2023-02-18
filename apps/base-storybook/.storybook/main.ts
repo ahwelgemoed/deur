@@ -5,9 +5,6 @@ const config = {
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@storybook/addon-controls',
-    '@storybook/addon-viewport',
-    '@storybook/addon-outline',
     'storybook-tailwind-dark-mode',
     'storybook-addon-manual-mocks',
     {
@@ -22,7 +19,7 @@ const config = {
     builder: 'webpack5',
   },
   framework: '@storybook/react',
-  // typescript: { reactDocgen: false },
+  typescript: { reactDocgen: false },
   webpackFinal: async (config, { configType }) => {
     config.module.rules.push({
       test: /\.css$/,

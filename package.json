@@ -14,6 +14,7 @@
     "dev:base:web": "turbo dev --filter=\"{./apps/base-web}...\"",
     "dev:base:kiosk": "turbo dev --filter=\"{./apps/base-kiosk}...\"",
     "test:base:web:e2e": "turbo test:e2e --filter=\"{./apps/base-web}...\"",
+    "test:base:cloud:e2e": "turbo test:e2e --filter=\"{./apps/base-cloud}...\"",
     "test:base:web:e2e:report": "turbo report --filter=\"{./apps/base-web}...\"",
     "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
     "seed:base:cloud": "cd ./packages/cloud-prisma-db && npm run db:seed",

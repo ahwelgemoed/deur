@@ -342,9 +342,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       react-native-web: 0.18.7
-      storybook-addon-manual-mocks: ^0.0.6
       storybook-addon-theme-changer: ^0.1.2
-      storybook-tailwind-dark-mode: ^1.0.15
       tailwindcss: ^3.1.8
       typescript: 4.7.4
     dependencies:
@@ -372,9 +370,7 @@ importers:
       eslint-plugin-storybook: 0.6.10_hxadhbs2xogijvk7vq4t2azzbu
       postcss: 8.4.21
       postcss-loader: 7.0.2_postcss@8.4.21
-      storybook-addon-manual-mocks: 0.0.6_biqbaboplfbrettd7655fr4n2y
       storybook-addon-theme-changer: 0.1.2_biqbaboplfbrettd7655fr4n2y
-      storybook-tailwind-dark-mode: 1.0.15_biqbaboplfbrettd7655fr4n2y
       tailwindcss: 3.2.6
       typescript: 4.7.4
 
@@ -20839,26 +20835,6 @@ packages:
     resolution: {integrity: sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==}
     dev: true
 
-  /storybook-addon-manual-mocks/0.0.6_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-9+O0Pua1vWAhCj1dZ9c/A09sMqMAYqw65d4nULasPTwKWCC8z2mVKhbgbf+f23hMIj3NGmSdd91QqeYzr2ND+A==}
-    peerDependencies:
-      '@storybook/addons': ^6.5.8
-      '@storybook/api': ^6.5.8
-      '@storybook/components': ^6.5.8
-      '@storybook/core-events': ^6.5.8
-      '@storybook/theming': ^6.5.8
-      react: ^16.8.0 || ^17.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: true
-
   /storybook-addon-theme-changer/0.1.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-moN3hHg91W7Y4Gux8IsPuA0NUvqEliV3RBXCJ9Au6T7Gc5ME4fDy89eZVVSRs+1DTemQG1pYCikXtAR2p4dFfA==}
     peerDependencies:
@@ -20869,26 +20845,6 @@ packages:
       '@storybook/theming': ^6.4.0
       react: ^16.8.0 || ^17.0.0
       react-dom: ^16.8.0 || ^17.0.0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: true
-
-  /storybook-tailwind-dark-mode/1.0.15_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-rIN8vNqzKYN1wyZLfd1Wm4OwbNsaOJfnyc8gAkXTEMbmwaOF8vzOQMznuVdera4GdRtvCFkhhsf/IcYOkrrg1g==}
-    peerDependencies:
-      '@storybook/addons': ^6.2.9
-      '@storybook/api': ^6.2.9
-      '@storybook/components': ^6.2.9
-      '@storybook/core-events': ^6.2.9
-      '@storybook/theming': ^6.2.9
-      react: ^16.8.0 || ^17.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
       react:
         optional: true
