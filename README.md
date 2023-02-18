@@ -125,7 +125,7 @@ You can use yarn or npm with this monorepo as well. If you want to use one of th
 
 - [`setup-monorepo`](./.github/actions/setup-monorepo/action.yml) - Reusable composite workflow to setup the monorepo in GitHub Actions.
 
-## ⚠️ Caveats
+## ⚠️ Caveat
 
 ### Using environment variables in React Native
 
