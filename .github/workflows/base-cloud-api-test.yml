@@ -8,20 +8,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  test_setup:
-    name: Wait for Vercel preview deployment to be ready
-    runs-on: ubuntu-latest
-    outputs:
-      preview_url: ${{ steps.waitForVercelPreviewDeployment.outputs.url }}
-    steps:
-      - name: Wait for Vercel preview deployment to be ready
-        uses: patrickedqvist/wait-for-vercel-preview@v1.2.0
-        id: waitForVercelPreviewDeployment
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 600
   test_e2e:
-    needs: test_setup
     name: Playwright E2E Tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
