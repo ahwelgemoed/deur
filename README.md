@@ -3,6 +3,7 @@
 # Developer
 
 - TS Everywhere, C++ if you cant
+
 - Tailwind Everywhere
 - Easy to Deploy
 - Easy to update
