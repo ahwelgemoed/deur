@@ -24,6 +24,7 @@ COPY --from=builder /base-cloud/out/json/ .
 COPY --from=builder /base-cloud/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /base-cloud/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 RUN pnpm install
+RUN pnpm install tsx
 
 # Build the project
 COPY --from=builder /base-cloud/out/full/ .
