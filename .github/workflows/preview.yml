@@ -28,7 +28,7 @@ jobs:
         run: expo publish --release-channel=pr-${{ github.event.number }}
 
       - name: 💬 Comment preview
-        uses: expo/expo-github-action/preview-comment@v7
+        uses: expo/expo-github-action/preview-comment@v8
         with:
           project: apps/base-app
           channel: pr-${{ github.event.number }}
