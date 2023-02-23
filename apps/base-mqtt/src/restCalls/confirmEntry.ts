@@ -47,7 +47,7 @@ async function getUser(userId: string) {
       cardNumber: id,
     });
     const data: { isAllowed: boolean; requestId: string } = await response.data;
-
+    console.log('data', data);
     return { isAllowed: data.isAllowed, requestId: data.requestId };
   } catch (error) {
     console.error('error', error);

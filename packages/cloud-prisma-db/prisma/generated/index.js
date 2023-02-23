@@ -18,8 +18,9 @@ const {
   Debug,
   objectEnumValues,
   makeStrictEnum,
-  Extensions
-} = require('./runtime/index')
+  Extensions,
+  findSync
+} = require('./runtime/library')
 
 
 const Prisma = {}
@@ -27,12 +28,12 @@ const Prisma = {}
 exports.Prisma = Prisma
 
 /**
- * Prisma Client JS version: 4.9.0
- * Query Engine version: ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
+ * Prisma Client JS version: 4.10.1
+ * Query Engine version: aead147aa326ccb985dcfed5b065b4fdabd44b19
  */
 Prisma.prismaVersion = {
-  client: "4.9.0",
-  engine: "ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5"
+  client: "4.10.1",
+  engine: "aead147aa326ccb985dcfed5b065b4fdabd44b19"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -69,7 +70,6 @@ Prisma.NullTypes = {
 
   const path = require('path')
 
-const { findSync } = require('./runtime')
 const fs = require('fs')
 
 // some frameworks or bundlers replace or totally remove __dirname
@@ -207,8 +207,8 @@ const config = {
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "..",
-  "clientVersion": "4.9.0",
-  "engineVersion": "ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5",
+  "clientVersion": "4.10.1",
+  "engineVersion": "aead147aa326ccb985dcfed5b065b4fdabd44b19",
   "datasourceNames": [
     "db"
   ],
@@ -221,7 +221,7 @@ config.dirname = dirname
 
 
 
-const { warnEnvConflicts } = require('./runtime/index')
+const { warnEnvConflicts } = require('./runtime/library')
 
 warnEnvConflicts({
     rootEnvPath: config.relativeEnvPaths.rootEnvPath && path.resolve(dirname, config.relativeEnvPaths.rootEnvPath),

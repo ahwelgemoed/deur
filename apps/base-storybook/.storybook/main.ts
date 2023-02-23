@@ -19,7 +19,6 @@ const config = {
     builder: 'webpack5',
   },
   framework: '@storybook/react',
-  typescript: { reactDocgen: false },
   webpackFinal: async (config, { configType }) => {
     config.module.rules.push({
       test: /\.css$/,

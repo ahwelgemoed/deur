@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
-import { CompleteUser, CompleteVisitsToLocation, UserCloudModel } from './cloud-prisma-types';
+import {
+  CompleteUser,
+  CompleteVisitsToLocation,
+  UserCloudModel,
+  VisitsToLocationCloudModel,
+} from './cloud-prisma-types';
 
 export * from './cloud-prisma-types';
 

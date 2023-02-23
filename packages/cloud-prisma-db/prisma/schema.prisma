@@ -4,6 +4,14 @@ generator client {
   binaryTargets = ["linux-musl-openssl-3.0.x", "darwin-arm64"]
 }
 
+generator trpc {
+  provider       = "prisma-trpc-generator"
+  withMiddleware = false
+  withShield     = false
+  output         = "../../shared-trpc/src/generated"
+  contextPath    = "../../shared-trpc/src/context/prisma.context"
+}
+
 generator zod {
   provider    = "zod-prisma"
   modelSuffix = "CloudModel"

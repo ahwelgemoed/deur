@@ -9,20 +9,22 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
+    "@deur/eslint-config": "*",
     "@deur/shared-types": "*",
     "@deur/tsconfig": "*",
     "@types/paho-mqtt": "^1.0.6",
     "@types/react": "^18.0.22",
     "@types/react-native": "^0.69.15",
     "tsup": "^5.11.13",
-    "@deur/eslint-config": "*",
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.24.9",
     "paho-mqtt": "^1.1.0",
     "react": "^18.1.0",
     "react-native": "^0.70.3",
     "react-native-mmkv": "^2.6.1",
+    "superjson": "^1.12.2",
     "zustand": "^4.3.2"
   },
   "eslintConfig": {

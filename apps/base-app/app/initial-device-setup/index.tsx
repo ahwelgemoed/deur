@@ -10,8 +10,16 @@ import { createDevice } from '../../src/utils/mutations/device-mutations';
 import { getAllCountries } from '../../src/utils/queries/country-queries';
 import { getAllDeviceTypes } from '../../src/utils/queries/device-queries';
 import { getLocationByCountry } from '../../src/utils/queries/location-queries';
+import { api } from '../_layout';
 
 const InitialSetup = () => {
+  const s = api.greeting.useQuery({
+    name: 'asd',
+  });
+
+  // api.generatedRoutes.country.
+  console.log('s', s.data);
+
   const deviceState = useDeviceState();
   const [device, setDevice] = useState<DeviceSetupData>({
     deviceId: uuidv4(),

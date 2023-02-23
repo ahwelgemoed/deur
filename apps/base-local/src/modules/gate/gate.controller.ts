@@ -10,7 +10,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
 import { logGateUserQueue, redisClient } from '../../server';
 import { GPSLocation, isFeasibleVisit } from '../../services/isFeasibleVisit';
-import { UserAllowedCheckRequest } from './gate.schema';
+import { UserAllowedCheckRequest, UserHelpAtGate } from './gate.schema';
 
 export async function userAllowedCheck(
   request: FastifyRequest<{
@@ -33,14 +33,18 @@ export async function userAllowedCheck(
 
       if (users && users.length > 0) {
         const user = users.find((user) => user.cardNumber === body.cardNumber);
+
         if (!user) {
           addNotAllowedUserToCache(requestId, ReasonForVisit.NOT_USER, user);
           return reply.code(200).send({ isAllowed: false, requestId });
         }
-        const distanceCheck = await allowBasedOnLastSignedInLocation(user?.visits[0]);
-        if (!distanceCheck) {
-          addNotAllowedUserToCache(requestId, ReasonForVisit.NOT_FEASIBLE, user);
-          return reply.code(200).send({ isAllowed: false, requestId });
+        if (user?.visits[0]) {
+          // Do Time Check
+          const distanceCheck = await allowBasedOnLastSignedInLocation(user?.visits[0]);
+          if (!distanceCheck) {
+            addNotAllowedUserToCache(requestId, ReasonForVisit.NOT_FEASIBLE, user);
+            return reply.code(200).send({ isAllowed: false, requestId });
+          }
         }
 
         if (user?.isAllowed) {
@@ -105,6 +109,7 @@ const allowBasedOnLastSignedInLocation = async (lastVisit: CompleteVisitsToLocat
       lat: currentLocation.lat,
       long: currentLocation.long,
     };
+
     return isFeasibleVisit(userLocationGPS, currentLocationGPS, lastVisit.createdAt);
   }
 };
@@ -119,5 +124,28 @@ const addNotAllowedUserToCache = (
     errorId: id,
     reason,
   };
-  redisClient.set(id, JSON.stringify(data), 'EX', 10);
+  console.log('id💃🏽', id);
+  redisClient.set(id, JSON.stringify(data), 'EX', 20_000);
 };
+
+export async function getGateUserToHelp(
+  request: FastifyRequest<{
+    Params: UserHelpAtGate;
+  }>,
+  reply: FastifyReply
+) {
+  const { id } = request.params;
+  try {
+    const data = await redisClient.get(id);
+    console.log('data', data);
+    if (data) {
+      const user = JSON.parse(data as string) as ICleanUserSchema;
+      console.log('user', user);
+
+      return reply.code(200).send({ ...user });
+    }
+    return reply.code(200).send({ user: null });
+  } catch (error) {
+    return reply.code(500).send({ status: 'ERROR' });
+  }
+}

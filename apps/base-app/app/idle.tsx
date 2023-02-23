@@ -1,7 +1,7 @@
 import { useMqttMessageListener } from '@deur/shared-hooks';
 import { EMQQTTTopics } from '@deur/shared-types';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 
 import { useSetToIdle } from '../src/contexts/IdleState.Context';
@@ -27,6 +27,14 @@ export default function IdlePage() {
       setToActive();
     }, 0);
   };
+
+  useEffect(() => {
+    if (helpThisUserActive) {
+      setTimeout(() => {
+        setHelpThisUserActive('');
+      }, 10_000);
+    }
+  }, [helpThisUserActive]);
 
   // TODO:: MOVE TO PAGE OF ITS OWN
   if (helpThisUserActive) {

@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Ubuntu_500Medium_Italic'],
-        body: ['Ubuntu_500Medium'],
-        text: ['Ubuntu_300Light'],
+        display: [''],
+        body: [''],
+        text: [''],
       },
     },
   },

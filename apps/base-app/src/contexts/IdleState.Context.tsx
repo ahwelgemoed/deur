@@ -1,6 +1,6 @@
 import { useRouter, usePathname } from 'expo-router';
-import { createContext, useContext, useEffect, useState } from 'react';
-import UserInactivity from 'react-native-user-inactivity';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { Pressable } from 'react-native';
 
 type IdleStateProviderProps = { children: React.ReactNode };
 
@@ -17,7 +17,7 @@ const IdleContext = createContext<{
 export function IdleStateProvider({ children }: IdleStateProviderProps) {
   const pathName = usePathname();
   const router = useRouter();
-  // const idleTime = useRef(10_0000);
+  const timeOutRef = useRef<NodeJS.Timeout>();
 
   const setToInactive = () => {
     setActive(false);
@@ -27,7 +27,6 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
   };
 
   const [active, setActive] = useState(true);
-  console.log('active', active);
   useEffect(() => {
     if (active) {
       // GO TO HOME PAGE
@@ -41,20 +40,21 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
     }
   }, [active]);
 
+  const onScreenHasBeenPressedOn = () => {
+    if (!active) {
+      setToActive();
+    }
+    if (timeOutRef.current) {
+      clearTimeout(timeOutRef.current);
+    }
+    timeOutRef.current = setTimeout(() => {
+      setToInactive();
+    }, 5000);
+  };
+
   return (
     <IdleContext.Provider value={{ isActive: active, setToInactive, setToActive }}>
-      {/* <UserInactivity
-        isActive={active}
-        timeForInactivity={pathName === '/' ? 5000 : 10_0000}
-        // timeForInactivity={idleTime.current}
-        onAction={(isActive: boolean) => {
-          if (!isActive) {
-            setActive(isActive);
-          }
-        }}
-      > */}
-      {children}
-      {/* </UserInactivity> */}
+      <Pressable onPress={onScreenHasBeenPressedOn}>{children}</Pressable>
     </IdleContext.Provider>
   );
 }

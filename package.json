@@ -19,6 +19,8 @@
     "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
     "seed:base:cloud": "cd ./packages/cloud-prisma-db && npm run db:seed",
     "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local --continue --parallel",
+    "dev:base:trpc": "turbo dev --filter=@deur/base-local-trpc --continue --parallel",
+    "dev:base:mqtt": "turbo dev --filter=@deur/base-mqtt --continue --parallel",
     "dev:base:storybook": "turbo dev --filter=\"...{./apps/base-storybook}...\"",
     "dev:base:server": "turbo dev --filter=\"...{./apps/base-cloud}...\"",
     "cloud": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build;",

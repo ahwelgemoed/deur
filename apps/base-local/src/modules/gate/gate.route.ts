@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { userAllowedCheck } from './gate.controller';
+import { getGateUserToHelp, userAllowedCheck } from './gate.controller';
 import { $ref } from './gate.schema';
 
 async function gateRoutes(server: FastifyInstance) {
@@ -14,6 +14,18 @@ async function gateRoutes(server: FastifyInstance) {
       },
     },
     userAllowedCheck
+  );
+  server.get(
+    '/user-gate-help/:id',
+    {
+      schema: {
+        params: $ref('userHelpRequestParams'),
+        response: {
+          200: $ref('HelpUserReply'),
+        },
+      },
+    },
+    getGateUserToHelp
   );
 }
 

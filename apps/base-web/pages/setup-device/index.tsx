@@ -6,8 +6,9 @@ const SetupDevice = () => {
 
   return (
     <div>
-      SET UP DEVICE
-      <Header classNames="bg-red-500">Hello</Header>
+      <Header classNames="" isBig={true}>
+        Welcome to @deur
+      </Header>
       <button
         onClick={() => {
           t.setState({
