@@ -6,6 +6,7 @@ import {
   UserCloudModel,
   VisitsToLocationCloudModel,
 } from './cloud-prisma-types';
+import { ReasonForVisit } from './reasonTypes';
 
 export * from './cloud-prisma-types';
 
@@ -59,6 +60,10 @@ export const CleanUserSchema = UserCloudModel.omit({
 
 export interface ICleanUserSchema extends z.infer<typeof CleanUserSchema> {
   visits: CompleteVisitsToLocation[];
+}
+
+export interface ISignedInUserInRedis extends ICleanUserSchema {
+  reason: ReasonForVisit;
 }
 
 export const cloudHeaders = z.object({

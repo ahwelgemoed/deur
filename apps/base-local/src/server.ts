@@ -36,7 +36,6 @@ export const logGateUserQueue = new Queue(LOG_GATE_USER, {
 export function bootstrap(): FastifyInstance {
   const server = Fastify();
   const serverAdapter = new FastifyAdapter();
-
   createBullBoard({
     queues: [new BullMQAdapter(logGateUserQueue)],
     serverAdapter,
@@ -76,7 +75,7 @@ export function bootstrap(): FastifyInstance {
   server.register(require('@fastify/swagger-ui'), {
     routePrefix: '/swagger',
   });
-  serverAdapter.setBasePath('/ui');
+
   // @ts-ignore
   server.register(serverAdapter.registerPlugin(), { prefix: '/ui' });
   // Register all routes

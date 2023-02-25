@@ -631,6 +631,37 @@ importers:
       '@deur/tsconfig': link:../tsconfig
       typescript: 4.9.5
 
+  packages/shared-functions:
+    specifiers:
+      '@deur/cloud-prisma-db': '*'
+      '@deur/eslint-config': '*'
+      '@deur/shared-types': '*'
+      '@deur/tsconfig': '*'
+      '@tanstack/react-query': ^4.23.0
+      '@trpc/client': ^10.2.0
+      '@trpc/react-query': ^10.9.0
+      '@trpc/server': ^10.1.0
+      '@types/react': ^18.0.22
+      '@types/react-native': ^0.69.15
+      react: ^18.1.0
+      react-native: ^0.70.3
+      typescript: ^4.7.4
+    dependencies:
+      '@deur/cloud-prisma-db': link:../cloud-prisma-db
+      '@tanstack/react-query': 4.24.10_gsl26ufhuqz7slchfhyupetrmm
+      '@trpc/client': 10.12.0_@trpc+server@10.12.0
+      '@trpc/react-query': 10.12.0_r3ybe2mzzfybfq7cyjdcr4ihze
+      '@trpc/server': 10.12.0
+      react: 18.2.0
+      react-native: 0.70.7_react@18.2.0
+    devDependencies:
+      '@deur/eslint-config': link:../eslint-config
+      '@deur/shared-types': link:../shared-types
+      '@deur/tsconfig': link:../tsconfig
+      '@types/react': 18.0.28
+      '@types/react-native': 0.69.18
+      typescript: 4.9.5
+
   packages/shared-hooks:
     specifiers:
       '@deur/eslint-config': '*'
@@ -670,6 +701,7 @@ importers:
     specifiers:
       '@deur/cloud-prisma-db': '*'
       '@deur/eslint-config': '*'
+      '@deur/shared-functions': '*'
       '@deur/shared-types': '*'
       '@deur/tsconfig': '*'
       '@tanstack/react-query': ^4.23.0
@@ -685,6 +717,7 @@ importers:
       zustand: ^4.3.2
     dependencies:
       '@deur/cloud-prisma-db': link:../cloud-prisma-db
+      '@deur/shared-functions': link:../shared-functions
       '@tanstack/react-query': 4.24.10_gsl26ufhuqz7slchfhyupetrmm
       '@trpc/client': 10.12.0_@trpc+server@10.12.0
       '@trpc/react-query': 10.12.0_r3ybe2mzzfybfq7cyjdcr4ihze

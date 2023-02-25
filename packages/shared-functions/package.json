@@ -1,5 +1,5 @@
 {
-  "name": "@deur/shared-trpc",
+  "name": "@deur/shared-functions",
   "version": "0.0.0",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -19,15 +19,12 @@
   },
   "dependencies": {
     "@deur/cloud-prisma-db": "*",
-    "@deur/shared-functions": "*",
     "@tanstack/react-query": "^4.23.0",
     "@trpc/client": "^10.2.0",
     "@trpc/server": "^10.1.0",
     "@trpc/react-query": "^10.9.0",
     "react": "^18.1.0",
-    "react-native": "^0.70.3",
-    "superjson": "^1.12.2",
-    "zustand": "^4.3.2"
+    "react-native": "^0.70.3"
   },
   "eslintConfig": {
     "extends": "@deur/eslint-config",

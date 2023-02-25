@@ -1,3 +1,4 @@
+import { createTRPCServerClient } from '@deur/shared-trpc';
 import * as dotenv from 'dotenv';
 
 import { bootstrap } from './server';

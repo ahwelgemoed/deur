@@ -1,7 +1,7 @@
 import { EMQQTTTopics } from '@deur/shared-types';
 import axios from 'axios';
 import { respondToOpenGateRequest } from '../publish/publishOpenGate';
-import { mqttClient } from '../set-up-server';
+import { localTrpcClientInstance, mqttClient } from '../set-up-server';
 
 /**
  * Check if user may enter
@@ -9,30 +9,40 @@ import { mqttClient } from '../set-up-server';
  * @param clientId Client ID of the MQTT Client
  */
 export async function checkIfUserMayEnter(userId: string, clientId: string) {
-  // Do a Rest Call to Local Server to Check USER
-  const { isAllowed, requestId } = await getUser(userId);
-  // Publish Back to Gate
-  await respondToOpenGateRequest(clientId, isAllowed);
+  try {
+    const cardNumber = JSON.parse(userId).cardNumber;
 
-  if (!isAllowed) {
-    console.log('🚫 USER IS NOT ALLOWED TO ENTER');
-
-    // Push to Kiosks
-    mqttClient.publish(
+    const isThisCardNumberAllowed = await localTrpcClientInstance.canThisUserBeLetInToTheClub.query(
       {
-        cmd: 'publish',
-        qos: 0,
-        dup: false,
-        retain: false,
-        topic: EMQQTTTopics.HELP_THIS_USER,
-        payload: requestId || '',
-      },
-      (err) => {
-        if (err) {
-          console.log('err', err);
-        }
+        cardNumber,
       }
     );
+
+    await respondToOpenGateRequest(clientId, isThisCardNumberAllowed.isAllowed); // REPLAYS TO GATE - OVER MQTT
+    if (!isThisCardNumberAllowed.isAllowed) {
+      console.log(
+        '🚫 USER IS NOT ALLOWED TO ENTER',
+        JSON.stringify(isThisCardNumberAllowed, null, 2)
+      );
+      // iPAD WILL RESPOND TO THIS
+      mqttClient.publish(
+        {
+          cmd: 'publish',
+          qos: 0,
+          dup: false,
+          retain: false,
+          topic: EMQQTTTopics.HELP_THIS_USER,
+          payload: cardNumber,
+        },
+        (err) => {
+          if (err) {
+            console.log('err', err);
+          }
+        }
+      );
+    }
+  } catch (error) {
+    console.log('MQTT :: checkIfUserMayEnter', error);
   }
 }
 

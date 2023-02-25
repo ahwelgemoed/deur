@@ -42,6 +42,7 @@ export type GPSLocation = {
   lat: string;
   long: string;
 };
+
 /**
  * @description - This function checks if the distance between the current location and the last signed in location is feasible
  * @param location1 - The location of the user
@@ -49,19 +50,26 @@ export type GPSLocation = {
  * @param lastVisitTime - The time of the last visit
  * @returns - A boolean indicating if the visit is feasible
  */
-export const isFeasibleVisit = (
+export const isGeographicallyFeasible = (
   location1: GPSLocation,
   location2: GPSLocation,
   lastVisitTime: Date
 ) => {
+  const dateOfLastVisit = new Date(lastVisitTime);
+  const dateOfCurrentVisit = new Date();
+
+  // Is last visit more than 24 hours ago?
+  const diffInHours = (dateOfCurrentVisit.getTime() - dateOfLastVisit.getTime()) / 1000 / 60 / 60;
+  if (diffInHours > 24) {
+    return true;
+  }
+
   const distanceBetweenCurrentLocationAndLastSignedInLocation = calcCrow(
     parseString(location1.lat),
     parseString(location1.long),
     parseString(location2.lat),
     parseString(location2.long)
   );
-  const dateOfLastVisit = new Date(lastVisitTime);
-  const dateOfCurrentVisit = new Date();
 
   const diffInSeconds = (dateOfCurrentVisit.getTime() - dateOfLastVisit.getTime()) / 1000;
 
