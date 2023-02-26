@@ -1,5 +1,5 @@
 import { FastifyAdapter, createBullBoard, BullMQAdapter } from '@bull-board/fastify';
-import { ICleanUserSchema } from '@deur/shared-types';
+import { ICleanUserSchema, ReasonForVisit } from '@deur/shared-types';
 import { Queue } from 'bullmq';
 import { FastifyInstance } from 'fastify';
 import Redis from 'ioredis';
@@ -60,4 +60,11 @@ export const findCardNumberInRedisCache = async (
     return false;
   }
   return isUserInCache;
+};
+
+export const replyResponse = (reason: ReasonForVisit, isAllowed = false) => {
+  return {
+    isAllowed,
+    reason,
+  };
 };

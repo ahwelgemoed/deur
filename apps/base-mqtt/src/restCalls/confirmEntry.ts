@@ -1,5 +1,4 @@
 import { EMQQTTTopics } from '@deur/shared-types';
-import axios from 'axios';
 import { respondToOpenGateRequest } from '../publish/publishOpenGate';
 import { localTrpcClientInstance, mqttClient } from '../set-up-server';
 
@@ -24,8 +23,8 @@ export async function checkIfUserMayEnter(userId: string, clientId: string) {
         '🚫 USER IS NOT ALLOWED TO ENTER',
         JSON.stringify(isThisCardNumberAllowed, null, 2)
       );
-      // iPAD WILL RESPOND TO THIS
-      mqttClient.publish(
+      // iPAD WILL,...should, RESPOND TO THIS
+      return mqttClient.publish(
         {
           cmd: 'publish',
           qos: 0,
@@ -41,26 +40,8 @@ export async function checkIfUserMayEnter(userId: string, clientId: string) {
         }
       );
     }
+    console.log('✅ USER IS ALLOWED TO ENTER', JSON.stringify(isThisCardNumberAllowed, null, 2));
   } catch (error) {
     console.log('MQTT :: checkIfUserMayEnter', error);
-  }
-}
-
-async function getUser(userId: string) {
-  console.log('🦬 FETCHING USER ', userId);
-
-  const { id } = JSON.parse(userId) as { id: string };
-
-  const url = `http://127.0.0.1:${process.env.BASE_LOCAL_PORT}/gate/user-gate-check`;
-  try {
-    const response = await axios.post(url, {
-      cardNumber: id,
-    });
-    const data: { isAllowed: boolean; requestId: string } = await response.data;
-    console.log('data', data);
-    return { isAllowed: data.isAllowed, requestId: data.requestId };
-  } catch (error) {
-    console.error('error', error);
-    return { isAllowed: false };
   }
 }

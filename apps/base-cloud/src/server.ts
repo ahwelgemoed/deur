@@ -1,6 +1,9 @@
 import { PrismaClient } from '@deur/cloud-prisma-db';
+import { mainCloudRouter } from '@deur/shared-trpc';
+import { cloudCreateContext } from '@deur/shared-trpc/src/trpc/context/cloudServerContext';
 import cors from '@fastify/cors';
 import FastifySwagger from '@fastify/swagger';
+import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import Fastify, { FastifyInstance } from 'fastify';
 import { withRefResolver } from 'fastify-zod';
 
@@ -65,6 +68,11 @@ export function bootstrap(): FastifyInstance {
   // Register all routes
   server.get('/healthcheck', async () => {
     return { status: 'OK', version: pjson.version, uptime: process.uptime() };
+  });
+
+  server.register(fastifyTRPCPlugin, {
+    prefix: '/trpc',
+    trpcOptions: { router: mainCloudRouter, createContext: cloudCreateContext },
   });
 
   server.register(locationRoutes, { prefix: '/v1/location' });

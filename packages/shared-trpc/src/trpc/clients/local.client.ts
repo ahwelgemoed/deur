@@ -1,9 +1,9 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import superjson from 'superjson';
 
-import { LocalAppRouter } from '../routers/local.router';
-export const createTRPCServerClient = (connectionUrl: string) => {
-  const trpcBaseLocalClient = createTRPCProxyClient<LocalAppRouter>({
+export const createTRPCServerClient = <T>(connectionUrl: string) => {
+  // @ts-ignore
+  const trpcBaseLocalClient = createTRPCProxyClient<T>({
     transformer: superjson,
     links: [
       httpBatchLink({

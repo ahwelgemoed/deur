@@ -1,15 +1,15 @@
-import { t, publicProcedure } from './helpers/createRouter';
-import { LocationFindUniqueSchema } from '../schemas/findUniqueLocation.schema';
-import { LocationFindFirstSchema } from '../schemas/findFirstLocation.schema';
-import { LocationFindManySchema } from '../schemas/findManyLocation.schema';
-import { LocationCreateOneSchema } from '../schemas/createOneLocation.schema';
-import { LocationDeleteOneSchema } from '../schemas/deleteOneLocation.schema';
-import { LocationUpdateOneSchema } from '../schemas/updateOneLocation.schema';
-import { LocationDeleteManySchema } from '../schemas/deleteManyLocation.schema';
-import { LocationUpdateManySchema } from '../schemas/updateManyLocation.schema';
-import { LocationUpsertSchema } from '../schemas/upsertOneLocation.schema';
-import { LocationAggregateSchema } from '../schemas/aggregateLocation.schema';
-import { LocationGroupBySchema } from '../schemas/groupByLocation.schema';
+import { t, publicProcedure } from "./helpers/createRouter";
+import { LocationAggregateSchema } from "../schemas/aggregateLocation.schema";
+import { LocationCreateOneSchema } from "../schemas/createOneLocation.schema";
+import { LocationDeleteManySchema } from "../schemas/deleteManyLocation.schema";
+import { LocationDeleteOneSchema } from "../schemas/deleteOneLocation.schema";
+import { LocationFindFirstSchema } from "../schemas/findFirstLocation.schema";
+import { LocationFindManySchema } from "../schemas/findManyLocation.schema";
+import { LocationFindUniqueSchema } from "../schemas/findUniqueLocation.schema";
+import { LocationGroupBySchema } from "../schemas/groupByLocation.schema";
+import { LocationUpdateManySchema } from "../schemas/updateManyLocation.schema";
+import { LocationUpdateOneSchema } from "../schemas/updateOneLocation.schema";
+import { LocationUpsertSchema } from "../schemas/upsertOneLocation.schema";
 
 export const locationsRouter = t.router({
   aggregateLocation: publicProcedure
@@ -48,10 +48,12 @@ export const locationsRouter = t.router({
       const findFirstLocationOrThrow = await ctx.prisma.location.findFirstOrThrow(input);
       return findFirstLocationOrThrow;
     }),
-  findManyLocation: publicProcedure.input(LocationFindManySchema).query(async ({ ctx, input }) => {
-    const findManyLocation = await ctx.prisma.location.findMany(input);
-    return findManyLocation;
-  }),
+  findManyLocation: publicProcedure
+    .input(LocationFindManySchema)
+    .query(async ({ ctx, input }) => {
+      const findManyLocation = await ctx.prisma.location.findMany(input);
+      return findManyLocation;
+    }),
   findUniqueLocation: publicProcedure
     .input(LocationFindUniqueSchema)
     .query(async ({ ctx, input }) => {
@@ -64,17 +66,12 @@ export const locationsRouter = t.router({
       const findUniqueLocationOrThrow = await ctx.prisma.location.findUniqueOrThrow(input);
       return findUniqueLocationOrThrow;
     }),
-  groupByLocation: publicProcedure.input(LocationGroupBySchema).query(async ({ ctx, input }) => {
-    const groupByLocation = await ctx.prisma.location.groupBy({
-      where: input.where,
-      orderBy: input.orderBy,
-      by: input.by,
-      having: input.having,
-      take: input.take,
-      skip: input.skip,
-    });
-    return groupByLocation;
-  }),
+  groupByLocation: publicProcedure
+    .input(LocationGroupBySchema)
+    .query(async ({ ctx, input }) => {
+      const groupByLocation = await ctx.prisma.location.groupBy({ where: input.where, orderBy: input.orderBy, by: input.by, having: input.having, take: input.take, skip: input.skip });
+      return groupByLocation;
+    }),
   updateManyLocation: publicProcedure
     .input(LocationUpdateManySchema)
     .mutation(async ({ ctx, input }) => {
@@ -93,4 +90,5 @@ export const locationsRouter = t.router({
       const upsertOneLocation = await ctx.prisma.location.upsert(input);
       return upsertOneLocation;
     }),
-});
+
+})

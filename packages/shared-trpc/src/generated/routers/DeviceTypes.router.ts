@@ -1,15 +1,15 @@
-import { t, publicProcedure } from './helpers/createRouter';
-import { DeviceTypesFindUniqueSchema } from '../schemas/findUniqueDeviceTypes.schema';
-import { DeviceTypesFindFirstSchema } from '../schemas/findFirstDeviceTypes.schema';
-import { DeviceTypesFindManySchema } from '../schemas/findManyDeviceTypes.schema';
-import { DeviceTypesCreateOneSchema } from '../schemas/createOneDeviceTypes.schema';
-import { DeviceTypesDeleteOneSchema } from '../schemas/deleteOneDeviceTypes.schema';
-import { DeviceTypesUpdateOneSchema } from '../schemas/updateOneDeviceTypes.schema';
-import { DeviceTypesDeleteManySchema } from '../schemas/deleteManyDeviceTypes.schema';
-import { DeviceTypesUpdateManySchema } from '../schemas/updateManyDeviceTypes.schema';
-import { DeviceTypesUpsertSchema } from '../schemas/upsertOneDeviceTypes.schema';
-import { DeviceTypesAggregateSchema } from '../schemas/aggregateDeviceTypes.schema';
-import { DeviceTypesGroupBySchema } from '../schemas/groupByDeviceTypes.schema';
+import { t, publicProcedure } from "./helpers/createRouter";
+import { DeviceTypesAggregateSchema } from "../schemas/aggregateDeviceTypes.schema";
+import { DeviceTypesCreateOneSchema } from "../schemas/createOneDeviceTypes.schema";
+import { DeviceTypesDeleteManySchema } from "../schemas/deleteManyDeviceTypes.schema";
+import { DeviceTypesDeleteOneSchema } from "../schemas/deleteOneDeviceTypes.schema";
+import { DeviceTypesFindFirstSchema } from "../schemas/findFirstDeviceTypes.schema";
+import { DeviceTypesFindManySchema } from "../schemas/findManyDeviceTypes.schema";
+import { DeviceTypesFindUniqueSchema } from "../schemas/findUniqueDeviceTypes.schema";
+import { DeviceTypesGroupBySchema } from "../schemas/groupByDeviceTypes.schema";
+import { DeviceTypesUpdateManySchema } from "../schemas/updateManyDeviceTypes.schema";
+import { DeviceTypesUpdateOneSchema } from "../schemas/updateOneDeviceTypes.schema";
+import { DeviceTypesUpsertSchema } from "../schemas/upsertOneDeviceTypes.schema";
 
 export const devicetypesRouter = t.router({
   aggregateDeviceTypes: publicProcedure
@@ -69,14 +69,7 @@ export const devicetypesRouter = t.router({
   groupByDeviceTypes: publicProcedure
     .input(DeviceTypesGroupBySchema)
     .query(async ({ ctx, input }) => {
-      const groupByDeviceTypes = await ctx.prisma.deviceTypes.groupBy({
-        where: input.where,
-        orderBy: input.orderBy,
-        by: input.by,
-        having: input.having,
-        take: input.take,
-        skip: input.skip,
-      });
+      const groupByDeviceTypes = await ctx.prisma.deviceTypes.groupBy({ where: input.where, orderBy: input.orderBy, by: input.by, having: input.having, take: input.take, skip: input.skip });
       return groupByDeviceTypes;
     }),
   updateManyDeviceTypes: publicProcedure
@@ -97,4 +90,5 @@ export const devicetypesRouter = t.router({
       const upsertOneDeviceTypes = await ctx.prisma.deviceTypes.upsert(input);
       return upsertOneDeviceTypes;
     }),
-});
+
+})

@@ -13,7 +13,7 @@
     "@types/node-cron": "^3.0.7",
     "chance": "^1.1.9",
     "node-cron": "^3.0.2",
-    "prisma-trpc-generator": "^1.0.2",
+    "prisma-trpc-generator": "^1.1.0",
     "prisma-zod-generator": "^0.8.11",
     "react-native-shared-element": "0.8.4",
     "tsup": "^5.11.13",

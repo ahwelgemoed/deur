@@ -3,7 +3,7 @@ import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { z } from 'zod';
 
-import { findCardNumberInRedisCache } from '../../func/redis';
+import { findCardNumberInRedisCache, replyResponse } from '../../func/redis';
 import { LocalContext } from '../context/localServerContext';
 import { isFeasibleVisit } from '../services/userVist.service';
 
@@ -42,7 +42,6 @@ export const mainLocalRouter = t.router({
       if (justSingedInCache) {
         return replyResponse(ReasonForVisit.JUST_SIGNED_IN);
       }
-
       // Check if  User in Local Redis Cache
       const isUserInLocalCache = await ctx.redis.get(RedisKeys.LocalBaseUsers);
 
@@ -53,14 +52,12 @@ export const mainLocalRouter = t.router({
       if (!isUserInLocalCacheRedis) {
         return replyResponse(ReasonForVisit.NOT_USER);
       }
-
       // Check if User is Feasible
       const isGeoFeasible = await isFeasibleVisit(ctx, isUserInLocalCacheRedis.visits[0]);
 
       if (!isGeoFeasible.isFeasible) {
         return replyResponse(isGeoFeasible.reason);
       }
-
       // THIS WILL ALLOW THE USER TO ENTER THE LOCATION
       if (isGeoFeasible.isFeasible) {
         // SET USER TO QUEUE - WILL BE ADDED TO CLOUD SERVER
@@ -79,12 +76,5 @@ export const mainLocalRouter = t.router({
       return replyResponse(ReasonForVisit.ERROR);
     }),
 });
-
-const replyResponse = (reason: ReasonForVisit, isAllowed = false) => {
-  return {
-    isAllowed,
-    reason,
-  };
-};
 
 export type LocalAppRouter = typeof mainLocalRouter;

@@ -1,7 +1,7 @@
 import Aedes from 'aedes';
 import { createServer } from 'http';
 import { createServer as netServer } from 'net';
-import { createTRPCServerClient } from '@deur/shared-trpc';
+import { createTRPCServerClient, LocalAppRouter } from '@deur/shared-trpc';
 import websocketStream from 'websocket-stream';
 
 import { clientConnected } from './callbacks/connected.cb';
@@ -18,7 +18,9 @@ const mqttClient = new Aedes();
 const mqttServerConnection = netServer(mqttClient.handle as any);
 const httpServer = createServer();
 
-export const localTrpcClientInstance = createTRPCServerClient('http://127.0.0.1:3033/trpc');
+export const localTrpcClientInstance = createTRPCServerClient<LocalAppRouter>(
+  'http://127.0.0.1:3033/trpc'
+);
 
 websocketStream.createServer({ server: httpServer }, mqttClient.handle as any);
 

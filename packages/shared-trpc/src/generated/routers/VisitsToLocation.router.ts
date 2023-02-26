@@ -1,15 +1,15 @@
-import { t, publicProcedure } from './helpers/createRouter';
-import { VisitsToLocationFindUniqueSchema } from '../schemas/findUniqueVisitsToLocation.schema';
-import { VisitsToLocationFindFirstSchema } from '../schemas/findFirstVisitsToLocation.schema';
-import { VisitsToLocationFindManySchema } from '../schemas/findManyVisitsToLocation.schema';
-import { VisitsToLocationCreateOneSchema } from '../schemas/createOneVisitsToLocation.schema';
-import { VisitsToLocationDeleteOneSchema } from '../schemas/deleteOneVisitsToLocation.schema';
-import { VisitsToLocationUpdateOneSchema } from '../schemas/updateOneVisitsToLocation.schema';
-import { VisitsToLocationDeleteManySchema } from '../schemas/deleteManyVisitsToLocation.schema';
-import { VisitsToLocationUpdateManySchema } from '../schemas/updateManyVisitsToLocation.schema';
-import { VisitsToLocationUpsertSchema } from '../schemas/upsertOneVisitsToLocation.schema';
-import { VisitsToLocationAggregateSchema } from '../schemas/aggregateVisitsToLocation.schema';
-import { VisitsToLocationGroupBySchema } from '../schemas/groupByVisitsToLocation.schema';
+import { t, publicProcedure } from "./helpers/createRouter";
+import { VisitsToLocationAggregateSchema } from "../schemas/aggregateVisitsToLocation.schema";
+import { VisitsToLocationCreateOneSchema } from "../schemas/createOneVisitsToLocation.schema";
+import { VisitsToLocationDeleteManySchema } from "../schemas/deleteManyVisitsToLocation.schema";
+import { VisitsToLocationDeleteOneSchema } from "../schemas/deleteOneVisitsToLocation.schema";
+import { VisitsToLocationFindFirstSchema } from "../schemas/findFirstVisitsToLocation.schema";
+import { VisitsToLocationFindManySchema } from "../schemas/findManyVisitsToLocation.schema";
+import { VisitsToLocationFindUniqueSchema } from "../schemas/findUniqueVisitsToLocation.schema";
+import { VisitsToLocationGroupBySchema } from "../schemas/groupByVisitsToLocation.schema";
+import { VisitsToLocationUpdateManySchema } from "../schemas/updateManyVisitsToLocation.schema";
+import { VisitsToLocationUpdateOneSchema } from "../schemas/updateOneVisitsToLocation.schema";
+import { VisitsToLocationUpsertSchema } from "../schemas/upsertOneVisitsToLocation.schema";
 
 export const visitstolocationsRouter = t.router({
   aggregateVisitsToLocation: publicProcedure
@@ -45,9 +45,7 @@ export const visitstolocationsRouter = t.router({
   findFirstVisitsToLocationOrThrow: publicProcedure
     .input(VisitsToLocationFindFirstSchema)
     .query(async ({ ctx, input }) => {
-      const findFirstVisitsToLocationOrThrow = await ctx.prisma.visitsToLocation.findFirstOrThrow(
-        input
-      );
+      const findFirstVisitsToLocationOrThrow = await ctx.prisma.visitsToLocation.findFirstOrThrow(input);
       return findFirstVisitsToLocationOrThrow;
     }),
   findManyVisitsToLocation: publicProcedure
@@ -65,22 +63,13 @@ export const visitstolocationsRouter = t.router({
   findUniqueVisitsToLocationOrThrow: publicProcedure
     .input(VisitsToLocationFindUniqueSchema)
     .query(async ({ ctx, input }) => {
-      const findUniqueVisitsToLocationOrThrow = await ctx.prisma.visitsToLocation.findUniqueOrThrow(
-        input
-      );
+      const findUniqueVisitsToLocationOrThrow = await ctx.prisma.visitsToLocation.findUniqueOrThrow(input);
       return findUniqueVisitsToLocationOrThrow;
     }),
   groupByVisitsToLocation: publicProcedure
     .input(VisitsToLocationGroupBySchema)
     .query(async ({ ctx, input }) => {
-      const groupByVisitsToLocation = await ctx.prisma.visitsToLocation.groupBy({
-        where: input.where,
-        orderBy: input.orderBy,
-        by: input.by,
-        having: input.having,
-        take: input.take,
-        skip: input.skip,
-      });
+      const groupByVisitsToLocation = await ctx.prisma.visitsToLocation.groupBy({ where: input.where, orderBy: input.orderBy, by: input.by, having: input.having, take: input.take, skip: input.skip });
       return groupByVisitsToLocation;
     }),
   updateManyVisitsToLocation: publicProcedure
@@ -101,4 +90,5 @@ export const visitstolocationsRouter = t.router({
       const upsertOneVisitsToLocation = await ctx.prisma.visitsToLocation.upsert(input);
       return upsertOneVisitsToLocation;
     }),
-});
+
+})

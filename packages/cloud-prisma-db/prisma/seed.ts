@@ -37,7 +37,7 @@ async function main() {
       },
     });
     // Create 1000 Locations
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 250; i++) {
       const createdLocation = await prisma.location.create({
         data: {
           name: faker.address.cityName(),
@@ -47,7 +47,7 @@ async function main() {
         },
       });
       // Create 2000 Users per  Location
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 3000; i++) {
         await prisma.user.create({
           data: {
             memberShipType: faker.datatype.number({

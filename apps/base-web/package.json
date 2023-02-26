@@ -17,6 +17,7 @@
     "@deur/shared-hooks": "*",
     "@deur/shared-types": "*",
     "@deur/tailwind-config": "*",
+    "daisyui": "^2.51.1",
     "nativewind": "^2.0.11",
     "next": "^13.1.6",
     "next-themes": "^0.2.1",

@@ -18,7 +18,7 @@
     "test:base:web:e2e:report": "turbo report --filter=\"{./apps/base-web}...\"",
     "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
     "seed:base:cloud": "cd ./packages/cloud-prisma-db && npm run db:seed",
-    "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local --continue --parallel",
+    "dev:base:servers": "turbo dev --filter=@deur/base-mqtt --filter @deur/base-cloud --filter @deur/base-local-trpc --continue --parallel",
     "dev:base:trpc": "turbo dev --filter=@deur/base-local-trpc --continue --parallel",
     "dev:base:mqtt": "turbo dev --filter=@deur/base-mqtt --continue --parallel",
     "dev:base:storybook": "turbo dev --filter=\"...{./apps/base-storybook}...\"",
@@ -51,7 +51,6 @@
       ]
     },
     "patchedDependencies": {
-      "eslint-config-universe@11.1.1": "./packages/eslint-config/patches/eslint-config-universe@11.1.1.patch",
       "react-native@0.70.5": "./apps/base-app/patches/react-native@0.70.5.patch"
     }
   },

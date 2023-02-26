@@ -1,8 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, createContext, useContext } from 'react';
 import { createStore } from 'zustand';
-import { MMKV } from 'react-native-mmkv';
-import React, { useEffect } from 'react';
-import { persist, StateStorage } from 'zustand/middleware';
-import { createContext, useContext } from 'react';
+import { persist } from 'zustand/middleware';
 
 export interface DeviceSetupData {
   deviceId: string;
@@ -11,22 +10,6 @@ export interface DeviceSetupData {
   locationId: string;
   friendlyName: string;
 }
-
-const storage = new MMKV();
-const zustandStorage: StateStorage = {
-  setItem: (name, value) => {
-    console.log('setItem', name, value);
-    return storage.set(name, value);
-  },
-  getItem: (name) => {
-    console.log('getItem', name);
-    const value = storage.getString(name);
-    return value ?? null;
-  },
-  removeItem: (name) => {
-    return storage.delete(name);
-  },
-};
 
 export const useSetUpDeviceStore = createStore<DeviceSetupData>()(
   persist(
@@ -39,7 +22,6 @@ export const useSetUpDeviceStore = createStore<DeviceSetupData>()(
     }),
     {
       name: 'device-setup-dv',
-      getStorage: () => zustandStorage,
     }
   )
 );

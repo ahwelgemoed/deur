@@ -2,22 +2,19 @@ import Fastify, { FastifyInstance } from 'fastify';
 import { Worker } from 'bullmq';
 import cors from '@fastify/cors';
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
-import axios from 'axios';
 import { MQMessageTypes, ISignedInUserInRedis } from '@deur/shared-types';
 import cron from 'node-cron';
-
-import { mainRedisClient, setUpBullMQBoard } from '@deur/shared-trpc/src/func/redis';
-
-import { createTRPCServerClient, mainLocalRouter } from '@deur/shared-trpc';
-
+import { LOG_GATE_USER, mainRedisClient, setUpBullMQBoard } from '@deur/shared-trpc/src/func/redis';
+import { CloudAppRouter, createTRPCServerClient, mainLocalRouter } from '@deur/shared-trpc';
 import { createContext } from '@deur/shared-trpc/src/trpc/context/localServerContext';
 
 const pjson = require('../package.json');
 
-export const REDIS_KEY = 'clubUsers';
-export const LOG_GATE_USER = 'Log_Gate_User';
+const localBaseTrpcClient = createTRPCServerClient<typeof mainLocalRouter>(
+  'http://127.0.0.1:3033/trpc'
+); //SELF
 
-const localBaseTrpcClient = createTRPCServerClient('http://127.0.0.1:3033/trpc');
+const cloudBaseTrpcClient = createTRPCServerClient<CloudAppRouter>(`http://127.0.0.1:3030/trpc`); //CLOUD
 
 export function bootstrap(): FastifyInstance {
   const server = Fastify();
@@ -55,8 +52,13 @@ const worker = new Worker(
     if (job.name === MQMessageTypes.USER_IS_ALLOWED) {
       const url = `${process.env.BASE_CLOUD_URL}/v1/visit/log-visit`;
       try {
-        setJustSignedInUser(job.data.user);
-        await axios.post(url, { cardNumber: job.data.user.cardNumber });
+        const returnedVisit = await cloudBaseTrpcClient.visitsRouter.logVisitAtLocation.mutate({
+          cardNumber: job.data.user.cardNumber,
+          locationId: job.data.user.locationId,
+        });
+        if (returnedVisit) {
+          setJustSignedInUser(job.data.user);
+        }
       } catch (err: unknown) {
         throw new Error("Can't log visit");
       }

@@ -7,17 +7,8 @@ const SetupDevice = () => {
   return (
     <div>
       <Header classNames="" isBig={true}>
-        Welcome to @deur
+        Setup Device
       </Header>
-      <button
-        onClick={() => {
-          t.setState({
-            deviceId: Math.random().toString(),
-          });
-        }}
-      >
-        Press
-      </button>
     </div>
   );
 };
