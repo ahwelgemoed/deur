@@ -26,10 +26,7 @@
     "cloud": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yml build;",
     "prod:location:build": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose-base.yml build",
     "prod:location:up": "docker-compose -f docker-compose-base.yml up -d",
-    "up": "docker-compose -f docker-compose.yml up -d",
-    "start": "expo start --dev-client",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "up": "docker-compose -f docker-compose.yml up -d"
   },
   "devDependencies": {
     "turbo": "^1.5.4",
@@ -49,9 +46,6 @@
         "expo-modules-*",
         "typescript"
       ]
-    },
-    "patchedDependencies": {
-      "react-native@0.70.5": "./apps/base-app/patches/react-native@0.70.5.patch"
     }
   },
   "prettier": {

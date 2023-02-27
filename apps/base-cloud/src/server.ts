@@ -1,6 +1,5 @@
 import { PrismaClient } from '@deur/cloud-prisma-db';
-import { mainCloudRouter } from '@deur/shared-trpc';
-import { cloudCreateContext } from '@deur/shared-trpc/src/trpc/context/cloudServerContext';
+import { mainCloudRouter, cloudCreateContext } from '@deur/cloud-trpc';
 import cors from '@fastify/cors';
 import FastifySwagger from '@fastify/swagger';
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';

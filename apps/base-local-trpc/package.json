@@ -17,7 +17,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@deur/shared-trpc": "*",
+    "@deur/local-trpc": "*",
+    "@deur/cloud-trpc": "*",
+    "@deur/shared-functions": "*",
     "@bull-board/fastify": "^4.11.0",
     "@fastify/autoload": "^5.6.0",
     "@fastify/redis": "^6.1.0",

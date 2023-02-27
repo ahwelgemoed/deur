@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { View, Text } from '../index';
-
 interface HeaderProps {
   classNames?: string;
   children: React.ReactNode;
@@ -10,13 +8,10 @@ interface HeaderProps {
 
 export const Header = ({ children, classNames, isBig }: HeaderProps) => {
   return (
-    <View testID="header_view">
-      <Text
-        className={`font-body ${isBig ? 'text-[90px]' : 'text-[20px]'} ${classNames}`}
-        testID="header_text"
-      >
+    <div>
+      <div className={`font-body ${isBig ? 'text-[90px]' : 'text-[20px]'} ${classNames}`}>
         {children}
-      </Text>
-    </View>
+      </div>
+    </div>
   );
 };

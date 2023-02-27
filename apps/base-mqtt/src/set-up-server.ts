@@ -1,7 +1,8 @@
 import Aedes from 'aedes';
 import { createServer } from 'http';
 import { createServer as netServer } from 'net';
-import { createTRPCServerClient, LocalAppRouter } from '@deur/shared-trpc';
+import { LocalAppRouter } from '@deur/local-trpc';
+import { createTRPCServerClient } from '@deur/shared-functions';
 import websocketStream from 'websocket-stream';
 
 import { clientConnected } from './callbacks/connected.cb';

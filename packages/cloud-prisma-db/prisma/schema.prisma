@@ -8,8 +8,8 @@ generator trpc {
   provider       = "prisma-trpc-generator"
   withMiddleware = false
   withShield     = false
-  output         = "../../shared-trpc/src/generated"
-  contextPath    = "../../shared-trpc/src/context/prisma.context"
+  output         = "../../trpc-local/src/generated"
+  contextPath    = "../../trpc-local/src/context/prisma.context"
 }
 
 generator zod {

@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@deur/shared-functions": "*",
     "@trpc/client": "^10.2.0",
     "@trpc/server": "^10.1.0",
     "superjson": "^1.12.2",
@@ -30,7 +31,7 @@
     "ts-jest": "^29.0.3",
     "tsup": "^5.11.13",
     "typescript": "^4.9.3",
-    "@deur/shared-trpc": "*",
+    "@deur/local-trpc": "*",
     "websocket-stream": "^5.5.2"
   },
   "devDependencies": {

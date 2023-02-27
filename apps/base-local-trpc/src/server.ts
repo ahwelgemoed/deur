@@ -3,10 +3,12 @@ import { Worker } from 'bullmq';
 import cors from '@fastify/cors';
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import { MQMessageTypes, ISignedInUserInRedis } from '@deur/shared-types';
-import cron from 'node-cron';
-import { LOG_GATE_USER, mainRedisClient, setUpBullMQBoard } from '@deur/shared-trpc/src/func/redis';
-import { CloudAppRouter, createTRPCServerClient, mainLocalRouter } from '@deur/shared-trpc';
-import { createContext } from '@deur/shared-trpc/src/trpc/context/localServerContext';
+import * as cron from 'node-cron';
+import { LOG_GATE_USER, mainRedisClient, setUpBullMQBoard } from '@deur/local-trpc/src/func/redis';
+import { mainLocalRouter } from '@deur/local-trpc';
+import { CloudAppRouter } from '@deur/cloud-trpc';
+import { createTRPCServerClient } from '@deur/shared-functions';
+import { createContext } from '@deur/local-trpc/src/context/mainContext';
 
 const pjson = require('../package.json');
 

@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, createContext, useContext } from 'react';
 import { createStore } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -62,22 +61,3 @@ export const DeviceStateProvider = ({
 };
 
 export const useDeviceState = () => useContext(StoreContext);
-
-// const hashStorage: StateStorage = {
-//   getItem: (key): string => {
-//     const searchParams = new URLSearchParams(location.hash.slice(1));
-//     const storedValue = searchParams.get(key);
-//     if (!storedValue) return '';
-//     return JSON.parse(storedValue);
-//   },
-//   setItem: (key, newValue): void => {
-//     const searchParams = new URLSearchParams(location.hash.slice(1));
-//     searchParams.set(key, JSON.stringify(newValue));
-//     location.hash = searchParams.toString();
-//   },
-//   removeItem: (key): void => {
-//     const searchParams = new URLSearchParams(location.hash.slice(1));
-//     searchParams.delete(key);
-//     location.hash = searchParams.toString();
-//   },
-// };
