@@ -183,7 +183,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/arnowelgemoed/Documents/repos/deur/packages/cloud-prisma-db/prisma/generated",
+      "value": "/Users/arnowelgemoed/Documents/deurV2/packages/cloud-prisma-db/prisma/generated",
       "fromEnvVar": null
     },
     "config": {

@@ -13,11 +13,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@deur/cloud-trpc": "*",
     "@deur/design-system": "*",
-    "@deur/shared-hooks": "*",
     "@deur/local-trpc": "*",
+    "@deur/shared-functions": "*",
+    "@deur/shared-hooks": "*",
     "@deur/shared-types": "*",
     "@deur/tailwind-config": "*",
+    "@tanstack/react-query": "^4.24.10",
+    "@trpc/next": "^10.13.0",
+    "@trpc/react-query": "^10.13.0",
     "daisyui": "^2.51.1",
     "nativewind": "^2.0.11",
     "next": "^13.1.6",

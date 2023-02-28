@@ -1,12 +1,13 @@
 {
   "name": "@deur/shared-hooks",
   "version": "0.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "license": "MIT",
   "scripts": {
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
-    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
     "@deur/eslint-config": "*",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
+    "@deur/shared-functions": "*",
     "@tanstack/react-query": "^4.24.9",
     "paho-mqtt": "^1.1.0",
     "react": "^18.1.0",

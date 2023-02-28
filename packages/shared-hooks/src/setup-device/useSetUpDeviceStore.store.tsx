@@ -1,4 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, createContext, useContext } from 'react';
+import { Platform } from 'react-native';
 import { createStore } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -21,6 +23,8 @@ export const useSetUpDeviceStore = createStore<DeviceSetupData>()(
     }),
     {
       name: 'device-setup-dv',
+      getStorage: () =>
+        Platform.OS === 'ios' || Platform.OS === 'android' ? AsyncStorage : localStorage, // Add this here!
     }
   )
 );
