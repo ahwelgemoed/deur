@@ -8,4 +8,9 @@ module.exports = {
   ],
   plugins: [],
   darkMode: 'class',
+  theme: {
+    colors: {
+      primary: '#00C6AE',
+    },
+  },
 };

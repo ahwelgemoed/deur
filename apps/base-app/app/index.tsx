@@ -1,7 +1,5 @@
-import { Card, View, Text } from '@deur/design-system';
+import { Card, MainLayout, View } from '@deur/design-system';
 import { useRouter } from 'expo-router';
-
-import MainLayout from '../src/components/MainLayout';
 
 enum CardType {
   CREATE = '/create-new-user',
@@ -18,7 +16,7 @@ export default function Page() {
   return (
     <>
       <MainLayout
-        bgColor="primary"
+        bgColor="bg-primary"
         headerMainText="Welcome"
         body={
           <View className="w-full flex items-center flex-row h-full justify-evenly">
