@@ -1,9 +1,8 @@
+import { MainLayout, View, Text } from '@deur/design-system';
 import { faker } from '@faker-js/faker';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
 
-import MainLayout from '../../src/components/MainLayout';
 import { Member } from '../../src/localDB/entities/members';
 import { useLocalSource } from '../../src/localDB/useLocalDatabase';
 
@@ -54,26 +53,24 @@ const CreateNewUser = () => {
 
   return (
     <MainLayout
-      bgColor="#FFBD12"
+      useNavigationHook={useNavigation}
+      bgColor="bg-yellow"
       showBackButton
       headerMainText="Create New User"
       headerSubText=""
       body={
         <View className="flex w-full h-full">
           <View className="flex flex-col justify-center items-center">
-            <Text className="text-3xl uppercase font-text text-white">👋 {newMember.name}</Text>
+            <Text className="text-3xl uppercase font-text">👋 {newMember.name}</Text>
           </View>
           <View className="flex flex-row gap-2 justify-center">
-            <Text className="text-md uppercase font-tex text-white">Email: {newMember.email}</Text>
-            <Text className="text-md uppercase font-text text-white">
+            <Text className="text-md uppercase font-text">Email: {newMember.email}</Text>
+            <Text className="text-md uppercase font-text ">
               BirthDay: {newMember.birthDay.toDateString()}
             </Text>
           </View>
-          <View className="flex flex-row gap-2 justify-center mt-10">
-            <Text
-              className=" text-white py-4 px-6  font-text text-lg bg-slate-800"
-              onPress={createNewUser}
-            >
+          <View className="flex flex-row gap-2 justify-center mt-10 ">
+            <Text className="py-4 px-6 font-text text-lg bg-primary" onPress={createNewUser}>
               Create Your Membership
             </Text>
           </View>

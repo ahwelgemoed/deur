@@ -671,6 +671,7 @@ importers:
   packages/local-trpc:
     specifiers:
       '@deur/cloud-prisma-db': '*'
+      '@deur/cloud-trpc': '*'
       '@deur/eslint-config': '*'
       '@deur/shared-functions': '*'
       '@deur/shared-types': '*'
@@ -688,6 +689,7 @@ importers:
       zustand: ^4.3.2
     dependencies:
       '@deur/cloud-prisma-db': link:../cloud-prisma-db
+      '@deur/cloud-trpc': link:../cloud-trpc
       '@deur/shared-functions': link:../shared-functions
       '@tanstack/react-query': 4.24.10_gsl26ufhuqz7slchfhyupetrmm
       '@trpc/client': 10.13.2_@trpc+server@10.13.2

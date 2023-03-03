@@ -1,5 +1,5 @@
 import { Card, MainLayout, View } from '@deur/design-system';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 
 enum CardType {
   CREATE = '/create-new-user',
@@ -14,34 +14,33 @@ export default function Page() {
     router.push(type);
   };
   return (
-    <>
-      <MainLayout
-        bgColor="bg-primary"
-        headerMainText="Welcome"
-        body={
-          <View className="w-full flex items-center flex-row h-full justify-evenly">
-            <Card
-              onClick={() => onCardPress(CardType.CREATE)}
-              classNames="bg-[#FFBD12]"
-              title="CRE
+    <MainLayout
+      useNavigationHook={useNavigation}
+      bgColor="bg-primary"
+      headerMainText="Welcome"
+      body={
+        <View className="w-full flex items-center flex-row h-full justify-evenly">
+          <Card
+            onClick={() => onCardPress(CardType.CREATE)}
+            classNames="bg-[#FFBD12]"
+            title="CRE
               ATE"
-            />
-            <Card
-              onClick={() => onCardPress(CardType.DAYPASS)}
-              classNames="bg-[#F95A2C]"
-              title="DAY
+          />
+          <Card
+            onClick={() => onCardPress(CardType.DAYPASS)}
+            classNames="bg-[#F95A2C]"
+            title="DAY
               PASS"
-            />
-            <Card
-              onClick={() => onCardPress(CardType.GATESENTME)}
-              classNames="bg-[#FF9692]"
-              title="GATE
+          />
+          <Card
+            onClick={() => onCardPress(CardType.GATESENTME)}
+            classNames="bg-[#FF9692]"
+            title="GATE
             SENT
             ME"
-            />
-          </View>
-        }
-      />
-    </>
+          />
+        </View>
+      }
+    />
   );
 }

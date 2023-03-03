@@ -22,7 +22,7 @@ export default function IdlePage() {
     });
     setTimeout(() => {
       setToActive();
-    }, 0);
+    }, 10);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function IdlePage() {
   if (helpThisUserActive) {
     return (
       <Pressable onPress={gateSentRoute}>
-        <View className="bg-black w-full h-full flex justify-center p-4">
+        <View className="w-full h-full flex justify-center p-4 bg-dark">
           <Text className="text-white font-body text-[100px]">👋 there... </Text>
           <Text className="text-white font-body text-[60px]">do you need some help?</Text>
           <View className="text-center flex content-center">
@@ -52,7 +52,7 @@ export default function IdlePage() {
 
   return (
     <Pressable onPress={setToActive}>
-      <View className="bg-black w-full h-full flex justify-center p-4">
+      <View className="w-full h-full flex justify-center p-4 bg-dark">
         <View className="flex flex-row gap-2 justify-center items-center">
           <View className="bg-primary w-5 h-5 rounded-full"></View>
           <View className="bg-[#FFBD12] w-5 h-5 rounded-full"></View>

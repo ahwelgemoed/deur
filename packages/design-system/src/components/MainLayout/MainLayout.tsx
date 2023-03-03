@@ -1,32 +1,27 @@
-// import { Text, View } from 'react-native';
-
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 
 import { MainLayoutProps } from './Mainlayout.types';
 import { View, Text, Header } from '../..';
 
-const isHexColor = (color: string) => {
-  return /^#[0-9A-F]{6}$/i.test(color);
-};
-
 export const MainLayout = ({
   body,
+  useNavigationHook,
   bgColor = '#00C6AE',
   headerSubText,
   headerMainText,
   headerComponent,
   showBackButton = false,
 }: MainLayoutProps) => {
-  const calculatedBGColor = isHexColor(bgColor) ? `bg-[${bgColor}]` : `bg-${bgColor}`;
+  const navigation = useNavigationHook && useNavigationHook();
   return (
     <KeyboardAvoidingView style={{ flexGrow: 1, height: '100%' }} behavior="padding" enabled>
       <View className={`w-full h-full flex p-4 ${bgColor}`}>
         <View className="">
           {showBackButton && (
             <Text
-              className="text-bold uppercase pt-4 font-body"
+              className="text-bold uppercase pt-4 font-body text-white"
               onPress={() => {
-                //   navigation.goBack();
+                navigation?.goBack();
               }}
             >
               Go Back
@@ -36,10 +31,10 @@ export const MainLayout = ({
             headerComponent
           ) : (
             <>
-              <Header classNames="font-display uppercase pt-2" isBig>
+              <Header classNames="font-display uppercase text-white" isBig>
                 {headerMainText}
               </Header>
-              <Text className="">{headerSubText}</Text>
+              <Text className="text-white">{headerSubText}</Text>
             </>
           )}
         </View>

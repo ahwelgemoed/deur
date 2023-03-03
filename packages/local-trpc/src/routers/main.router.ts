@@ -3,18 +3,17 @@ import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { z } from 'zod';
 
-import { findCardNumberInRedisCache, replyResponse } from '../func/redis';
+import { createMemberRoute } from './createMember.router';
 import { LocalContext } from '../context/mainContext';
-import { isFeasibleVisit } from '../services/userVist.service';
+import { findCardNumberInRedisCache, replyResponse } from '../func/redis';
+import { isFeasibleVisit } from '../services/userVisit.service';
 
 export const t = initTRPC.context<LocalContext>().create({
   transformer: superjson,
 });
 
 export const mainLocalRouter = t.router({
-  greeting: t.procedure.input(z.object({ name: z.string() }).nullish()).query(({ input }) => {
-    return `Hello ${input?.name ?? 'World'}`;
-  }),
+  createMemberRoute,
   hydrateLocationsUsers: t.procedure.query(async ({ ctx }) => {
     const usersByLocationUrl = `${process.env.BASE_CLOUD_URL}/v1/user/users-by-location`;
     try {

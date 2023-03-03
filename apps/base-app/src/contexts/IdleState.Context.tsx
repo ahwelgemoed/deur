@@ -32,6 +32,7 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
     if (pathName === '/initial-device-setup') {
       return;
     }
+    onScreenHasBeenPressedOn();
     if (active) {
       // GO TO HOME PAGE
       // WE do this as Router this is used for when we automatically go to a page from idle and manually set Active mode
@@ -45,9 +46,6 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
   }, [active]);
 
   const onScreenHasBeenPressedOn = () => {
-    if (!active) {
-      setToActive();
-    }
     if (timeOutRef.current) {
       clearTimeout(timeOutRef.current);
     }

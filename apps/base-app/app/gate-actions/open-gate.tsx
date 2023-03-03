@@ -1,8 +1,7 @@
+import { MainLayout, View, Text } from '@deur/design-system';
 import { useSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
 
-import MainLayout from '../../src/components/MainLayout';
 import Swipper from '../../src/components/Swipper';
 import { useSetToIdle } from '../../src/contexts/IdleState.Context';
 
@@ -48,13 +47,13 @@ const OpenGate = () => {
 
   return (
     <MainLayout
-      bgColor="#FFBD12"
+      bgColor="bg-yellow"
       showBackButton
       headerMainText={`Congratulations ${memberName}`}
       headerSubText=""
       body={
         <View className="flex w-full h-full items-center">
-          <Text className="uppercase font-body text-xl text-white">
+          <Text className="uppercase font-body text-xl">
             Choose a Gate and swipe and go enjoy...
           </Text>
           <Swipper successCallback={successCallback} />

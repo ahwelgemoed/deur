@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@deur/cloud-prisma-db": "*",
+    "@deur/cloud-trpc": "*",
     "@deur/shared-functions": "*",
     "@tanstack/react-query": "^4.23.0",
     "@trpc/client": "^10.2.0",

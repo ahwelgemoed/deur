@@ -2,6 +2,7 @@
   "private": true,
   "name": "@deur/monorepo",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
