@@ -1,6 +1,5 @@
-import { Header } from '@deur/design-system';
-import Link from 'next/link';
 import { useTheme } from 'next-themes';
+// import Link from 'next/link';
 
 export default function Web() {
   const { setTheme } = useTheme();
@@ -10,8 +9,8 @@ export default function Web() {
         Light Mode
       </button>
       <button onClick={() => setTheme('dark')}>Dark Mode</button>
-      <Header classNames="">Welcome to @deur Web App</Header>
-      <Link href={'/setup-device'}>setup-device</Link>
+      {/* <Header classNames="">Welcome to @deur Web App</Header> */}
+      {/* <Link href={'/setup-device'}>setup-device</Link> */}
     </div>
   );
 }

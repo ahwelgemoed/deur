@@ -23,5 +23,5 @@ module.exports = {
     ];
     return config;
   },
-  transpilePackages: ['@deur/design-system', 'nativewind'],
+  transpilePackages: ['@deur/**', 'nativewind'],
 };

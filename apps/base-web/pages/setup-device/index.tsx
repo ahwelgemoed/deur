@@ -7,7 +7,7 @@ const SetupDevice = () => {
   return (
     <div>
       <Header classNames="" isBig={true}>
-        Setup Device
+        Setup Devicesadasd
       </Header>
     </div>
   );

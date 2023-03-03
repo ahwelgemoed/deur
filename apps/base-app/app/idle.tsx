@@ -38,8 +38,8 @@ export default function IdlePage() {
     return (
       <Pressable onPress={gateSentRoute}>
         <View className="w-full h-full flex justify-center p-4 bg-dark">
-          <Text className="text-white font-body text-[100px]">👋 there... </Text>
-          <Text className="text-white font-body text-[60px]">do you need some help?</Text>
+          <Text className="text-[#DDDDE1] font-body text-[100px]">👋 there... </Text>
+          <Text className="text-[#DDDDE1] font-body text-[60px]">do you need some help?</Text>
           <View className="text-center flex content-center">
             <Text className="text-[#DDDDE1] font-display text-[40px] uppercase">
               Press to Interact
@@ -59,7 +59,9 @@ export default function IdlePage() {
           <View className="bg-[#FF9692] w-5 h-5 rounded-full"></View>
           <View className="bg-[#F95A2C] w-5 h-5 rounded-full"></View>
         </View>
-        <Text className="text-center  text-white font-display uppercase text-[100px]">Welcome</Text>
+        <Text className="text-center font-display uppercase text-[100px] text-[#DDDDE1]">
+          Welcome
+        </Text>
         <View className="text-center flex content-center items-center">
           <Text className="text-[#DDDDE1] font-display uppercase text-[30px]">
             Press to Interact
