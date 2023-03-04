@@ -1,12 +1,13 @@
 {
   "name": "@deur/shared-types",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsc -w",
     "lint": "TIMING=1 eslint --fix \"src/**/*.ts*\"",
@@ -26,6 +27,24 @@
     "ignorePatterns": [
       "node_modules",
       "build"
+    ]
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "format": [
+      "cjs",
+      "esm"
+    ],
+    "outDir": "dist",
+    "sourcemap": true,
+    "minify": true,
+    "dts": true,
+    "external": [
+      "react",
+      "react-native",
+      "react-native-web"
     ]
   }
 }
