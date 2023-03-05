@@ -2,9 +2,9 @@ import Fastify, { FastifyInstance } from 'fastify';
 import { Worker } from 'bullmq';
 import cors from '@fastify/cors';
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
-import { MQMessageTypes, ISignedInUserInRedis } from '@deur/shared-types';
+import { MQMessageTypes, ISignedInUserInRedis, MQTypes } from '@deur/shared-types';
 import * as cron from 'node-cron';
-import { LOG_GATE_USER, mainRedisClient, setUpBullMQBoard } from '@deur/local-trpc/src/func/redis';
+import { mainRedisClient, setUpBullMQBoard } from '@deur/local-trpc/src/func/redis';
 import { mainLocalRouter } from '@deur/local-trpc';
 import { CloudAppRouter } from '@deur/cloud-trpc';
 import { createTRPCServerClient } from '@deur/shared-functions';
@@ -49,7 +49,7 @@ const setJustSignedInUser = async (user: ISignedInUserInRedis) => {
 };
 
 const worker = new Worker(
-  LOG_GATE_USER,
+  MQTypes.LOG_GATE_USER,
   async (job) => {
     // Log the user in Cloud DB
     if (job.name === MQMessageTypes.USER_IS_ALLOWED) {
@@ -84,4 +84,32 @@ worker.on('failed', (job, err) => {
 
 worker.on('drained', () => {
   console.log('🦀 All jobs have been processed');
+});
+
+const createUserWorker = new Worker(
+  MQTypes.CREATE_USER,
+  async (job) => {
+    // Log the user in Cloud DB
+    if (job.name === MQMessageTypes.CREATE_USER_LOCAL) {
+      // TODO - Create user in Cloud DB
+      console.log('job.data', job.data);
+    }
+  },
+  {
+    limiter: {
+      max: 2, // We Limit the number of jobs that can be processed at the same time
+      duration: 5000,
+    },
+  }
+);
+createUserWorker.on('completed', (job) => {
+  console.log(`Create USER ${job.id} has completed!`);
+});
+
+createUserWorker.on('failed', (job, err) => {
+  console.log(`Create USER ${job?.id} has failed with ${err.message}`);
+});
+
+createUserWorker.on('drained', () => {
+  console.log('🦀 Create USER All jobs have been processed');
 });

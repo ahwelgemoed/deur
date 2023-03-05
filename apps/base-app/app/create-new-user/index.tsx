@@ -3,53 +3,41 @@ import { faker } from '@faker-js/faker';
 import { useNavigation, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 
-import { Member } from '../../src/localDB/entities/members';
-import { useLocalSource } from '../../src/localDB/useLocalDatabase';
+import { mergedTrpcApi } from '../../src/contexts/trpc/trpc.provider';
 
 const newMember = {
+  id: faker.datatype.uuid(),
   name: faker.name.firstName(),
   birthDay: faker.date.past(),
-  clubId: faker.datatype.number({ min: 1, max: 5000 }),
   email: faker.internet.email(),
   isAllowed: true,
 };
 const CreateNewUser = () => {
-  const [repository, createdEntity] = useLocalSource(Member);
+  const createUserMutation = mergedTrpcApi.local.createMemberRoute.createMember.useMutation();
   const router = useRouter();
 
-  useEffect(() => {
-    async function init() {
-      const authors = await repository?.find();
-      console.log('authors', authors);
-    }
-    init();
-  }, [repository]);
-
   const createNewUser = async () => {
-    createdEntity.name = newMember.name;
-    createdEntity.birthDay = newMember.birthDay.toISOString();
-    createdEntity.clubId = String(newMember.clubId);
-    createdEntity.email = newMember.email;
-    createdEntity.isAllowed = newMember.isAllowed;
     try {
-      await repository?.save(createdEntity);
+      createUserMutation.mutate({
+        name: newMember.name,
+        birthDay: newMember.birthDay,
+        email: newMember.email,
+        isAllowed: newMember.isAllowed,
+      });
+      // await repository?.save(createdEntity);
     } catch (error) {
       console.log('🚀error', error);
     }
+  };
 
-    const justCreatedPerson = await repository?.findOne({
-      where: {
-        name: newMember.name,
-      },
-    });
-    // TODO MACH THIS MORE GENERIC
-    if (justCreatedPerson?.id) {
+  useEffect(() => {
+    if (createUserMutation.data?.success) {
       router.push({
         pathname: '/gate-actions/open-gate',
-        params: { memberId: justCreatedPerson.id, memberName: justCreatedPerson.name },
+        params: { memberId: newMember.id, memberName: newMember.name },
       });
     }
-  };
+  }, [createUserMutation]);
 
   return (
     <MainLayout

@@ -13,13 +13,12 @@ export default function IdlePage() {
 
   const userToHelp = mergedTrpcApi.local.helpMemberRoute.getUserToHelp.useQuery(
     {
-      cardNumber: '0621f9ee-457f-45d1-bca6-0e835c85ca5d',
+      cardNumber: helpThisUserActive,
     },
     {
-      enabled: true,
+      enabled: !!helpThisUserActive,
     }
   );
-  console.log('userToHelp', userToHelp.data);
   const router = useRouter();
   const { setToActive } = useSetToIdle();
 
@@ -29,7 +28,7 @@ export default function IdlePage() {
   const gateSentRoute = () => {
     router.push({
       pathname: '/gate-actions/help-this-user',
-      params: { requestId: helpThisUserActive },
+      params: { cardNumber: helpThisUserActive, user: userToHelp.data },
     });
     setTimeout(() => {
       setToActive();
@@ -38,11 +37,10 @@ export default function IdlePage() {
 
   useEffect(() => {
     if (helpThisUserActive) {
-      console.log('helpThisUserActive', helpThisUserActive);
       userToHelp.refetch();
       setTimeout(() => {
         setHelpThisUserActive('');
-      }, 10_000);
+      }, 50_000);
     }
   }, [helpThisUserActive]);
 
@@ -51,10 +49,12 @@ export default function IdlePage() {
     return (
       <Pressable onPress={gateSentRoute}>
         <View className="w-full h-full flex justify-center p-4 bg-dark">
-          <Text className="text-[#DDDDE1] font-body text-[100px]">👋 there... </Text>
-          <Text className="text-[#DDDDE1] font-body text-[60px]">do you need some help?</Text>
+          <Text className="text-[#DDDDE1] font-body text-[100px]">👋 {userToHelp.data?.name} </Text>
+          <Text className="text-[#DDDDE1] font-body text-[40px] uppercase">
+            do you need some help?
+          </Text>
           <View className="text-center flex content-center">
-            <Text className="text-[#DDDDE1] font-display text-[40px] uppercase">
+            <Text className="text-[#DDDDE1] font-display text-[10px] uppercase">
               Press to Interact
             </Text>
           </View>

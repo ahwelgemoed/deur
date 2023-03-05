@@ -1,10 +1,9 @@
 import { FastifyAdapter, createBullBoard, BullMQAdapter } from '@bull-board/fastify';
-import { ICleanUserSchema, ReasonForVisit } from '@deur/shared-types';
+import { ICleanUserSchema, MQTypes, ReasonForVisit } from '@deur/shared-types';
 import { Queue } from 'bullmq';
 import { FastifyInstance } from 'fastify';
 import Redis from 'ioredis';
 
-export const LOG_GATE_USER = 'Log_Gate_User';
 export const redisOptions = {
   port: 6379,
   host: 'localhost',
@@ -12,7 +11,17 @@ export const redisOptions = {
 
 const mainRedisClient = new Redis({ ...redisOptions });
 
-export const logGateUserQueue = new Queue(LOG_GATE_USER, {
+export const logGateUserQueue = new Queue(MQTypes.LOG_GATE_USER, {
+  connection: redisOptions,
+  defaultJobOptions: {
+    attempts: 5,
+    backoff: {
+      type: 'exponential',
+      delay: 1000 * 10,
+    },
+  },
+});
+export const createNewUserQueue = new Queue(MQTypes.CREATE_USER, {
   connection: redisOptions,
   defaultJobOptions: {
     attempts: 5,
@@ -26,7 +35,7 @@ export const logGateUserQueue = new Queue(LOG_GATE_USER, {
 export const setUpBullMQBoard = (server: FastifyInstance) => {
   const serverAdapter = new FastifyAdapter();
   createBullBoard({
-    queues: [new BullMQAdapter(logGateUserQueue)],
+    queues: [new BullMQAdapter(logGateUserQueue), new BullMQAdapter(createNewUserQueue)],
     serverAdapter,
   });
   serverAdapter.setBasePath('/ui');
@@ -68,7 +77,7 @@ export const replyWithErrorResponse = (
   key: string,
   user: ICleanUserSchema | undefined
 ) => {
-  mainRedisClient.set(key, JSON.stringify(user), 'EX', 60);
+  mainRedisClient.set(key, JSON.stringify({ ...user, reason }), 'EX', 60);
   return {
     isAllowed,
     reason,

@@ -44,6 +44,11 @@ export enum EReasons {
 
 export enum MQMessageTypes {
   USER_IS_ALLOWED = 'USER_IS_ALLOWED',
+  CREATE_USER_LOCAL = 'CREATE_USER_LOCAL',
+}
+export enum MQTypes {
+  LOG_GATE_USER = 'Log_Gate_User',
+  CREATE_USER = 'CREATE_USER',
 }
 type LimitedUser = Pick<CompleteUser, 'id' | 'name' | 'isAllowed'>;
 
