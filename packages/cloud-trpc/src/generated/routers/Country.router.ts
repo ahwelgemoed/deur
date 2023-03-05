@@ -1,23 +1,21 @@
-import { t, publicProcedure } from "./helpers/createRouter";
-import { CountryAggregateSchema } from "../schemas/aggregateCountry.schema";
-import { CountryCreateOneSchema } from "../schemas/createOneCountry.schema";
-import { CountryDeleteManySchema } from "../schemas/deleteManyCountry.schema";
-import { CountryDeleteOneSchema } from "../schemas/deleteOneCountry.schema";
-import { CountryFindFirstSchema } from "../schemas/findFirstCountry.schema";
-import { CountryFindManySchema } from "../schemas/findManyCountry.schema";
-import { CountryFindUniqueSchema } from "../schemas/findUniqueCountry.schema";
-import { CountryGroupBySchema } from "../schemas/groupByCountry.schema";
-import { CountryUpdateManySchema } from "../schemas/updateManyCountry.schema";
-import { CountryUpdateOneSchema } from "../schemas/updateOneCountry.schema";
-import { CountryUpsertSchema } from "../schemas/upsertOneCountry.schema";
+import { t, publicProcedure } from './helpers/createRouter';
+import { CountryAggregateSchema } from '../schemas/aggregateCountry.schema';
+import { CountryCreateOneSchema } from '../schemas/createOneCountry.schema';
+import { CountryDeleteManySchema } from '../schemas/deleteManyCountry.schema';
+import { CountryDeleteOneSchema } from '../schemas/deleteOneCountry.schema';
+import { CountryFindFirstSchema } from '../schemas/findFirstCountry.schema';
+import { CountryFindManySchema } from '../schemas/findManyCountry.schema';
+import { CountryFindUniqueSchema } from '../schemas/findUniqueCountry.schema';
+import { CountryGroupBySchema } from '../schemas/groupByCountry.schema';
+import { CountryUpdateManySchema } from '../schemas/updateManyCountry.schema';
+import { CountryUpdateOneSchema } from '../schemas/updateOneCountry.schema';
+import { CountryUpsertSchema } from '../schemas/upsertOneCountry.schema';
 
 export const countriesRouter = t.router({
-  aggregateCountry: publicProcedure
-    .input(CountryAggregateSchema)
-    .query(async ({ ctx, input }) => {
-      const aggregateCountry = await ctx.prisma.country.aggregate(input);
-      return aggregateCountry;
-    }),
+  aggregateCountry: publicProcedure.input(CountryAggregateSchema).query(async ({ ctx, input }) => {
+    const aggregateCountry = await ctx.prisma.country.aggregate(input);
+    return aggregateCountry;
+  }),
   createOneCountry: publicProcedure
     .input(CountryCreateOneSchema)
     .mutation(async ({ ctx, input }) => {
@@ -36,24 +34,20 @@ export const countriesRouter = t.router({
       const deleteOneCountry = await ctx.prisma.country.delete(input);
       return deleteOneCountry;
     }),
-  findFirstCountry: publicProcedure
-    .input(CountryFindFirstSchema)
-    .query(async ({ ctx, input }) => {
-      const findFirstCountry = await ctx.prisma.country.findFirst(input);
-      return findFirstCountry;
-    }),
+  findFirstCountry: publicProcedure.input(CountryFindFirstSchema).query(async ({ ctx, input }) => {
+    const findFirstCountry = await ctx.prisma.country.findFirst(input);
+    return findFirstCountry;
+  }),
   findFirstCountryOrThrow: publicProcedure
     .input(CountryFindFirstSchema)
     .query(async ({ ctx, input }) => {
       const findFirstCountryOrThrow = await ctx.prisma.country.findFirstOrThrow(input);
       return findFirstCountryOrThrow;
     }),
-  findManyCountry: publicProcedure
-    .input(CountryFindManySchema)
-    .query(async ({ ctx, input }) => {
-      const findManyCountry = await ctx.prisma.country.findMany(input);
-      return findManyCountry;
-    }),
+  findManyCountry: publicProcedure.input(CountryFindManySchema).query(async ({ ctx, input }) => {
+    const findManyCountry = await ctx.prisma.country.findMany(input);
+    return findManyCountry;
+  }),
   findUniqueCountry: publicProcedure
     .input(CountryFindUniqueSchema)
     .query(async ({ ctx, input }) => {
@@ -66,12 +60,17 @@ export const countriesRouter = t.router({
       const findUniqueCountryOrThrow = await ctx.prisma.country.findUniqueOrThrow(input);
       return findUniqueCountryOrThrow;
     }),
-  groupByCountry: publicProcedure
-    .input(CountryGroupBySchema)
-    .query(async ({ ctx, input }) => {
-      const groupByCountry = await ctx.prisma.country.groupBy({ where: input.where, orderBy: input.orderBy, by: input.by, having: input.having, take: input.take, skip: input.skip });
-      return groupByCountry;
-    }),
+  groupByCountry: publicProcedure.input(CountryGroupBySchema).query(async ({ ctx, input }) => {
+    const groupByCountry = await ctx.prisma.country.groupBy({
+      where: input.where,
+      orderBy: input.orderBy,
+      by: input.by,
+      having: input.having,
+      take: input.take,
+      skip: input.skip,
+    });
+    return groupByCountry;
+  }),
   updateManyCountry: publicProcedure
     .input(CountryUpdateManySchema)
     .mutation(async ({ ctx, input }) => {
@@ -84,11 +83,8 @@ export const countriesRouter = t.router({
       const updateOneCountry = await ctx.prisma.country.update(input);
       return updateOneCountry;
     }),
-  upsertOneCountry: publicProcedure
-    .input(CountryUpsertSchema)
-    .mutation(async ({ ctx, input }) => {
-      const upsertOneCountry = await ctx.prisma.country.upsert(input);
-      return upsertOneCountry;
-    }),
-
-})
+  upsertOneCountry: publicProcedure.input(CountryUpsertSchema).mutation(async ({ ctx, input }) => {
+    const upsertOneCountry = await ctx.prisma.country.upsert(input);
+    return upsertOneCountry;
+  }),
+});

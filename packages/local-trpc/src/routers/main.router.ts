@@ -1,11 +1,13 @@
+import { mainCloudRouter } from '@deur/cloud-trpc';
 import { MQMessageTypes, ReasonForVisit, RedisKeys } from '@deur/shared-types';
 import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { z } from 'zod';
 
 import { createMemberRoute } from './createMember.router';
+import { helpMemberRoute } from './helpUserAtGate.router';
 import { LocalContext } from '../context/mainContext';
-import { findCardNumberInRedisCache, replyResponse } from '../func/redis';
+import { findCardNumberInRedisCache, replyResponse, replyWithErrorResponse } from '../func/redis';
 import { isFeasibleVisit } from '../services/userVisit.service';
 
 export const t = initTRPC.context<LocalContext>().create({
@@ -13,6 +15,7 @@ export const t = initTRPC.context<LocalContext>().create({
 });
 
 export const mainLocalRouter = t.router({
+  helpMemberRoute,
   createMemberRoute,
   hydrateLocationsUsers: t.procedure.query(async ({ ctx }) => {
     const usersByLocationUrl = `${process.env.BASE_CLOUD_URL}/v1/user/users-by-location`;
@@ -36,10 +39,14 @@ export const mainLocalRouter = t.router({
     .input(z.object({ cardNumber: z.string() }))
     .query(async ({ input, ctx }) => {
       // Check if USER is In Recent Redis Cache
-      const justSingedInCache = await ctx.redis.get(input.cardNumber);
-
+      const justSingedInCache: string | null = await ctx.redis.get(input.cardNumber);
       if (justSingedInCache) {
-        return replyResponse(ReasonForVisit.JUST_SIGNED_IN);
+        return replyWithErrorResponse(
+          ReasonForVisit.JUST_SIGNED_IN,
+          false,
+          input.cardNumber,
+          JSON.parse(justSingedInCache)
+        );
       }
       // Check if  User in Local Redis Cache
       const isUserInLocalCache = await ctx.redis.get(RedisKeys.LocalBaseUsers);
@@ -48,14 +55,15 @@ export const mainLocalRouter = t.router({
         isUserInLocalCache,
         input.cardNumber
       );
+
       if (!isUserInLocalCacheRedis) {
-        return replyResponse(ReasonForVisit.NOT_USER);
+        return replyWithErrorResponse(ReasonForVisit.NOT_USER, false, input.cardNumber, undefined);
       }
       // Check if User is Feasible
       const isGeoFeasible = await isFeasibleVisit(ctx, isUserInLocalCacheRedis.visits[0]);
 
       if (!isGeoFeasible.isFeasible) {
-        return replyResponse(isGeoFeasible.reason);
+        return replyWithErrorResponse(isGeoFeasible.reason, false, input.cardNumber, undefined);
       }
       // THIS WILL ALLOW THE USER TO ENTER THE LOCATION
       if (isGeoFeasible.isFeasible) {
@@ -72,8 +80,20 @@ export const mainLocalRouter = t.router({
         );
         return replyResponse(isGeoFeasible.reason, true);
       }
-      return replyResponse(ReasonForVisit.ERROR);
+      return replyWithErrorResponse(
+        ReasonForVisit.ERROR,
+        false,
+        input.cardNumber,
+        isUserInLocalCacheRedis
+      );
     }),
 });
 
 export type LocalAppRouter = typeof mainLocalRouter;
+
+export const mergedAppRouter = t.router({
+  local: mainLocalRouter,
+  cloud: mainCloudRouter,
+});
+
+export type MergedAppRouter = typeof mergedAppRouter;

@@ -6,8 +6,9 @@ import { View, Text, Header } from '../..';
 export const MainLayout = ({
   body,
   useNavigationHook,
-  bgColor = '#00C6AE',
+  bgColor = 'bg-[#00C6AE]',
   headerSubText,
+  scrollable = true,
   headerMainText,
   headerComponent,
   showBackButton = false,
@@ -15,7 +16,7 @@ export const MainLayout = ({
   const navigation = useNavigationHook && useNavigationHook();
   return (
     <KeyboardAvoidingView style={{ flexGrow: 1, height: '100%' }} behavior="padding" enabled>
-      <View className={`w-full h-full flex p-4 ${bgColor}`}>
+      <View className={`w-full h-full flex p-4 min-h-screen ${bgColor}`}>
         <View className="">
           {showBackButton && (
             <Text
@@ -38,7 +39,9 @@ export const MainLayout = ({
             </>
           )}
         </View>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>{body}</ScrollView>
+        <ScrollView scrollEnabled={scrollable} contentContainerStyle={{ flexGrow: 1 }}>
+          {body}
+        </ScrollView>
       </View>
     </KeyboardAvoidingView>
   );

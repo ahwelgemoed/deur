@@ -1,7 +1,7 @@
+import { View, Text } from '@deur/design-system';
 import { useMqttMessageListener, useSendMqttMessage } from '@deur/shared-hooks';
 import { EMQQTTTopics } from '@deur/shared-types';
 import React, { useRef, useState } from 'react';
-import { View, Text } from 'react-native';
 import SwipeButton from 'rn-swipe-button';
 import { v4 as uuidv4 } from 'uuid';
 interface ISwipper {
@@ -11,13 +11,18 @@ interface ISwipper {
 const Swipper = ({ successCallback }: ISwipper) => {
   const uuid = useRef(uuidv4());
   const [gatesOnline, setGatesOnline] = useState<string[]>();
+
+  // Send message to open gate
   const [sendMessage] = useSendMqttMessage((e) => console.log('e', e));
+
+  // Collect all gates online
   useMqttMessageListener(EMQQTTTopics.GATES_ONLINE, (message) => {
-    console.log('message', message);
+    console.log('👇message', message);
     setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as unknown as string[]);
   });
+  // Listen for gate opened
   useMqttMessageListener(uuid.current, (message) => {
-    console.log('message', message);
+    console.log('🔥message', message);
     successCallback();
   });
 

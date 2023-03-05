@@ -1,4 +1,4 @@
-import { useNavigation, useRouter } from 'expo-router';
+import { useNavigation } from 'expo-router';
 interface MainLayoutProps_HeaderText {
   showBackButton?: boolean;
   headerComponent?: never;
@@ -9,6 +9,7 @@ interface MainLayoutProps_HeaderText {
   footerMainText?: never;
   footerSubText?: never;
   bgColor?: string;
+  scrollable?: boolean;
   useNavigationHook?: typeof useNavigation;
 }
 interface MainLayoutProps_HeaderNode {
@@ -21,6 +22,7 @@ interface MainLayoutProps_HeaderNode {
   footerMainText?: never;
   footerSubText?: never;
   bgColor?: string;
+  scrollable?: boolean;
   useNavigationHook?: typeof useNavigation;
 }
 
@@ -34,6 +36,7 @@ interface MainLayoutProps_FooterText {
   footerMainText?: string;
   footerSubText?: string;
   bgColor?: string;
+  scrollable?: boolean;
   useNavigationHook?: typeof useNavigation;
 }
 export type MainLayoutProps =

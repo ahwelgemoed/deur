@@ -51,8 +51,8 @@ const setJustSignedInUser = async (user: ISignedInUserInRedis) => {
 const worker = new Worker(
   LOG_GATE_USER,
   async (job) => {
+    // Log the user in Cloud DB
     if (job.name === MQMessageTypes.USER_IS_ALLOWED) {
-      const url = `${process.env.BASE_CLOUD_URL}/v1/visit/log-visit`;
       try {
         const returnedVisit = await cloudBaseTrpcClient.visitsRouter.logVisitAtLocation.mutate({
           cardNumber: job.data.user.cardNumber,

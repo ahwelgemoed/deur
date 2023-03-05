@@ -51,7 +51,7 @@ export function IdleStateProvider({ children }: IdleStateProviderProps) {
     }
     timeOutRef.current = setTimeout(() => {
       setToInactive();
-    }, 5000);
+    }, 50_000);
 
     return true; // Hack to get onStartShouldSetResponder to work
   };

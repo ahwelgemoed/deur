@@ -1,12 +1,11 @@
-import { View, Text, TextInput } from '@deur/design-system';
+import { View, Text, TextInput, MainLayout } from '@deur/design-system';
 import { useDeviceState, DeviceSetupData } from '@deur/shared-hooks';
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Button } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 
-import MainLayout from '../../src/components/MainLayout';
-import { cloudTrpcApi } from '../../src/contexts/trpc/trpc.provider';
+import { mergedTrpcApi } from '../../src/contexts/trpc/trpc.provider';
 
 const selectView = 'p-2 m-2 bg-[#0f0f0f] flex rounded-md border-2 border-white';
 
@@ -20,24 +19,26 @@ const InitialSetup = () => {
     friendlyName: '',
   });
 
-  const createDeviceMutation = cloudTrpcApi.generatedRoutes.devices.createOneDevices.useMutation();
+  const createDeviceMutation =
+    mergedTrpcApi.cloud.generatedRoutes.devices.createOneDevices.useMutation();
 
   useEffect(() => {
     if (createDeviceMutation?.data) {
-      deviceState.setState({ ...device, ...createDeviceMutation.data });
+      deviceState.setState({ ...device });
     }
   }, [createDeviceMutation.data]);
 
   const { data: deviceTypes, isLoading: deviceTypesLoading } =
-    cloudTrpcApi.generatedRoutes.devicetypes.findManyDeviceTypes.useQuery({});
+    mergedTrpcApi.cloud.generatedRoutes.devicetypes.findManyDeviceTypes.useQuery({});
+
   const {
     data: counties,
     isLoading: countiesLoading,
     error: countriesError,
-  } = cloudTrpcApi.generatedRoutes.country.findManyCountry.useQuery({});
+  } = mergedTrpcApi.cloud.generatedRoutes.country.findManyCountry.useQuery({});
 
   const { data: locations, isLoading: locationsLoading } =
-    cloudTrpcApi.generatedRoutes.location.findManyLocation.useQuery({
+    mergedTrpcApi.cloud.generatedRoutes.location.findManyLocation.useQuery({
       where: {
         countryId: device.countryId,
       },

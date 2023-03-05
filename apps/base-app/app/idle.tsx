@@ -6,9 +6,20 @@ import { useEffect, useState } from 'react';
 import { Pressable } from 'react-native';
 
 import { useSetToIdle } from '../src/contexts/IdleState.Context';
+import { mergedTrpcApi } from '../src/contexts/trpc/trpc.provider';
 
 export default function IdlePage() {
   const [helpThisUserActive, setHelpThisUserActive] = useState<string>('');
+
+  const userToHelp = mergedTrpcApi.local.helpMemberRoute.getUserToHelp.useQuery(
+    {
+      cardNumber: '0621f9ee-457f-45d1-bca6-0e835c85ca5d',
+    },
+    {
+      enabled: true,
+    }
+  );
+  console.log('userToHelp', userToHelp.data);
   const router = useRouter();
   const { setToActive } = useSetToIdle();
 
@@ -27,6 +38,8 @@ export default function IdlePage() {
 
   useEffect(() => {
     if (helpThisUserActive) {
+      console.log('helpThisUserActive', helpThisUserActive);
+      userToHelp.refetch();
       setTimeout(() => {
         setHelpThisUserActive('');
       }, 10_000);

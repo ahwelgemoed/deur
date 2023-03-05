@@ -3,6 +3,7 @@ import { useDeviceState } from '@deur/shared-hooks';
 
 const SetupDevice = () => {
   const t = useDeviceState();
+  console.log('t', t);
 
   return (
     <div>

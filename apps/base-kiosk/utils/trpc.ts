@@ -4,7 +4,7 @@ import { httpBatchLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
 import superjson from 'superjson';
 
-export const trpc = createTRPCNext<CloudAppRouter>({
+export const trpcCloud = createTRPCNext<CloudAppRouter>({
   config() {
     return {
       transformer: superjson,

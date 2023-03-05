@@ -62,6 +62,18 @@ export const findCardNumberInRedisCache = async (
   return isUserInCache;
 };
 
+export const replyWithErrorResponse = (
+  reason: ReasonForVisit,
+  isAllowed = false,
+  key: string,
+  user: ICleanUserSchema | undefined
+) => {
+  mainRedisClient.set(key, JSON.stringify(user), 'EX', 60);
+  return {
+    isAllowed,
+    reason,
+  };
+};
 export const replyResponse = (reason: ReasonForVisit, isAllowed = false) => {
   return {
     isAllowed,

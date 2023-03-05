@@ -34,8 +34,8 @@ const OpenGate = () => {
   }
   if (successfullyGateOpened) {
     return (
-      <View className="bg-black w-full h-full flex justify-center p-4">
-        <Text className="text-white font-body text-[100px]">🎉 Congratulations </Text>
+      <View className="w-full h-full flex justify-center p-4 bg-dark">
+        <Text className="text-[#DDDDE1]  font-body text-[100px]">🎉 Congratulations </Text>
         <View className="text-center flex content-center">
           <Text className="text-[#DDDDE1] font-display text-[40px]">
             The gate is open, Enjoy the 💪
@@ -47,6 +47,7 @@ const OpenGate = () => {
 
   return (
     <MainLayout
+      scrollable={false}
       bgColor="bg-yellow"
       showBackButton
       headerMainText={`Congratulations ${memberName}`}

@@ -1,41 +1,49 @@
-import { CloudAppRouter } from '@deur/cloud-trpc';
-import { LocalAppRouter } from '@deur/local-trpc';
+import { MergedAppRouter } from '@deur/local-trpc';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { useState } from 'react';
 import superjson from 'superjson';
 
-export const localTrpcApi = createTRPCReact<LocalAppRouter>();
-export const cloudTrpcApi = createTRPCReact<CloudAppRouter>();
+export const mergedTrpcApi = createTRPCReact<MergedAppRouter>();
 
 export const TRPCProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [queryClient] = useState(() => new QueryClient());
-  const [localTrpcClient] = useState(() =>
-    localTrpcApi.createClient({
-      transformer: superjson,
-      links: [
-        httpBatchLink({
-          url: `http://localhost:3030/trpc`,
-        }),
-      ],
-    })
-  );
+
   const [cloudTrpcClient] = useState(() =>
-    cloudTrpcApi.createClient({
+    mergedTrpcApi.createClient({
       transformer: superjson,
       links: [
-        httpBatchLink({
-          url: `http://localhost:3033/trpc`,
-        }),
+        (runtime) => {
+          const servers = {
+            local: httpBatchLink({ url: 'http://localhost:3033/trpc' })(runtime),
+            cloud: httpBatchLink({ url: 'http://localhost:3030/trpc' })(runtime),
+          };
+          return (ctx) => {
+            const { op } = ctx;
+            const pathParts = op.path.split('.');
+            const serverName = pathParts.shift() as string as keyof typeof servers;
+            const path = pathParts.join('.');
+            console.log(`> calling ${serverName} on path ${path}`, {
+              input: op.input,
+            });
+            const link = servers[serverName];
+            return link({
+              ...ctx,
+              op: {
+                ...op,
+                path,
+              },
+            });
+          };
+        },
       ],
     })
   );
+
   return (
-    <cloudTrpcApi.Provider client={cloudTrpcClient} queryClient={queryClient}>
-      <localTrpcApi.Provider client={localTrpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </localTrpcApi.Provider>
-    </cloudTrpcApi.Provider>
+    <mergedTrpcApi.Provider client={cloudTrpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </mergedTrpcApi.Provider>
   );
 };
