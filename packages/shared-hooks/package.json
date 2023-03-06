@@ -22,6 +22,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@deur/shared-functions": "*",
+    "@deur/design-system": "*",
     "@tanstack/react-query": "^4.24.9",
     "paho-mqtt": "^1.1.0",
     "react": "^18.1.0",
