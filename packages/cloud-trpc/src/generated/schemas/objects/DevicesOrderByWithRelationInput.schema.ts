@@ -11,11 +11,14 @@ const Schema: z.ZodType<Prisma.DevicesOrderByWithRelationInput> = z
     name: z.lazy(() => SortOrderSchema).optional(),
     deviceId: z.lazy(() => SortOrderSchema).optional(),
     locationId: z.lazy(() => SortOrderSchema).optional(),
-    location: z.lazy(() => LocationOrderByWithRelationInputObjectSchema).optional(),
-    deviceType: z.lazy(() => DeviceTypesOrderByWithRelationInputObjectSchema).optional(),
     deviceTypeId: z.lazy(() => SortOrderSchema).optional(),
+    lastOnline: z.lazy(() => SortOrderSchema).optional(),
+    lastHeartbeat: z.lazy(() => SortOrderSchema).optional(),
+    isOnline: z.lazy(() => SortOrderSchema).optional(),
     createdAt: z.lazy(() => SortOrderSchema).optional(),
     updatedAt: z.lazy(() => SortOrderSchema).optional(),
+    location: z.lazy(() => LocationOrderByWithRelationInputObjectSchema).optional(),
+    deviceType: z.lazy(() => DeviceTypesOrderByWithRelationInputObjectSchema).optional(),
   })
   .strict();
 

@@ -6,9 +6,9 @@ import type { Prisma } from '../../../../../cloud-prisma-db/prisma/generated';
 const Schema: z.ZodType<Prisma.VisitsToLocationCreateWithoutLocationInput> = z
   .object({
     id: z.string().optional(),
-    user: z.lazy(() => UserCreateNestedOneWithoutVisitsInputObjectSchema),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
+    user: z.lazy(() => UserCreateNestedOneWithoutVisitsInputObjectSchema),
   })
   .strict();
 

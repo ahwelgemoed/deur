@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { StringFilterObjectSchema } from './StringFilter.schema';
-import { DevicesListRelationFilterObjectSchema } from './DevicesListRelationFilter.schema';
 import { DateTimeFilterObjectSchema } from './DateTimeFilter.schema';
+import { DevicesListRelationFilterObjectSchema } from './DevicesListRelationFilter.schema';
 
 import type { Prisma } from '../../../../../cloud-prisma-db/prisma/generated';
 
@@ -25,9 +25,9 @@ const Schema: z.ZodType<Prisma.DeviceTypesWhereInput> = z
       .optional(),
     id: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
     name: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
-    devices: z.lazy(() => DevicesListRelationFilterObjectSchema).optional(),
     createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
     updatedAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+    devices: z.lazy(() => DevicesListRelationFilterObjectSchema).optional(),
   })
   .strict();
 

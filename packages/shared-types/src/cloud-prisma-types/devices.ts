@@ -7,6 +7,9 @@ export const DevicesCloudModel = z.object({
   deviceId: z.string(),
   locationId: z.string(),
   deviceTypeId: z.string(),
+  lastOnline: z.date(),
+  lastHeartbeat: z.date().nullish(),
+  isOnline: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })

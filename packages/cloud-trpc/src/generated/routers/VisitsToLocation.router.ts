@@ -13,82 +13,69 @@ import { VisitsToLocationUpsertSchema } from "../schemas/upsertOneVisitsToLocati
 
 export const visitstolocationsRouter = t.router({
   aggregateVisitsToLocation: publicProcedure
-    .input(VisitsToLocationAggregateSchema)
-    .query(async ({ ctx, input }) => {
+    .input(VisitsToLocationAggregateSchema).query(async ({ ctx, input }) => {
       const aggregateVisitsToLocation = await ctx.prisma.visitsToLocation.aggregate(input);
       return aggregateVisitsToLocation;
     }),
   createOneVisitsToLocation: publicProcedure
-    .input(VisitsToLocationCreateOneSchema)
-    .mutation(async ({ ctx, input }) => {
+    .input(VisitsToLocationCreateOneSchema).mutation(async ({ ctx, input }) => {
       const createOneVisitsToLocation = await ctx.prisma.visitsToLocation.create(input);
       return createOneVisitsToLocation;
     }),
   deleteManyVisitsToLocation: publicProcedure
-    .input(VisitsToLocationDeleteManySchema)
-    .mutation(async ({ ctx, input }) => {
+    .input(VisitsToLocationDeleteManySchema).mutation(async ({ ctx, input }) => {
       const deleteManyVisitsToLocation = await ctx.prisma.visitsToLocation.deleteMany(input);
       return deleteManyVisitsToLocation;
     }),
   deleteOneVisitsToLocation: publicProcedure
-    .input(VisitsToLocationDeleteOneSchema)
-    .mutation(async ({ ctx, input }) => {
+    .input(VisitsToLocationDeleteOneSchema).mutation(async ({ ctx, input }) => {
       const deleteOneVisitsToLocation = await ctx.prisma.visitsToLocation.delete(input);
       return deleteOneVisitsToLocation;
     }),
   findFirstVisitsToLocation: publicProcedure
-    .input(VisitsToLocationFindFirstSchema)
-    .query(async ({ ctx, input }) => {
+    .input(VisitsToLocationFindFirstSchema).query(async ({ ctx, input }) => {
       const findFirstVisitsToLocation = await ctx.prisma.visitsToLocation.findFirst(input);
       return findFirstVisitsToLocation;
     }),
   findFirstVisitsToLocationOrThrow: publicProcedure
-    .input(VisitsToLocationFindFirstSchema)
-    .query(async ({ ctx, input }) => {
+    .input(VisitsToLocationFindFirstSchema).query(async ({ ctx, input }) => {
       const findFirstVisitsToLocationOrThrow = await ctx.prisma.visitsToLocation.findFirstOrThrow(input);
       return findFirstVisitsToLocationOrThrow;
     }),
   findManyVisitsToLocation: publicProcedure
-    .input(VisitsToLocationFindManySchema)
-    .query(async ({ ctx, input }) => {
+    .input(VisitsToLocationFindManySchema).query(async ({ ctx, input }) => {
       const findManyVisitsToLocation = await ctx.prisma.visitsToLocation.findMany(input);
       return findManyVisitsToLocation;
     }),
   findUniqueVisitsToLocation: publicProcedure
-    .input(VisitsToLocationFindUniqueSchema)
-    .query(async ({ ctx, input }) => {
+    .input(VisitsToLocationFindUniqueSchema).query(async ({ ctx, input }) => {
       const findUniqueVisitsToLocation = await ctx.prisma.visitsToLocation.findUnique(input);
       return findUniqueVisitsToLocation;
     }),
   findUniqueVisitsToLocationOrThrow: publicProcedure
-    .input(VisitsToLocationFindUniqueSchema)
-    .query(async ({ ctx, input }) => {
+    .input(VisitsToLocationFindUniqueSchema).query(async ({ ctx, input }) => {
       const findUniqueVisitsToLocationOrThrow = await ctx.prisma.visitsToLocation.findUniqueOrThrow(input);
       return findUniqueVisitsToLocationOrThrow;
     }),
   groupByVisitsToLocation: publicProcedure
-    .input(VisitsToLocationGroupBySchema)
-    .query(async ({ ctx, input }) => {
+    .input(VisitsToLocationGroupBySchema).query(async ({ ctx, input }) => {
       const groupByVisitsToLocation = await ctx.prisma.visitsToLocation.groupBy({ where: input.where, orderBy: input.orderBy, by: input.by, having: input.having, take: input.take, skip: input.skip });
       return groupByVisitsToLocation;
     }),
   updateManyVisitsToLocation: publicProcedure
-    .input(VisitsToLocationUpdateManySchema)
-    .mutation(async ({ ctx, input }) => {
+    .input(VisitsToLocationUpdateManySchema).mutation(async ({ ctx, input }) => {
       const updateManyVisitsToLocation = await ctx.prisma.visitsToLocation.updateMany(input);
       return updateManyVisitsToLocation;
     }),
   updateOneVisitsToLocation: publicProcedure
-    .input(VisitsToLocationUpdateOneSchema)
-    .mutation(async ({ ctx, input }) => {
+    .input(VisitsToLocationUpdateOneSchema).mutation(async ({ ctx, input }) => {
       const updateOneVisitsToLocation = await ctx.prisma.visitsToLocation.update(input);
       return updateOneVisitsToLocation;
     }),
   upsertOneVisitsToLocation: publicProcedure
-    .input(VisitsToLocationUpsertSchema)
-    .mutation(async ({ ctx, input }) => {
+    .input(VisitsToLocationUpsertSchema).mutation(async ({ ctx, input }) => {
       const upsertOneVisitsToLocation = await ctx.prisma.visitsToLocation.upsert(input);
       return upsertOneVisitsToLocation;
     }),
 
-})
+}) 

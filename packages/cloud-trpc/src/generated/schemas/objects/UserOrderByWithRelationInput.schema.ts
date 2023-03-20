@@ -15,10 +15,10 @@ const Schema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z
     isAllowed: z.lazy(() => SortOrderSchema).optional(),
     memberShipType: z.lazy(() => SortOrderSchema).optional(),
     email: z.lazy(() => SortOrderSchema).optional(),
-    location: z.lazy(() => LocationOrderByWithRelationInputObjectSchema).optional(),
-    visits: z.lazy(() => VisitsToLocationOrderByRelationAggregateInputObjectSchema).optional(),
     createdAt: z.lazy(() => SortOrderSchema).optional(),
     updatedAt: z.lazy(() => SortOrderSchema).optional(),
+    location: z.lazy(() => LocationOrderByWithRelationInputObjectSchema).optional(),
+    visits: z.lazy(() => VisitsToLocationOrderByRelationAggregateInputObjectSchema).optional(),
   })
   .strict();
 

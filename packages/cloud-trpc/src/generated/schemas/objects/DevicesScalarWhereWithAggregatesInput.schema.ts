@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { StringWithAggregatesFilterObjectSchema } from './StringWithAggregatesFilter.schema';
 import { DateTimeWithAggregatesFilterObjectSchema } from './DateTimeWithAggregatesFilter.schema';
+import { DateTimeNullableWithAggregatesFilterObjectSchema } from './DateTimeNullableWithAggregatesFilter.schema';
+import { BoolWithAggregatesFilterObjectSchema } from './BoolWithAggregatesFilter.schema';
 
 import type { Prisma } from '../../../../../cloud-prisma-db/prisma/generated';
 
@@ -33,6 +35,14 @@ const Schema: z.ZodType<Prisma.DevicesScalarWhereWithAggregatesInput> = z
     deviceTypeId: z
       .union([z.lazy(() => StringWithAggregatesFilterObjectSchema), z.string()])
       .optional(),
+    lastOnline: z
+      .union([z.lazy(() => DateTimeWithAggregatesFilterObjectSchema), z.date()])
+      .optional(),
+    lastHeartbeat: z
+      .union([z.lazy(() => DateTimeNullableWithAggregatesFilterObjectSchema), z.date()])
+      .optional()
+      .nullable(),
+    isOnline: z.union([z.lazy(() => BoolWithAggregatesFilterObjectSchema), z.boolean()]).optional(),
     createdAt: z
       .union([z.lazy(() => DateTimeWithAggregatesFilterObjectSchema), z.date()])
       .optional(),

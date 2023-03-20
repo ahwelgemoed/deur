@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { StringFieldUpdateOperationsInputObjectSchema } from './StringFieldUpdateOperationsInput.schema';
-import { LocationUncheckedUpdateManyWithoutCountryNestedInputObjectSchema } from './LocationUncheckedUpdateManyWithoutCountryNestedInput.schema';
 import { DateTimeFieldUpdateOperationsInputObjectSchema } from './DateTimeFieldUpdateOperationsInput.schema';
+import { LocationUncheckedUpdateManyWithoutCountryNestedInputObjectSchema } from './LocationUncheckedUpdateManyWithoutCountryNestedInput.schema';
 
 import type { Prisma } from '../../../../../cloud-prisma-db/prisma/generated';
 
@@ -16,14 +16,14 @@ const Schema: z.ZodType<Prisma.CountryUncheckedUpdateInput> = z
     code: z
       .union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
       .optional(),
-    locations: z
-      .lazy(() => LocationUncheckedUpdateManyWithoutCountryNestedInputObjectSchema)
-      .optional(),
     createdAt: z
       .union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)])
       .optional(),
     updatedAt: z
       .union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)])
+      .optional(),
+    locations: z
+      .lazy(() => LocationUncheckedUpdateManyWithoutCountryNestedInputObjectSchema)
       .optional(),
   })
   .strict();

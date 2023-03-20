@@ -39,6 +39,8 @@ const Schema: z.ZodType<Prisma.UserWhereInput> = z
     isAllowed: z.union([z.lazy(() => BoolFilterObjectSchema), z.boolean()]).optional(),
     memberShipType: z.union([z.lazy(() => IntFilterObjectSchema), z.number()]).optional(),
     email: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
+    createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+    updatedAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
     location: z
       .union([
         z.lazy(() => LocationRelationFilterObjectSchema),
@@ -46,8 +48,6 @@ const Schema: z.ZodType<Prisma.UserWhereInput> = z
       ])
       .optional(),
     visits: z.lazy(() => VisitsToLocationListRelationFilterObjectSchema).optional(),
-    createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
-    updatedAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
   })
   .strict();
 

@@ -7,9 +7,9 @@ const Schema: z.ZodType<Prisma.DeviceTypesCreateInput> = z
   .object({
     id: z.string().optional(),
     name: z.string(),
-    devices: z.lazy(() => DevicesCreateNestedManyWithoutDeviceTypeInputObjectSchema).optional(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
+    devices: z.lazy(() => DevicesCreateNestedManyWithoutDeviceTypeInputObjectSchema).optional(),
   })
   .strict();
 

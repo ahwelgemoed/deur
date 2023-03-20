@@ -17,8 +17,7 @@ const Swipper = ({ successCallback }: ISwipper) => {
 
   // Collect all gates online
   useMqttMessageListener(EMQQTTTopics.GATES_ONLINE, (message) => {
-    console.log('👇message', message);
-    setGatesOnline(JSON.parse(Buffer.from(message.payloadBytes).toString()) as unknown as string[]);
+    setGatesOnline(JSON.parse(message.payloadString) as unknown as string[]);
   });
   // Listen for gate opened
   useMqttMessageListener(uuid.current, (message) => {

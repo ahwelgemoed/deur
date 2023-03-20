@@ -8,9 +8,9 @@ const Schema: z.ZodType<Prisma.CountryCreateInput> = z
     id: z.string().optional(),
     name: z.string(),
     code: z.string(),
-    locations: z.lazy(() => LocationCreateNestedManyWithoutCountryInputObjectSchema).optional(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
+    locations: z.lazy(() => LocationCreateNestedManyWithoutCountryInputObjectSchema).optional(),
   })
   .strict();
 

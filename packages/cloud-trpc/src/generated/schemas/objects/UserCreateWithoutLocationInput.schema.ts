@@ -12,9 +12,9 @@ const Schema: z.ZodType<Prisma.UserCreateWithoutLocationInput> = z
     isAllowed: z.boolean().optional(),
     memberShipType: z.number(),
     email: z.string(),
-    visits: z.lazy(() => VisitsToLocationCreateNestedManyWithoutUserInputObjectSchema).optional(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
+    visits: z.lazy(() => VisitsToLocationCreateNestedManyWithoutUserInputObjectSchema).optional(),
   })
   .strict();
 

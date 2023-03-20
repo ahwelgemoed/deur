@@ -1,0 +1,12 @@
+{
+  "folders": [
+	{
+		"path": "../.."
+	},
+	{
+		"name": "Gate_Scanner",
+		"path": "../../../repos/deur/hardware/Gate_Scanner"
+	}
+],
+  "settings": {}
+}

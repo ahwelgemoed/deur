@@ -9,11 +9,11 @@ const Schema: z.ZodType<Prisma.VisitsToLocationOrderByWithRelationInput> = z
   .object({
     id: z.lazy(() => SortOrderSchema).optional(),
     userId: z.lazy(() => SortOrderSchema).optional(),
-    user: z.lazy(() => UserOrderByWithRelationInputObjectSchema).optional(),
     locationId: z.lazy(() => SortOrderSchema).optional(),
-    location: z.lazy(() => LocationOrderByWithRelationInputObjectSchema).optional(),
     createdAt: z.lazy(() => SortOrderSchema).optional(),
     updatedAt: z.lazy(() => SortOrderSchema).optional(),
+    user: z.lazy(() => UserOrderByWithRelationInputObjectSchema).optional(),
+    location: z.lazy(() => LocationOrderByWithRelationInputObjectSchema).optional(),
   })
   .strict();
 

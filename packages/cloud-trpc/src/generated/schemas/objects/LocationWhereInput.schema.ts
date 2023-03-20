@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { StringFilterObjectSchema } from './StringFilter.schema';
+import { DateTimeFilterObjectSchema } from './DateTimeFilter.schema';
 import { UserListRelationFilterObjectSchema } from './UserListRelationFilter.schema';
 import { DevicesListRelationFilterObjectSchema } from './DevicesListRelationFilter.schema';
 import { CountryRelationFilterObjectSchema } from './CountryRelationFilter.schema';
 import { CountryWhereInputObjectSchema } from './CountryWhereInput.schema';
 import { VisitsToLocationListRelationFilterObjectSchema } from './VisitsToLocationListRelationFilter.schema';
-import { DateTimeFilterObjectSchema } from './DateTimeFilter.schema';
 
 import type { Prisma } from '../../../../../cloud-prisma-db/prisma/generated';
 
@@ -29,11 +29,13 @@ const Schema: z.ZodType<Prisma.LocationWhereInput> = z
       .optional(),
     id: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
     name: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
-    users: z.lazy(() => UserListRelationFilterObjectSchema).optional(),
-    devices: z.lazy(() => DevicesListRelationFilterObjectSchema).optional(),
     lat: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
     long: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
     countryId: z.union([z.lazy(() => StringFilterObjectSchema), z.string()]).optional(),
+    createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+    updatedAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
+    users: z.lazy(() => UserListRelationFilterObjectSchema).optional(),
+    devices: z.lazy(() => DevicesListRelationFilterObjectSchema).optional(),
     country: z
       .union([
         z.lazy(() => CountryRelationFilterObjectSchema),
@@ -41,8 +43,6 @@ const Schema: z.ZodType<Prisma.LocationWhereInput> = z
       ])
       .optional(),
     visits: z.lazy(() => VisitsToLocationListRelationFilterObjectSchema).optional(),
-    createdAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
-    updatedAt: z.union([z.lazy(() => DateTimeFilterObjectSchema), z.date()]).optional(),
   })
   .strict();
 

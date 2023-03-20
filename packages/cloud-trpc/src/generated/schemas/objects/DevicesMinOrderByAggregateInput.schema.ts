@@ -10,6 +10,9 @@ const Schema: z.ZodType<Prisma.DevicesMinOrderByAggregateInput> = z
     deviceId: z.lazy(() => SortOrderSchema).optional(),
     locationId: z.lazy(() => SortOrderSchema).optional(),
     deviceTypeId: z.lazy(() => SortOrderSchema).optional(),
+    lastOnline: z.lazy(() => SortOrderSchema).optional(),
+    lastHeartbeat: z.lazy(() => SortOrderSchema).optional(),
+    isOnline: z.lazy(() => SortOrderSchema).optional(),
     createdAt: z.lazy(() => SortOrderSchema).optional(),
     updatedAt: z.lazy(() => SortOrderSchema).optional(),
   })

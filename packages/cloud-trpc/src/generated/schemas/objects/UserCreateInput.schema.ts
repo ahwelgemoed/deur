@@ -13,10 +13,10 @@ const Schema: z.ZodType<Prisma.UserCreateInput> = z
     isAllowed: z.boolean().optional(),
     memberShipType: z.number(),
     email: z.string(),
-    location: z.lazy(() => LocationCreateNestedOneWithoutUsersInputObjectSchema),
-    visits: z.lazy(() => VisitsToLocationCreateNestedManyWithoutUserInputObjectSchema).optional(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
+    location: z.lazy(() => LocationCreateNestedOneWithoutUsersInputObjectSchema),
+    visits: z.lazy(() => VisitsToLocationCreateNestedManyWithoutUserInputObjectSchema).optional(),
   })
   .strict();
 

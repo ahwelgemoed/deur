@@ -35,14 +35,14 @@ const Schema: z.ZodType<Prisma.UserUncheckedUpdateInput> = z
     email: z
       .union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
       .optional(),
-    visits: z
-      .lazy(() => VisitsToLocationUncheckedUpdateManyWithoutUserNestedInputObjectSchema)
-      .optional(),
     createdAt: z
       .union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)])
       .optional(),
     updatedAt: z
       .union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)])
+      .optional(),
+    visits: z
+      .lazy(() => VisitsToLocationUncheckedUpdateManyWithoutUserNestedInputObjectSchema)
       .optional(),
   })
   .strict();

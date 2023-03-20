@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { StringFieldUpdateOperationsInputObjectSchema } from './StringFieldUpdateOperationsInput.schema';
 import { DateTimeFieldUpdateOperationsInputObjectSchema } from './DateTimeFieldUpdateOperationsInput.schema';
+import { NullableDateTimeFieldUpdateOperationsInputObjectSchema } from './NullableDateTimeFieldUpdateOperationsInput.schema';
+import { BoolFieldUpdateOperationsInputObjectSchema } from './BoolFieldUpdateOperationsInput.schema';
 
 import type { Prisma } from '../../../../../cloud-prisma-db/prisma/generated';
 
@@ -20,6 +22,16 @@ const Schema: z.ZodType<Prisma.DevicesUncheckedUpdateManyInput> = z
       .optional(),
     deviceTypeId: z
       .union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
+      .optional(),
+    lastOnline: z
+      .union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)])
+      .optional(),
+    lastHeartbeat: z
+      .union([z.date(), z.lazy(() => NullableDateTimeFieldUpdateOperationsInputObjectSchema)])
+      .optional()
+      .nullable(),
+    isOnline: z
+      .union([z.boolean(), z.lazy(() => BoolFieldUpdateOperationsInputObjectSchema)])
       .optional(),
     createdAt: z
       .union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)])

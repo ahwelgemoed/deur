@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { StringFieldUpdateOperationsInputObjectSchema } from './StringFieldUpdateOperationsInput.schema';
+import { DateTimeFieldUpdateOperationsInputObjectSchema } from './DateTimeFieldUpdateOperationsInput.schema';
 import { UserUncheckedUpdateManyWithoutLocationNestedInputObjectSchema } from './UserUncheckedUpdateManyWithoutLocationNestedInput.schema';
 import { DevicesUncheckedUpdateManyWithoutLocationNestedInputObjectSchema } from './DevicesUncheckedUpdateManyWithoutLocationNestedInput.schema';
-import { DateTimeFieldUpdateOperationsInputObjectSchema } from './DateTimeFieldUpdateOperationsInput.schema';
 
 import type { Prisma } from '../../../../../cloud-prisma-db/prisma/generated';
 
@@ -13,10 +13,6 @@ const Schema: z.ZodType<Prisma.LocationUncheckedUpdateWithoutVisitsInput> = z
       .optional(),
     name: z
       .union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
-      .optional(),
-    users: z.lazy(() => UserUncheckedUpdateManyWithoutLocationNestedInputObjectSchema).optional(),
-    devices: z
-      .lazy(() => DevicesUncheckedUpdateManyWithoutLocationNestedInputObjectSchema)
       .optional(),
     lat: z
       .union([z.string(), z.lazy(() => StringFieldUpdateOperationsInputObjectSchema)])
@@ -32,6 +28,10 @@ const Schema: z.ZodType<Prisma.LocationUncheckedUpdateWithoutVisitsInput> = z
       .optional(),
     updatedAt: z
       .union([z.date(), z.lazy(() => DateTimeFieldUpdateOperationsInputObjectSchema)])
+      .optional(),
+    users: z.lazy(() => UserUncheckedUpdateManyWithoutLocationNestedInputObjectSchema).optional(),
+    devices: z
+      .lazy(() => DevicesUncheckedUpdateManyWithoutLocationNestedInputObjectSchema)
       .optional(),
   })
   .strict();

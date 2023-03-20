@@ -8,6 +8,9 @@ const Schema: z.ZodType<Prisma.DevicesUncheckedCreateWithoutDeviceTypeInput> = z
     name: z.string(),
     deviceId: z.string(),
     locationId: z.string(),
+    lastOnline: z.date(),
+    lastHeartbeat: z.date().optional().nullable(),
+    isOnline: z.boolean(),
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
   })

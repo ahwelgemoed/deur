@@ -6,6 +6,9 @@ export const DevicesScalarFieldEnumSchema = z.enum([
   'deviceId',
   'locationId',
   'deviceTypeId',
+  'lastOnline',
+  'lastHeartbeat',
+  'isOnline',
   'createdAt',
   'updatedAt',
 ]);

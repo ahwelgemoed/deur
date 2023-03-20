@@ -9,9 +9,9 @@ const Schema: z.ZodType<Prisma.CountryOrderByWithRelationInput> = z
     id: z.lazy(() => SortOrderSchema).optional(),
     name: z.lazy(() => SortOrderSchema).optional(),
     code: z.lazy(() => SortOrderSchema).optional(),
-    locations: z.lazy(() => LocationOrderByRelationAggregateInputObjectSchema).optional(),
     createdAt: z.lazy(() => SortOrderSchema).optional(),
     updatedAt: z.lazy(() => SortOrderSchema).optional(),
+    locations: z.lazy(() => LocationOrderByRelationAggregateInputObjectSchema).optional(),
   })
   .strict();
 

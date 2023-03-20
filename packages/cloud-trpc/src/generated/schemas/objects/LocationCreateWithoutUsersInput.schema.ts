@@ -9,15 +9,15 @@ const Schema: z.ZodType<Prisma.LocationCreateWithoutUsersInput> = z
   .object({
     id: z.string().optional(),
     name: z.string(),
-    devices: z.lazy(() => DevicesCreateNestedManyWithoutLocationInputObjectSchema).optional(),
     lat: z.string(),
     long: z.string(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
+    devices: z.lazy(() => DevicesCreateNestedManyWithoutLocationInputObjectSchema).optional(),
     country: z.lazy(() => CountryCreateNestedOneWithoutLocationsInputObjectSchema),
     visits: z
       .lazy(() => VisitsToLocationCreateNestedManyWithoutLocationInputObjectSchema)
       .optional(),
-    createdAt: z.date().optional(),
-    updatedAt: z.date().optional(),
   })
   .strict();
 
