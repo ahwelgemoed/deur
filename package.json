@@ -15,7 +15,7 @@
     "dev:base:web": "turbo dev --filter=\"{./apps/base-web}...\"",
     "dev:base:kiosk": "turbo dev --filter=\"{./apps/base-kiosk}...\"",
     "dev:base:ws": "turbo dev --filter=\"{./apps/cloud-kiosk-monitor}...\"",
-    "test:base:web:e2e": "turbo test:e2e --filter=\"{./apps/base-web}...\"",
+    "test:base:web:e2e": "turbo test:e2e --filter=\"{./apps/base-kiosk}...\"",
     "test:base:cloud:e2e": "turbo test:e2e --filter=\"{./apps/base-cloud}...\"",
     "test:base:web:e2e:report": "turbo report --filter=\"{./apps/base-web}...\"",
     "dev:base:app": "turbo dev --filter=\"{./apps/base-app}...\"",
