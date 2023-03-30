@@ -9,10 +9,9 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test:e2e": "playwright test",
     "start": "node -r esbuild-register ./dist/index.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "dev": "nodemon --exec \"node -r esbuild-register ./src/index.ts\" -e .ts"
+    "dev": "tsx watch ./src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +19,7 @@
   "dependencies": {
     "fastify-zod": "^1.2.0",
     "@deur/cloud-prisma-db": "*",
+    "@deur/cloud-trpc": "*",
     "@fastify/autoload": "^5.6.0",
     "@fastify/cors": "^8.2.0",
     "@fastify/redis": "^6.1.0",
@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@deur/eslint-config": "*",
+    "tsx": "^3.9.0",
     "@deur/shared-types": "*",
     "@deur/tsconfig": "*",
     "@playwright/test": "^1.30.0",

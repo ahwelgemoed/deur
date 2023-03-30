@@ -1,0 +1,53 @@
+{
+  "name": "ws-status",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch ./src/index.ts -o ./dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@deur/cloud-prisma-db": "*",
+    "@deur/cloud-trpc": "*",
+    "@prisma/client": "^4.11.0",
+    "@socket.io/redis-adapter": "^8.1.0",
+    "@socket.io/redis-emitter": "^5.1.0",
+    "mongodb": "^5.1.0",
+    "mongoose": "^7.0.2",
+    "redis": "^4.6.5",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "superjson": "^1.12.2"
+  },
+  "devDependencies": {
+    "@deur/eslint-config": "*",
+    "@deur/shared-types": "*",
+    "@deur/tsconfig": "*",
+    "@types/node": "^18.15.3",
+    "prisma": "^4.11.0",
+    "ts-node": "^10.9.1",
+    "tsx": "^3.12.5",
+    "typescript": "^4.9.5"
+  },
+  "eslintConfig": {
+    "extends": "@deur/eslint-config",
+    "ignorePatterns": [
+      "node_modules",
+      "dist"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.js"
+        ],
+        "env": {
+          "node": true
+        }
+      }
+    ]
+  }
+}

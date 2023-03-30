@@ -2,11 +2,12 @@
 module.exports = {
   presets: [require('@deur/tailwind-config')],
   theme: {
+    colors: {},
     extend: {
       fontFamily: {
-        display: ['Ubuntu_500Medium_Italic'],
-        body: ['Ubuntu_500Medium'],
-        text: ['Ubuntu_300Light'],
+        display: ['Montserrat_800ExtraBold'],
+        body: ['Montserrat_700Bold'],
+        text: ['Montserrat_400Regular'],
       },
     },
   },

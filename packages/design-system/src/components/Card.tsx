@@ -14,7 +14,7 @@ export const Card = (props: CardProps): JSX.Element => {
       <View
         className={`w-[250px] h-[350px] bg-red border border-4 p-2 rounded-md flex justify-center items-center ${props.classNames}`}
       >
-        <Text className="text-[70px]  font-body text-center text-white">{props.title}</Text>
+        <Text className="text-[70px] text-center text-white font-body">{props.title}</Text>
       </View>
     </Pressable>
   );

@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
-import { CompleteUser, CompleteVisitsToLocation, UserCloudModel } from './cloud-prisma-types';
+import {
+  CompleteUser,
+  CompleteVisitsToLocation,
+  UserCloudModel,
+  VisitsToLocationCloudModel,
+} from './cloud-prisma-types';
+import { ReasonForVisit } from './reasonTypes';
 
 export * from './cloud-prisma-types';
 
@@ -38,6 +44,11 @@ export enum EReasons {
 
 export enum MQMessageTypes {
   USER_IS_ALLOWED = 'USER_IS_ALLOWED',
+  CREATE_USER_LOCAL = 'CREATE_USER_LOCAL',
+}
+export enum MQTypes {
+  LOG_GATE_USER = 'Log_Gate_User',
+  CREATE_USER = 'CREATE_USER',
 }
 type LimitedUser = Pick<CompleteUser, 'id' | 'name' | 'isAllowed'>;
 
@@ -54,6 +65,10 @@ export const CleanUserSchema = UserCloudModel.omit({
 
 export interface ICleanUserSchema extends z.infer<typeof CleanUserSchema> {
   visits: CompleteVisitsToLocation[];
+}
+
+export interface ISignedInUserInRedis extends ICleanUserSchema {
+  reason: ReasonForVisit;
 }
 
 export const cloudHeaders = z.object({

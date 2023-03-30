@@ -5,40 +5,31 @@
 import { DeviceStateProvider } from '@deur/shared-hooks';
 import {
   useFonts,
-  Ubuntu_300Light,
-  Ubuntu_300Light_Italic,
-  Ubuntu_400Regular,
-  Ubuntu_400Regular_Italic,
-  Ubuntu_500Medium,
-  Ubuntu_500Medium_Italic,
-  Ubuntu_700Bold,
-  Ubuntu_700Bold_Italic,
-} from '@expo-google-fonts/ubuntu';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_700Bold,
+  Montserrat_800ExtraBold,
+} from '@expo-google-fonts/montserrat';
 import { Navigator, Slot, SplashScreen, useRouter } from 'expo-router';
 
 import AxiosInstance from '../src/api/AxiosInstance';
 import { IdleStateProvider } from '../src/contexts/IdleState.Context';
-
-const queryClient = new QueryClient();
+import { TRPCProvider } from '../src/contexts/trpc/trpc.provider';
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
-    Ubuntu_300Light,
-    Ubuntu_300Light_Italic,
-    Ubuntu_400Regular,
-    Ubuntu_400Regular_Italic,
-    Ubuntu_500Medium,
-    Ubuntu_500Medium_Italic,
-    Ubuntu_700Bold,
-    Ubuntu_700Bold_Italic,
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_700Bold,
+    Montserrat_800ExtraBold,
   });
 
   if (!fontsLoaded) {
     return <SplashScreen />;
   }
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <TRPCProvider>
       <DeviceStateProvider useRouter={useRouter} setupUrl={'/initial-device-setup'}>
         <IdleStateProvider>
           <AxiosInstance>
@@ -46,7 +37,7 @@ export default function Layout() {
           </AxiosInstance>
         </IdleStateProvider>
       </DeviceStateProvider>
-    </QueryClientProvider>
+    </TRPCProvider>
   );
 }
 

@@ -1,15 +1,13 @@
+import { View, Text, TextInput, MainLayout } from '@deur/design-system';
 import { useDeviceState, DeviceSetupData } from '@deur/shared-hooks';
 import { Picker } from '@react-native-picker/picker';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
-import { Text, ScrollView, ActivityIndicator, TextInput, View, Button } from 'react-native';
+import { ActivityIndicator, Button } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 
-import MainLayout from '../../src/components/MainLayout';
-import { createDevice } from '../../src/utils/mutations/device-mutations';
-import { getAllCountries } from '../../src/utils/queries/country-queries';
-import { getAllDeviceTypes } from '../../src/utils/queries/device-queries';
-import { getLocationByCountry } from '../../src/utils/queries/location-queries';
+import { mergedTrpcApi } from '../../src/contexts/trpc/trpc.provider';
+
+const selectView = 'p-2 m-2 bg-[#efefef] flex rounded-md border-2 border-[#e0e0e0]';
 
 const InitialSetup = () => {
   const deviceState = useDeviceState();
@@ -21,76 +19,66 @@ const InitialSetup = () => {
     friendlyName: '',
   });
 
-  const mutation = useMutation({
-    mutationFn: () => {
-      return createDevice(device);
-    },
-  });
+  const createDeviceMutation =
+    mergedTrpcApi.cloud.generatedRoutes.devices.createOneDevices.useMutation();
 
   useEffect(() => {
-    if (mutation?.data) {
-      deviceState.setState({ ...device, ...mutation.data });
+    if (createDeviceMutation?.data) {
+      deviceState.setState({ ...device });
     }
-  }, [mutation.data]);
+  }, [createDeviceMutation.data]);
 
-  const { data: deviceTypes, isLoading: deviceTypesLoading } = useQuery({
-    queryKey: ['getDeviceTypes'],
-    queryFn: () => {
-      const restDAta = getAllDeviceTypes();
-      return restDAta;
-    },
-  });
+  const { data: deviceTypes, isLoading: deviceTypesLoading } =
+    mergedTrpcApi.cloud.generatedRoutes.devicetypes.findManyDeviceTypes.useQuery({});
 
   const {
     data: counties,
     isLoading: countiesLoading,
     error: countriesError,
-  } = useQuery({
-    queryKey: ['getCountry'],
-    queryFn: () => {
-      const restDAta = getAllCountries();
-      return restDAta;
-    },
-  });
+  } = mergedTrpcApi.cloud.generatedRoutes.country.findManyCountry.useQuery({});
 
-  const { data: locations, isLoading: locationsLoading } = useQuery({
-    queryKey: ['getLocation'],
-    queryFn: () => {
-      const restDAta = getLocationByCountry(device.countryId);
-      return restDAta;
-    },
-    enabled: !!device.countryId,
-  });
+  const { data: locations, isLoading: locationsLoading } =
+    mergedTrpcApi.cloud.generatedRoutes.location.findManyLocation.useQuery({
+      where: {
+        countryId: device.countryId,
+      },
+    });
 
   const handleSave = async () => {
-    mutation.mutate();
+    createDeviceMutation.mutate({
+      data: {
+        lastOnline: new Date(),
+        isOnline: true,
+        deviceId: device.deviceId,
+        name: device.friendlyName,
+        locationId: device.locationId,
+        deviceTypeId: device.deviceTypeId.toString(),
+      },
+    });
   };
   return (
     <MainLayout
-      headerMainText={`Setup New Device`}
+      bgColor="bg-yellow-500"
+      headerMainText="Setup New Device"
       headerSubText="Initial Device Setup"
       body={
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <View className="w-[80%]">
-            <Text className="uppercase font-body text-xl text-white">
-              Here Is the reason we could not let you in today...
-            </Text>
-            <View className="p-2 m-2 bg-[#0f0f0f] flex  rounded-md">
+        <>
+          <View
+            className="p-20"
+            style={{
+              flex: 1,
+            }}
+          >
+            <View className={selectView}>
               {countiesLoading || countriesError ? (
-                <ActivityIndicator size="small" color="white" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <>
-                  <Text className="uppercase font-text text-xl text-white pt-4 text-center">
+                  <Text className="uppercase font-text text-xl text-black pt-4 text-center">
                     Chose a country
                   </Text>
                   <Picker
-                    itemStyle={{ color: 'white' }}
+                    itemStyle={{ color: 'black' }}
                     selectedValue={device.countryId}
                     onValueChange={(itemValue, itemIndex) => {
                       setDevice({ ...device, countryId: itemValue as string, locationId: '' });
@@ -108,19 +96,20 @@ const InitialSetup = () => {
                 </>
               )}
             </View>
-            <View className="p-2 m-2 bg-[#0f0f0f] flex rounded-md">
-              <Text className="uppercase font-text text-xl text-white pt-4 text-center">
+            <View className={selectView}>
+              <Text className="uppercase font-text text-xl text-black pt-4 text-center">
                 Chose a Location in {counties?.find((c: any) => c.id === device.countryId)?.name}
               </Text>
               {!locations ? (
                 ''
               ) : locationsLoading ? (
-                <ActivityIndicator size="small" color="white" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <>
                   <Picker
+                    // @ts-ignore
                     className="p-0 m-0"
-                    itemStyle={{ color: 'white' }}
+                    itemStyle={{ color: 'black' }}
                     selectedValue={device.locationId}
                     onValueChange={(itemValue, itemIndex) =>
                       setDevice({ ...device, locationId: itemValue as string })
@@ -138,17 +127,18 @@ const InitialSetup = () => {
                 </>
               )}
             </View>
-            <View className="p-2 m-2 bg-[#0f0f0f] flex rounded-md">
-              <Text className="uppercase font-text text-xl text-white pt-4 text-center">
+            <View className={selectView}>
+              <Text className="uppercase font-text text-xl text-black pt-4 text-center">
                 Choose a Device Type
               </Text>
               {deviceTypesLoading ? (
-                <ActivityIndicator size="small" color="white" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <>
                   <Picker
+                    // @ts-ignore
                     className="p-0 m-0"
-                    itemStyle={{ color: 'white' }}
+                    itemStyle={{ color: 'black' }}
                     selectedValue={device.deviceTypeId}
                     onValueChange={(itemValue, itemIndex) =>
                       setDevice({ ...device, deviceTypeId: itemValue as unknown as number })
@@ -166,7 +156,7 @@ const InitialSetup = () => {
                 </>
               )}
             </View>
-            <View className="p-2 m-2 bg-[#0f0f0f] flex ">
+            <View className={selectView}>
               <Text className="uppercase font-text text-xl text-white pt-4 text-center">
                 Friendly Name
               </Text>
@@ -186,7 +176,7 @@ const InitialSetup = () => {
           <View className="p-2 m-2 bg-[#0f0f0f] h-[250px]">
             <Text className="text-white p-2">{JSON.stringify(device, null, 2)}</Text>
           </View>
-        </ScrollView>
+        </>
       }
     />
   );

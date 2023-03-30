@@ -3,12 +3,10 @@
  * Client
 **/
 
-import * as runtime from './runtime/index';
-declare const prisma: unique symbol
-export interface PrismaPromise<A> extends Promise<A> {[prisma]: true}
+import * as runtime from './runtime/library';
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
 type UnwrapTuple<Tuple extends readonly unknown[]> = {
-  [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
+  [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends Prisma.PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
 };
 
 
@@ -77,6 +75,9 @@ export type Devices = {
   deviceId: string
   locationId: string
   deviceTypeId: string
+  lastOnline: Date
+  lastHeartbeat: Date | null
+  isOnline: boolean
   createdAt: Date
   updatedAt: Date
 }
@@ -156,7 +157,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<number>;
+  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
 
   /**
    * Executes a raw query and returns the number of affected rows.
@@ -168,7 +169,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<number>;
+  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
 
   /**
    * Performs a prepared raw query and returns the `SELECT` data.
@@ -179,7 +180,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<T>;
+  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
 
   /**
    * Performs a raw query and returns the `SELECT` data.
@@ -191,7 +192,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<T>;
+  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
 
   /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
@@ -206,9 +207,9 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>
+  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>
 
-  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<R>
+  $transaction<R>(fn: (prisma: Omit<this, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use">) => Promise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<R>
 
       /**
    * `prisma.country`: Exposes CRUD operations for the **Country** model.
@@ -274,6 +275,8 @@ export class PrismaClient<
 export namespace Prisma {
   export import DMMF = runtime.DMMF
 
+  export type PrismaPromise<T> = runtime.Types.Public.PrismaPromise<T>
+
   /**
    * Prisma Errors
    */
@@ -310,8 +313,8 @@ export namespace Prisma {
 
 
   /**
-   * Prisma Client JS version: 4.9.0
-   * Query Engine version: ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
+   * Prisma Client JS version: 4.11.0
+   * Query Engine version: 8fde8fef4033376662cad983758335009d522acb
    */
   export type PrismaVersion = {
     client: string
@@ -734,15 +737,6 @@ export namespace Prisma {
 
   type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
 
-  class PrismaClientFetcher {
-    private readonly prisma;
-    private readonly debug;
-    private readonly hooks?;
-    constructor(prisma: PrismaClient<any, any>, debug?: boolean, hooks?: Hooks | undefined);
-    request<T>(document: any, dataPath?: string[], rootField?: string, typeName?: string, isList?: boolean, callsite?: string): Promise<T>;
-    sanitizeMessage(message: string): string;
-    protected unpack(document: any, data: any, path: string[], rootField?: string, isList?: boolean): any;
-  }
 
   export const ModelName: {
     Country: 'Country',
@@ -827,10 +821,6 @@ export namespace Prisma {
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
     log?: Array<LogLevel | LogDefinition>
-  }
-
-  export type Hooks = {
-    beforeRequest?: (options: { query: string, path: string[], rootField?: string, typeName?: string, document: any }) => any
   }
 
   /* Types for Logging */
@@ -1241,7 +1231,7 @@ export namespace Prisma {
     _max: CountryMaxAggregateOutputType | null
   }
 
-  type GetCountryGroupByPayload<T extends CountryGroupByArgs> = PrismaPromise<
+  type GetCountryGroupByPayload<T extends CountryGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<CountryGroupByOutputType, T['by']> &
         {
@@ -1259,9 +1249,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     code?: boolean
-    locations?: boolean | Country$locationsArgs
     createdAt?: boolean
     updatedAt?: boolean
+    locations?: boolean | Country$locationsArgs
     _count?: boolean | CountryCountOutputTypeArgs
   }
 
@@ -1381,7 +1371,7 @@ export namespace Prisma {
     **/
     findMany<T extends CountryFindManyArgs>(
       args?: SelectSubset<T, CountryFindManyArgs>
-    ): PrismaPromise<Array<CountryGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<CountryGetPayload<T>>>
 
     /**
      * Create a Country.
@@ -1448,7 +1438,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends CountryDeleteManyArgs>(
       args?: SelectSubset<T, CountryDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Countries.
@@ -1469,7 +1459,7 @@ export namespace Prisma {
     **/
     updateMany<T extends CountryUpdateManyArgs>(
       args: SelectSubset<T, CountryUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Country.
@@ -1507,7 +1497,7 @@ export namespace Prisma {
     **/
     count<T extends CountryCountArgs>(
       args?: Subset<T, CountryCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -1539,7 +1529,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends CountryAggregateArgs>(args: Subset<T, CountryAggregateArgs>): PrismaPromise<GetCountryAggregateType<T>>
+    aggregate<T extends CountryAggregateArgs>(args: Subset<T, CountryAggregateArgs>): Prisma.PrismaPromise<GetCountryAggregateType<T>>
 
     /**
      * Group by Country.
@@ -1616,7 +1606,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, CountryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCountryGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CountryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCountryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -1626,10 +1616,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CountryClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__CountryClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -1640,10 +1628,10 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    locations<T extends Country$locationsArgs= {}>(args?: Subset<T, Country$locationsArgs>): PrismaPromise<Array<LocationGetPayload<T>>| Null>;
+    locations<T extends Country$locationsArgs= {}>(args?: Subset<T, Country$locationsArgs>): Prisma.PrismaPromise<Array<LocationGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -2240,7 +2228,7 @@ export namespace Prisma {
     _max: UserMaxAggregateOutputType | null
   }
 
-  type GetUserGroupByPayload<T extends UserGroupByArgs> = PrismaPromise<
+  type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<UserGroupByOutputType, T['by']> &
         {
@@ -2263,10 +2251,10 @@ export namespace Prisma {
     isAllowed?: boolean
     memberShipType?: boolean
     email?: boolean
-    location?: boolean | LocationArgs
-    visits?: boolean | User$visitsArgs
     createdAt?: boolean
     updatedAt?: boolean
+    location?: boolean | LocationArgs
+    visits?: boolean | User$visitsArgs
     _count?: boolean | UserCountOutputTypeArgs
   }
 
@@ -2389,7 +2377,7 @@ export namespace Prisma {
     **/
     findMany<T extends UserFindManyArgs>(
       args?: SelectSubset<T, UserFindManyArgs>
-    ): PrismaPromise<Array<UserGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<UserGetPayload<T>>>
 
     /**
      * Create a User.
@@ -2456,7 +2444,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends UserDeleteManyArgs>(
       args?: SelectSubset<T, UserDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Users.
@@ -2477,7 +2465,7 @@ export namespace Prisma {
     **/
     updateMany<T extends UserUpdateManyArgs>(
       args: SelectSubset<T, UserUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one User.
@@ -2515,7 +2503,7 @@ export namespace Prisma {
     **/
     count<T extends UserCountArgs>(
       args?: Subset<T, UserCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -2547,7 +2535,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): PrismaPromise<GetUserAggregateType<T>>
+    aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): Prisma.PrismaPromise<GetUserAggregateType<T>>
 
     /**
      * Group by User.
@@ -2624,7 +2612,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -2634,10 +2622,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__UserClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__UserClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -2648,12 +2634,12 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     location<T extends LocationArgs= {}>(args?: Subset<T, LocationArgs>): Prisma__LocationClient<LocationGetPayload<T> | Null>;
 
-    visits<T extends User$visitsArgs= {}>(args?: Subset<T, User$visitsArgs>): PrismaPromise<Array<VisitsToLocationGetPayload<T>>| Null>;
+    visits<T extends User$visitsArgs= {}>(args?: Subset<T, User$visitsArgs>): Prisma.PrismaPromise<Array<VisitsToLocationGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -3181,7 +3167,7 @@ export namespace Prisma {
     _max: VisitsToLocationMaxAggregateOutputType | null
   }
 
-  type GetVisitsToLocationGroupByPayload<T extends VisitsToLocationGroupByArgs> = PrismaPromise<
+  type GetVisitsToLocationGroupByPayload<T extends VisitsToLocationGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<VisitsToLocationGroupByOutputType, T['by']> &
         {
@@ -3198,11 +3184,11 @@ export namespace Prisma {
   export type VisitsToLocationSelect = {
     id?: boolean
     userId?: boolean
-    user?: boolean | UserArgs
     locationId?: boolean
-    location?: boolean | LocationArgs
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | UserArgs
+    location?: boolean | LocationArgs
   }
 
 
@@ -3321,7 +3307,7 @@ export namespace Prisma {
     **/
     findMany<T extends VisitsToLocationFindManyArgs>(
       args?: SelectSubset<T, VisitsToLocationFindManyArgs>
-    ): PrismaPromise<Array<VisitsToLocationGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<VisitsToLocationGetPayload<T>>>
 
     /**
      * Create a VisitsToLocation.
@@ -3388,7 +3374,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends VisitsToLocationDeleteManyArgs>(
       args?: SelectSubset<T, VisitsToLocationDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more VisitsToLocations.
@@ -3409,7 +3395,7 @@ export namespace Prisma {
     **/
     updateMany<T extends VisitsToLocationUpdateManyArgs>(
       args: SelectSubset<T, VisitsToLocationUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one VisitsToLocation.
@@ -3447,7 +3433,7 @@ export namespace Prisma {
     **/
     count<T extends VisitsToLocationCountArgs>(
       args?: Subset<T, VisitsToLocationCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -3479,7 +3465,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends VisitsToLocationAggregateArgs>(args: Subset<T, VisitsToLocationAggregateArgs>): PrismaPromise<GetVisitsToLocationAggregateType<T>>
+    aggregate<T extends VisitsToLocationAggregateArgs>(args: Subset<T, VisitsToLocationAggregateArgs>): Prisma.PrismaPromise<GetVisitsToLocationAggregateType<T>>
 
     /**
      * Group by VisitsToLocation.
@@ -3556,7 +3542,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, VisitsToLocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVisitsToLocationGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, VisitsToLocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVisitsToLocationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -3566,10 +3552,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__VisitsToLocationClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__VisitsToLocationClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -3580,8 +3564,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     user<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
 
@@ -4106,7 +4090,7 @@ export namespace Prisma {
     _max: LocationMaxAggregateOutputType | null
   }
 
-  type GetLocationGroupByPayload<T extends LocationGroupByArgs> = PrismaPromise<
+  type GetLocationGroupByPayload<T extends LocationGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<LocationGroupByOutputType, T['by']> &
         {
@@ -4123,15 +4107,15 @@ export namespace Prisma {
   export type LocationSelect = {
     id?: boolean
     name?: boolean
-    users?: boolean | Location$usersArgs
-    devices?: boolean | Location$devicesArgs
     lat?: boolean
     long?: boolean
     countryId?: boolean
-    country?: boolean | CountryArgs
-    visits?: boolean | Location$visitsArgs
     createdAt?: boolean
     updatedAt?: boolean
+    users?: boolean | Location$usersArgs
+    devices?: boolean | Location$devicesArgs
+    country?: boolean | CountryArgs
+    visits?: boolean | Location$visitsArgs
     _count?: boolean | LocationCountOutputTypeArgs
   }
 
@@ -4260,7 +4244,7 @@ export namespace Prisma {
     **/
     findMany<T extends LocationFindManyArgs>(
       args?: SelectSubset<T, LocationFindManyArgs>
-    ): PrismaPromise<Array<LocationGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<LocationGetPayload<T>>>
 
     /**
      * Create a Location.
@@ -4327,7 +4311,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends LocationDeleteManyArgs>(
       args?: SelectSubset<T, LocationDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Locations.
@@ -4348,7 +4332,7 @@ export namespace Prisma {
     **/
     updateMany<T extends LocationUpdateManyArgs>(
       args: SelectSubset<T, LocationUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Location.
@@ -4386,7 +4370,7 @@ export namespace Prisma {
     **/
     count<T extends LocationCountArgs>(
       args?: Subset<T, LocationCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -4418,7 +4402,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends LocationAggregateArgs>(args: Subset<T, LocationAggregateArgs>): PrismaPromise<GetLocationAggregateType<T>>
+    aggregate<T extends LocationAggregateArgs>(args: Subset<T, LocationAggregateArgs>): Prisma.PrismaPromise<GetLocationAggregateType<T>>
 
     /**
      * Group by Location.
@@ -4495,7 +4479,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, LocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLocationGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, LocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLocationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -4505,10 +4489,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__LocationClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__LocationClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -4519,16 +4501,16 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    users<T extends Location$usersArgs= {}>(args?: Subset<T, Location$usersArgs>): PrismaPromise<Array<UserGetPayload<T>>| Null>;
+    users<T extends Location$usersArgs= {}>(args?: Subset<T, Location$usersArgs>): Prisma.PrismaPromise<Array<UserGetPayload<T>>| Null>;
 
-    devices<T extends Location$devicesArgs= {}>(args?: Subset<T, Location$devicesArgs>): PrismaPromise<Array<DevicesGetPayload<T>>| Null>;
+    devices<T extends Location$devicesArgs= {}>(args?: Subset<T, Location$devicesArgs>): Prisma.PrismaPromise<Array<DevicesGetPayload<T>>| Null>;
 
     country<T extends CountryArgs= {}>(args?: Subset<T, CountryArgs>): Prisma__CountryClient<CountryGetPayload<T> | Null>;
 
-    visits<T extends Location$visitsArgs= {}>(args?: Subset<T, Location$visitsArgs>): PrismaPromise<Array<VisitsToLocationGetPayload<T>>| Null>;
+    visits<T extends Location$visitsArgs= {}>(args?: Subset<T, Location$visitsArgs>): Prisma.PrismaPromise<Array<VisitsToLocationGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -4969,6 +4951,9 @@ export namespace Prisma {
     deviceId: string | null
     locationId: string | null
     deviceTypeId: string | null
+    lastOnline: Date | null
+    lastHeartbeat: Date | null
+    isOnline: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4979,6 +4964,9 @@ export namespace Prisma {
     deviceId: string | null
     locationId: string | null
     deviceTypeId: string | null
+    lastOnline: Date | null
+    lastHeartbeat: Date | null
+    isOnline: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4989,6 +4977,9 @@ export namespace Prisma {
     deviceId: number
     locationId: number
     deviceTypeId: number
+    lastOnline: number
+    lastHeartbeat: number
+    isOnline: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5001,6 +4992,9 @@ export namespace Prisma {
     deviceId?: true
     locationId?: true
     deviceTypeId?: true
+    lastOnline?: true
+    lastHeartbeat?: true
+    isOnline?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5011,6 +5005,9 @@ export namespace Prisma {
     deviceId?: true
     locationId?: true
     deviceTypeId?: true
+    lastOnline?: true
+    lastHeartbeat?: true
+    isOnline?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5021,6 +5018,9 @@ export namespace Prisma {
     deviceId?: true
     locationId?: true
     deviceTypeId?: true
+    lastOnline?: true
+    lastHeartbeat?: true
+    isOnline?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5105,6 +5105,9 @@ export namespace Prisma {
     deviceId: string
     locationId: string
     deviceTypeId: string
+    lastOnline: Date
+    lastHeartbeat: Date | null
+    isOnline: boolean
     createdAt: Date
     updatedAt: Date
     _count: DevicesCountAggregateOutputType | null
@@ -5112,7 +5115,7 @@ export namespace Prisma {
     _max: DevicesMaxAggregateOutputType | null
   }
 
-  type GetDevicesGroupByPayload<T extends DevicesGroupByArgs> = PrismaPromise<
+  type GetDevicesGroupByPayload<T extends DevicesGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<DevicesGroupByOutputType, T['by']> &
         {
@@ -5131,11 +5134,14 @@ export namespace Prisma {
     name?: boolean
     deviceId?: boolean
     locationId?: boolean
-    location?: boolean | LocationArgs
-    deviceType?: boolean | DeviceTypesArgs
     deviceTypeId?: boolean
+    lastOnline?: boolean
+    lastHeartbeat?: boolean
+    isOnline?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    location?: boolean | LocationArgs
+    deviceType?: boolean | DeviceTypesArgs
   }
 
 
@@ -5254,7 +5260,7 @@ export namespace Prisma {
     **/
     findMany<T extends DevicesFindManyArgs>(
       args?: SelectSubset<T, DevicesFindManyArgs>
-    ): PrismaPromise<Array<DevicesGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<DevicesGetPayload<T>>>
 
     /**
      * Create a Devices.
@@ -5321,7 +5327,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends DevicesDeleteManyArgs>(
       args?: SelectSubset<T, DevicesDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Devices.
@@ -5342,7 +5348,7 @@ export namespace Prisma {
     **/
     updateMany<T extends DevicesUpdateManyArgs>(
       args: SelectSubset<T, DevicesUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Devices.
@@ -5380,7 +5386,7 @@ export namespace Prisma {
     **/
     count<T extends DevicesCountArgs>(
       args?: Subset<T, DevicesCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -5412,7 +5418,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends DevicesAggregateArgs>(args: Subset<T, DevicesAggregateArgs>): PrismaPromise<GetDevicesAggregateType<T>>
+    aggregate<T extends DevicesAggregateArgs>(args: Subset<T, DevicesAggregateArgs>): Prisma.PrismaPromise<GetDevicesAggregateType<T>>
 
     /**
      * Group by Devices.
@@ -5489,7 +5495,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, DevicesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDevicesGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, DevicesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDevicesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -5499,10 +5505,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__DevicesClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__DevicesClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -5513,8 +5517,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     location<T extends LocationArgs= {}>(args?: Subset<T, LocationArgs>): Prisma__LocationClient<LocationGetPayload<T> | Null>;
 
@@ -6018,7 +6022,7 @@ export namespace Prisma {
     _max: DeviceTypesMaxAggregateOutputType | null
   }
 
-  type GetDeviceTypesGroupByPayload<T extends DeviceTypesGroupByArgs> = PrismaPromise<
+  type GetDeviceTypesGroupByPayload<T extends DeviceTypesGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<DeviceTypesGroupByOutputType, T['by']> &
         {
@@ -6035,9 +6039,9 @@ export namespace Prisma {
   export type DeviceTypesSelect = {
     id?: boolean
     name?: boolean
-    devices?: boolean | DeviceTypes$devicesArgs
     createdAt?: boolean
     updatedAt?: boolean
+    devices?: boolean | DeviceTypes$devicesArgs
     _count?: boolean | DeviceTypesCountOutputTypeArgs
   }
 
@@ -6157,7 +6161,7 @@ export namespace Prisma {
     **/
     findMany<T extends DeviceTypesFindManyArgs>(
       args?: SelectSubset<T, DeviceTypesFindManyArgs>
-    ): PrismaPromise<Array<DeviceTypesGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<DeviceTypesGetPayload<T>>>
 
     /**
      * Create a DeviceTypes.
@@ -6224,7 +6228,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends DeviceTypesDeleteManyArgs>(
       args?: SelectSubset<T, DeviceTypesDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more DeviceTypes.
@@ -6245,7 +6249,7 @@ export namespace Prisma {
     **/
     updateMany<T extends DeviceTypesUpdateManyArgs>(
       args: SelectSubset<T, DeviceTypesUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one DeviceTypes.
@@ -6283,7 +6287,7 @@ export namespace Prisma {
     **/
     count<T extends DeviceTypesCountArgs>(
       args?: Subset<T, DeviceTypesCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -6315,7 +6319,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends DeviceTypesAggregateArgs>(args: Subset<T, DeviceTypesAggregateArgs>): PrismaPromise<GetDeviceTypesAggregateType<T>>
+    aggregate<T extends DeviceTypesAggregateArgs>(args: Subset<T, DeviceTypesAggregateArgs>): Prisma.PrismaPromise<GetDeviceTypesAggregateType<T>>
 
     /**
      * Group by DeviceTypes.
@@ -6392,7 +6396,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, DeviceTypesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDeviceTypesGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, DeviceTypesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDeviceTypesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -6402,10 +6406,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__DeviceTypesClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__DeviceTypesClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -6416,10 +6418,10 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    devices<T extends DeviceTypes$devicesArgs= {}>(args?: Subset<T, DeviceTypes$devicesArgs>): PrismaPromise<Array<DevicesGetPayload<T>>| Null>;
+    devices<T extends DeviceTypes$devicesArgs= {}>(args?: Subset<T, DeviceTypes$devicesArgs>): Prisma.PrismaPromise<Array<DevicesGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -6835,6 +6837,9 @@ export namespace Prisma {
     deviceId: 'deviceId',
     locationId: 'locationId',
     deviceTypeId: 'deviceTypeId',
+    lastOnline: 'lastOnline',
+    lastHeartbeat: 'lastHeartbeat',
+    isOnline: 'isOnline',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -6909,18 +6914,18 @@ export namespace Prisma {
     id?: StringFilter | string
     name?: StringFilter | string
     code?: StringFilter | string
-    locations?: LocationListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    locations?: LocationListRelationFilter
   }
 
   export type CountryOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     code?: SortOrder
-    locations?: LocationOrderByRelationAggregateInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    locations?: LocationOrderByRelationAggregateInput
   }
 
   export type CountryWhereUniqueInput = {
@@ -6961,10 +6966,10 @@ export namespace Prisma {
     isAllowed?: BoolFilter | boolean
     memberShipType?: IntFilter | number
     email?: StringFilter | string
-    location?: XOR<LocationRelationFilter, LocationWhereInput>
-    visits?: VisitsToLocationListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    location?: XOR<LocationRelationFilter, LocationWhereInput>
+    visits?: VisitsToLocationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -6976,10 +6981,10 @@ export namespace Prisma {
     isAllowed?: SortOrder
     memberShipType?: SortOrder
     email?: SortOrder
-    location?: LocationOrderByWithRelationInput
-    visits?: VisitsToLocationOrderByRelationAggregateInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    location?: LocationOrderByWithRelationInput
+    visits?: VisitsToLocationOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = {
@@ -7027,21 +7032,21 @@ export namespace Prisma {
     NOT?: Enumerable<VisitsToLocationWhereInput>
     id?: StringFilter | string
     userId?: StringFilter | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
     locationId?: StringFilter | string
-    location?: XOR<LocationRelationFilter, LocationWhereInput>
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    location?: XOR<LocationRelationFilter, LocationWhereInput>
   }
 
   export type VisitsToLocationOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    user?: UserOrderByWithRelationInput
     locationId?: SortOrder
-    location?: LocationOrderByWithRelationInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    location?: LocationOrderByWithRelationInput
   }
 
   export type VisitsToLocationWhereUniqueInput = {
@@ -7076,29 +7081,29 @@ export namespace Prisma {
     NOT?: Enumerable<LocationWhereInput>
     id?: StringFilter | string
     name?: StringFilter | string
-    users?: UserListRelationFilter
-    devices?: DevicesListRelationFilter
     lat?: StringFilter | string
     long?: StringFilter | string
     countryId?: StringFilter | string
-    country?: XOR<CountryRelationFilter, CountryWhereInput>
-    visits?: VisitsToLocationListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    users?: UserListRelationFilter
+    devices?: DevicesListRelationFilter
+    country?: XOR<CountryRelationFilter, CountryWhereInput>
+    visits?: VisitsToLocationListRelationFilter
   }
 
   export type LocationOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    users?: UserOrderByRelationAggregateInput
-    devices?: DevicesOrderByRelationAggregateInput
     lat?: SortOrder
     long?: SortOrder
     countryId?: SortOrder
-    country?: CountryOrderByWithRelationInput
-    visits?: VisitsToLocationOrderByRelationAggregateInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    users?: UserOrderByRelationAggregateInput
+    devices?: DevicesOrderByRelationAggregateInput
+    country?: CountryOrderByWithRelationInput
+    visits?: VisitsToLocationOrderByRelationAggregateInput
   }
 
   export type LocationWhereUniqueInput = {
@@ -7139,11 +7144,14 @@ export namespace Prisma {
     name?: StringFilter | string
     deviceId?: StringFilter | string
     locationId?: StringFilter | string
-    location?: XOR<LocationRelationFilter, LocationWhereInput>
-    deviceType?: XOR<DeviceTypesRelationFilter, DeviceTypesWhereInput>
     deviceTypeId?: StringFilter | string
+    lastOnline?: DateTimeFilter | Date | string
+    lastHeartbeat?: DateTimeNullableFilter | Date | string | null
+    isOnline?: BoolFilter | boolean
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    location?: XOR<LocationRelationFilter, LocationWhereInput>
+    deviceType?: XOR<DeviceTypesRelationFilter, DeviceTypesWhereInput>
   }
 
   export type DevicesOrderByWithRelationInput = {
@@ -7151,11 +7159,14 @@ export namespace Prisma {
     name?: SortOrder
     deviceId?: SortOrder
     locationId?: SortOrder
-    location?: LocationOrderByWithRelationInput
-    deviceType?: DeviceTypesOrderByWithRelationInput
     deviceTypeId?: SortOrder
+    lastOnline?: SortOrder
+    lastHeartbeat?: SortOrder
+    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    location?: LocationOrderByWithRelationInput
+    deviceType?: DeviceTypesOrderByWithRelationInput
   }
 
   export type DevicesWhereUniqueInput = {
@@ -7168,6 +7179,9 @@ export namespace Prisma {
     deviceId?: SortOrder
     locationId?: SortOrder
     deviceTypeId?: SortOrder
+    lastOnline?: SortOrder
+    lastHeartbeat?: SortOrder
+    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: DevicesCountOrderByAggregateInput
@@ -7184,6 +7198,9 @@ export namespace Prisma {
     deviceId?: StringWithAggregatesFilter | string
     locationId?: StringWithAggregatesFilter | string
     deviceTypeId?: StringWithAggregatesFilter | string
+    lastOnline?: DateTimeWithAggregatesFilter | Date | string
+    lastHeartbeat?: DateTimeNullableWithAggregatesFilter | Date | string | null
+    isOnline?: BoolWithAggregatesFilter | boolean
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
@@ -7194,17 +7211,17 @@ export namespace Prisma {
     NOT?: Enumerable<DeviceTypesWhereInput>
     id?: StringFilter | string
     name?: StringFilter | string
-    devices?: DevicesListRelationFilter
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
+    devices?: DevicesListRelationFilter
   }
 
   export type DeviceTypesOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    devices?: DevicesOrderByRelationAggregateInput
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    devices?: DevicesOrderByRelationAggregateInput
   }
 
   export type DeviceTypesWhereUniqueInput = {
@@ -7235,36 +7252,36 @@ export namespace Prisma {
     id?: string
     name: string
     code: string
-    locations?: LocationCreateNestedManyWithoutCountryInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    locations?: LocationCreateNestedManyWithoutCountryInput
   }
 
   export type CountryUncheckedCreateInput = {
     id?: string
     name: string
     code: string
-    locations?: LocationUncheckedCreateNestedManyWithoutCountryInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    locations?: LocationUncheckedCreateNestedManyWithoutCountryInput
   }
 
   export type CountryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
-    locations?: LocationUpdateManyWithoutCountryNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    locations?: LocationUpdateManyWithoutCountryNestedInput
   }
 
   export type CountryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
-    locations?: LocationUncheckedUpdateManyWithoutCountryNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    locations?: LocationUncheckedUpdateManyWithoutCountryNestedInput
   }
 
   export type CountryUpdateManyMutationInput = {
@@ -7291,10 +7308,10 @@ export namespace Prisma {
     isAllowed?: boolean
     memberShipType: number
     email: string
-    location: LocationCreateNestedOneWithoutUsersInput
-    visits?: VisitsToLocationCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: LocationCreateNestedOneWithoutUsersInput
+    visits?: VisitsToLocationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -7306,9 +7323,9 @@ export namespace Prisma {
     isAllowed?: boolean
     memberShipType: number
     email: string
-    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -7319,10 +7336,10 @@ export namespace Prisma {
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
     memberShipType?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
-    location?: LocationUpdateOneRequiredWithoutUsersNestedInput
-    visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: LocationUpdateOneRequiredWithoutUsersNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -7334,9 +7351,9 @@ export namespace Prisma {
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
     memberShipType?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpdateManyMutationInput = {
@@ -7366,10 +7383,10 @@ export namespace Prisma {
 
   export type VisitsToLocationCreateInput = {
     id?: string
-    user: UserCreateNestedOneWithoutVisitsInput
-    location: LocationCreateNestedOneWithoutVisitsInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutVisitsInput
+    location: LocationCreateNestedOneWithoutVisitsInput
   }
 
   export type VisitsToLocationUncheckedCreateInput = {
@@ -7382,10 +7399,10 @@ export namespace Prisma {
 
   export type VisitsToLocationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutVisitsNestedInput
-    location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutVisitsNestedInput
+    location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
   }
 
   export type VisitsToLocationUncheckedUpdateInput = {
@@ -7413,53 +7430,53 @@ export namespace Prisma {
   export type LocationCreateInput = {
     id?: string
     name: string
-    users?: UserCreateNestedManyWithoutLocationInput
-    devices?: DevicesCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    country: CountryCreateNestedOneWithoutLocationsInput
-    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutLocationInput
+    devices?: DevicesCreateNestedManyWithoutLocationInput
+    country: CountryCreateNestedOneWithoutLocationsInput
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
   }
 
   export type LocationUncheckedCreateInput = {
     id?: string
     name: string
-    users?: UserUncheckedCreateNestedManyWithoutLocationInput
-    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
     countryId: string
-    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutLocationInput
+    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
   }
 
   export type LocationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUpdateManyWithoutLocationNestedInput
-    devices?: DevicesUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
-    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUpdateManyWithoutLocationNestedInput
+    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
   }
 
   export type LocationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
-    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
     countryId?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
   }
 
   export type LocationUpdateManyMutationInput = {
@@ -7485,10 +7502,13 @@ export namespace Prisma {
     id?: string
     name: string
     deviceId: string
-    location: LocationCreateNestedOneWithoutDevicesInput
-    deviceType: DeviceTypesCreateNestedOneWithoutDevicesInput
+    lastOnline: Date | string
+    lastHeartbeat?: Date | string | null
+    isOnline: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: LocationCreateNestedOneWithoutDevicesInput
+    deviceType: DeviceTypesCreateNestedOneWithoutDevicesInput
   }
 
   export type DevicesUncheckedCreateInput = {
@@ -7497,6 +7517,9 @@ export namespace Prisma {
     deviceId: string
     locationId: string
     deviceTypeId: string
+    lastOnline: Date | string
+    lastHeartbeat?: Date | string | null
+    isOnline: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7505,10 +7528,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    location?: LocationUpdateOneRequiredWithoutDevicesNestedInput
-    deviceType?: DeviceTypesUpdateOneRequiredWithoutDevicesNestedInput
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: LocationUpdateOneRequiredWithoutDevicesNestedInput
+    deviceType?: DeviceTypesUpdateOneRequiredWithoutDevicesNestedInput
   }
 
   export type DevicesUncheckedUpdateInput = {
@@ -7517,6 +7543,9 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     locationId?: StringFieldUpdateOperationsInput | string
     deviceTypeId?: StringFieldUpdateOperationsInput | string
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7525,6 +7554,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7535,6 +7567,9 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     locationId?: StringFieldUpdateOperationsInput | string
     deviceTypeId?: StringFieldUpdateOperationsInput | string
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7542,33 +7577,33 @@ export namespace Prisma {
   export type DeviceTypesCreateInput = {
     id?: string
     name: string
-    devices?: DevicesCreateNestedManyWithoutDeviceTypeInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    devices?: DevicesCreateNestedManyWithoutDeviceTypeInput
   }
 
   export type DeviceTypesUncheckedCreateInput = {
     id?: string
     name: string
-    devices?: DevicesUncheckedCreateNestedManyWithoutDeviceTypeInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    devices?: DevicesUncheckedCreateNestedManyWithoutDeviceTypeInput
   }
 
   export type DeviceTypesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    devices?: DevicesUpdateManyWithoutDeviceTypeNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    devices?: DevicesUpdateManyWithoutDeviceTypeNestedInput
   }
 
   export type DeviceTypesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    devices?: DevicesUncheckedUpdateManyWithoutDeviceTypeNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    devices?: DevicesUncheckedUpdateManyWithoutDeviceTypeNestedInput
   }
 
   export type DeviceTypesUpdateManyMutationInput = {
@@ -7599,12 +7634,6 @@ export namespace Prisma {
     not?: NestedStringFilter | string
   }
 
-  export type LocationListRelationFilter = {
-    every?: LocationWhereInput
-    some?: LocationWhereInput
-    none?: LocationWhereInput
-  }
-
   export type DateTimeFilter = {
     equals?: Date | string
     in?: Enumerable<Date> | Enumerable<string>
@@ -7614,6 +7643,12 @@ export namespace Prisma {
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type LocationListRelationFilter = {
+    every?: LocationWhereInput
+    some?: LocationWhereInput
+    none?: LocationWhereInput
   }
 
   export type LocationOrderByRelationAggregateInput = {
@@ -7892,6 +7927,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type DateTimeNullableFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableFilter | Date | string | null
+  }
+
   export type DeviceTypesRelationFilter = {
     is?: DeviceTypesWhereInput
     isNot?: DeviceTypesWhereInput
@@ -7903,6 +7949,9 @@ export namespace Prisma {
     deviceId?: SortOrder
     locationId?: SortOrder
     deviceTypeId?: SortOrder
+    lastOnline?: SortOrder
+    lastHeartbeat?: SortOrder
+    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7913,6 +7962,9 @@ export namespace Prisma {
     deviceId?: SortOrder
     locationId?: SortOrder
     deviceTypeId?: SortOrder
+    lastOnline?: SortOrder
+    lastHeartbeat?: SortOrder
+    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -7923,8 +7975,25 @@ export namespace Prisma {
     deviceId?: SortOrder
     locationId?: SortOrder
     deviceTypeId?: SortOrder
+    lastOnline?: SortOrder
+    lastHeartbeat?: SortOrder
+    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
   }
 
   export type DeviceTypesCountOrderByAggregateInput = {
@@ -7964,6 +8033,10 @@ export namespace Prisma {
     set?: string
   }
 
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
   export type LocationUpdateManyWithoutCountryNestedInput = {
     create?: XOR<Enumerable<LocationCreateWithoutCountryInput>, Enumerable<LocationUncheckedCreateWithoutCountryInput>>
     connectOrCreate?: Enumerable<LocationCreateOrConnectWithoutCountryInput>
@@ -7975,10 +8048,6 @@ export namespace Prisma {
     update?: Enumerable<LocationUpdateWithWhereUniqueWithoutCountryInput>
     updateMany?: Enumerable<LocationUpdateManyWithWhereWithoutCountryInput>
     deleteMany?: Enumerable<LocationScalarWhereInput>
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type LocationUncheckedUpdateManyWithoutCountryNestedInput = {
@@ -8230,6 +8299,10 @@ export namespace Prisma {
     connect?: DeviceTypesWhereUniqueInput
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type LocationUpdateOneRequiredWithoutDevicesNestedInput = {
     create?: XOR<LocationCreateWithoutDevicesInput, LocationUncheckedCreateWithoutDevicesInput>
     connectOrCreate?: LocationCreateOrConnectWithoutDevicesInput
@@ -8433,28 +8506,53 @@ export namespace Prisma {
     not?: NestedFloatFilter | number
   }
 
+  export type NestedDateTimeNullableFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableFilter | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
+  }
+
   export type LocationCreateWithoutCountryInput = {
     id?: string
     name: string
-    users?: UserCreateNestedManyWithoutLocationInput
-    devices?: DevicesCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutLocationInput
+    devices?: DevicesCreateNestedManyWithoutLocationInput
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
   }
 
   export type LocationUncheckedCreateWithoutCountryInput = {
     id?: string
     name: string
-    users?: UserUncheckedCreateNestedManyWithoutLocationInput
-    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutLocationInput
+    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
   }
 
   export type LocationCreateOrConnectWithoutCountryInput = {
@@ -8494,25 +8592,25 @@ export namespace Prisma {
   export type LocationCreateWithoutUsersInput = {
     id?: string
     name: string
-    devices?: DevicesCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    country: CountryCreateNestedOneWithoutLocationsInput
-    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    devices?: DevicesCreateNestedManyWithoutLocationInput
+    country: CountryCreateNestedOneWithoutLocationsInput
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
   }
 
   export type LocationUncheckedCreateWithoutUsersInput = {
     id?: string
     name: string
-    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
     countryId: string
-    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
   }
 
   export type LocationCreateOrConnectWithoutUsersInput = {
@@ -8522,9 +8620,9 @@ export namespace Prisma {
 
   export type VisitsToLocationCreateWithoutUserInput = {
     id?: string
-    location: LocationCreateNestedOneWithoutVisitsInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: LocationCreateNestedOneWithoutVisitsInput
   }
 
   export type VisitsToLocationUncheckedCreateWithoutUserInput = {
@@ -8547,25 +8645,25 @@ export namespace Prisma {
   export type LocationUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    devices?: DevicesUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
-    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    devices?: DevicesUpdateManyWithoutLocationNestedInput
+    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
   }
 
   export type LocationUncheckedUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
     countryId?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
   }
 
   export type VisitsToLocationUpsertWithWhereUniqueWithoutUserInput = {
@@ -8603,9 +8701,9 @@ export namespace Prisma {
     isAllowed?: boolean
     memberShipType: number
     email: string
-    location: LocationCreateNestedOneWithoutUsersInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: LocationCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutVisitsInput = {
@@ -8629,25 +8727,25 @@ export namespace Prisma {
   export type LocationCreateWithoutVisitsInput = {
     id?: string
     name: string
-    users?: UserCreateNestedManyWithoutLocationInput
-    devices?: DevicesCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    country: CountryCreateNestedOneWithoutLocationsInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutLocationInput
+    devices?: DevicesCreateNestedManyWithoutLocationInput
+    country: CountryCreateNestedOneWithoutLocationsInput
   }
 
   export type LocationUncheckedCreateWithoutVisitsInput = {
     id?: string
     name: string
-    users?: UserUncheckedCreateNestedManyWithoutLocationInput
-    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
     countryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutLocationInput
+    devices?: DevicesUncheckedCreateNestedManyWithoutLocationInput
   }
 
   export type LocationCreateOrConnectWithoutVisitsInput = {
@@ -8668,9 +8766,9 @@ export namespace Prisma {
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
     memberShipType?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
-    location?: LocationUpdateOneRequiredWithoutUsersNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: LocationUpdateOneRequiredWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutVisitsInput = {
@@ -8694,25 +8792,25 @@ export namespace Prisma {
   export type LocationUpdateWithoutVisitsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUpdateManyWithoutLocationNestedInput
-    devices?: DevicesUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUpdateManyWithoutLocationNestedInput
+    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
   }
 
   export type LocationUncheckedUpdateWithoutVisitsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
-    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
     countryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
   }
 
   export type UserCreateWithoutLocationInput = {
@@ -8723,9 +8821,9 @@ export namespace Prisma {
     isAllowed?: boolean
     memberShipType: number
     email: string
-    visits?: VisitsToLocationCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    visits?: VisitsToLocationCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutLocationInput = {
@@ -8736,9 +8834,9 @@ export namespace Prisma {
     isAllowed?: boolean
     memberShipType: number
     email: string
-    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLocationInput = {
@@ -8750,9 +8848,12 @@ export namespace Prisma {
     id?: string
     name: string
     deviceId: string
-    deviceType: DeviceTypesCreateNestedOneWithoutDevicesInput
+    lastOnline: Date | string
+    lastHeartbeat?: Date | string | null
+    isOnline: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    deviceType: DeviceTypesCreateNestedOneWithoutDevicesInput
   }
 
   export type DevicesUncheckedCreateWithoutLocationInput = {
@@ -8760,6 +8861,9 @@ export namespace Prisma {
     name: string
     deviceId: string
     deviceTypeId: string
+    lastOnline: Date | string
+    lastHeartbeat?: Date | string | null
+    isOnline: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8792,9 +8896,9 @@ export namespace Prisma {
 
   export type VisitsToLocationCreateWithoutLocationInput = {
     id?: string
-    user: UserCreateNestedOneWithoutVisitsInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutVisitsInput
   }
 
   export type VisitsToLocationUncheckedCreateWithoutLocationInput = {
@@ -8866,6 +8970,9 @@ export namespace Prisma {
     deviceId?: StringFilter | string
     locationId?: StringFilter | string
     deviceTypeId?: StringFilter | string
+    lastOnline?: DateTimeFilter | Date | string
+    lastHeartbeat?: DateTimeNullableFilter | Date | string | null
+    isOnline?: BoolFilter | boolean
     createdAt?: DateTimeFilter | Date | string
     updatedAt?: DateTimeFilter | Date | string
   }
@@ -8910,25 +9017,25 @@ export namespace Prisma {
   export type LocationCreateWithoutDevicesInput = {
     id?: string
     name: string
-    users?: UserCreateNestedManyWithoutLocationInput
     lat: string
     long: string
-    country: CountryCreateNestedOneWithoutLocationsInput
-    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutLocationInput
+    country: CountryCreateNestedOneWithoutLocationsInput
+    visits?: VisitsToLocationCreateNestedManyWithoutLocationInput
   }
 
   export type LocationUncheckedCreateWithoutDevicesInput = {
     id?: string
     name: string
-    users?: UserUncheckedCreateNestedManyWithoutLocationInput
     lat: string
     long: string
     countryId: string
-    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
     createdAt?: Date | string
     updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutLocationInput
+    visits?: VisitsToLocationUncheckedCreateNestedManyWithoutLocationInput
   }
 
   export type LocationCreateOrConnectWithoutDevicesInput = {
@@ -8963,25 +9070,25 @@ export namespace Prisma {
   export type LocationUpdateWithoutDevicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
-    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutLocationNestedInput
+    country?: CountryUpdateOneRequiredWithoutLocationsNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
   }
 
   export type LocationUncheckedUpdateWithoutDevicesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
     countryId?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
   }
 
   export type DeviceTypesUpsertWithoutDevicesInput = {
@@ -9007,9 +9114,12 @@ export namespace Prisma {
     id?: string
     name: string
     deviceId: string
-    location: LocationCreateNestedOneWithoutDevicesInput
+    lastOnline: Date | string
+    lastHeartbeat?: Date | string | null
+    isOnline: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    location: LocationCreateNestedOneWithoutDevicesInput
   }
 
   export type DevicesUncheckedCreateWithoutDeviceTypeInput = {
@@ -9017,6 +9127,9 @@ export namespace Prisma {
     name: string
     deviceId: string
     locationId: string
+    lastOnline: Date | string
+    lastHeartbeat?: Date | string | null
+    isOnline: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9045,25 +9158,25 @@ export namespace Prisma {
   export type LocationUpdateWithoutCountryInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUpdateManyWithoutLocationNestedInput
-    devices?: DevicesUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUpdateManyWithoutLocationNestedInput
+    visits?: VisitsToLocationUpdateManyWithoutLocationNestedInput
   }
 
   export type LocationUncheckedUpdateWithoutCountryInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
-    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
     lat?: StringFieldUpdateOperationsInput | string
     long?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutLocationNestedInput
+    devices?: DevicesUncheckedUpdateManyWithoutLocationNestedInput
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutLocationNestedInput
   }
 
   export type LocationUncheckedUpdateManyWithoutLocationsInput = {
@@ -9077,9 +9190,9 @@ export namespace Prisma {
 
   export type VisitsToLocationUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: LocationUpdateOneRequiredWithoutVisitsNestedInput
   }
 
   export type VisitsToLocationUncheckedUpdateWithoutUserInput = {
@@ -9104,9 +9217,9 @@ export namespace Prisma {
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
     memberShipType?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: VisitsToLocationUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLocationInput = {
@@ -9117,9 +9230,9 @@ export namespace Prisma {
     isAllowed?: BoolFieldUpdateOperationsInput | boolean
     memberShipType?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
-    visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: VisitsToLocationUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutUsersInput = {
@@ -9138,9 +9251,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    deviceType?: DeviceTypesUpdateOneRequiredWithoutDevicesNestedInput
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deviceType?: DeviceTypesUpdateOneRequiredWithoutDevicesNestedInput
   }
 
   export type DevicesUncheckedUpdateWithoutLocationInput = {
@@ -9148,6 +9264,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     deviceTypeId?: StringFieldUpdateOperationsInput | string
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9157,15 +9276,18 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     deviceTypeId?: StringFieldUpdateOperationsInput | string
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VisitsToLocationUpdateWithoutLocationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutVisitsNestedInput
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutVisitsNestedInput
   }
 
   export type VisitsToLocationUncheckedUpdateWithoutLocationInput = {
@@ -9179,9 +9301,12 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
-    location?: LocationUpdateOneRequiredWithoutDevicesNestedInput
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: LocationUpdateOneRequiredWithoutDevicesNestedInput
   }
 
   export type DevicesUncheckedUpdateWithoutDeviceTypeInput = {
@@ -9189,6 +9314,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     deviceId?: StringFieldUpdateOperationsInput | string
     locationId?: StringFieldUpdateOperationsInput | string
+    lastOnline?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastHeartbeat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

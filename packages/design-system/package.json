@@ -3,7 +3,6 @@
   "name": "@deur/design-system",
   "version": "1.0.0",
   "description": "@deur design system for React (Native)",
-  "license": "MIT",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "react-native": "./src/index.ts",
@@ -19,6 +18,8 @@
     "build": "tsup --clean"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.11",
+    "react-native": "0.70.5",
     "expo-constants": "~14.0.2",
     "expo-linking": "~3.3.0",
     "expo-router": "1.0.0-rc6",
@@ -62,13 +63,6 @@
     "ignorePatterns": [
       "node_modules",
       "build"
-    ]
-  },
-  "jest": {
-    "preset": "jest-expo",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/build/"
     ]
   },
   "tsup": {

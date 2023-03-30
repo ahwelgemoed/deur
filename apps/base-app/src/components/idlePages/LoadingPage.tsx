@@ -1,5 +1,5 @@
+import { View, Text } from '@deur/design-system';
 import React from 'react';
-import { View, Text } from 'react-native';
 
 type TLoadingPageProps = {
   explanation: string;

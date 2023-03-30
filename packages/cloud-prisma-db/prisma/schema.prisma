@@ -4,6 +4,14 @@ generator client {
   binaryTargets = ["linux-musl-openssl-3.0.x", "darwin-arm64"]
 }
 
+generator trpc {
+  provider       = "prisma-trpc-generator"
+  withMiddleware = false
+  withShield     = false
+  output         = "../../cloud-trpc/src/generated"
+  contextPath    = "../../cloud-trpc/src/context/mainContext"
+}
+
 generator zod {
   provider    = "zod-prisma"
   modelSuffix = "CloudModel"
@@ -71,6 +79,9 @@ model Devices {
   location     Location    @relation(fields: [locationId], references: [id])
   deviceType   DeviceTypes @relation(fields: [deviceTypeId], references: [id])
   deviceTypeId String
+  lastOnline    DateTime
+  lastHeartbeat DateTime?
+  isOnline      Boolean
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 }

@@ -1,6 +1,8 @@
 import Aedes from 'aedes';
 import { createServer } from 'http';
 import { createServer as netServer } from 'net';
+import { LocalAppRouter } from '@deur/local-trpc';
+import { createTRPCServerClient } from '@deur/shared-functions';
 import websocketStream from 'websocket-stream';
 
 import { clientConnected } from './callbacks/connected.cb';
@@ -17,6 +19,10 @@ const mqttClient = new Aedes();
 const mqttServerConnection = netServer(mqttClient.handle as any);
 const httpServer = createServer();
 
+export const localTrpcClientInstance = createTRPCServerClient<LocalAppRouter>(
+  'http://127.0.0.1:3033/trpc'
+);
+
 websocketStream.createServer({ server: httpServer }, mqttClient.handle as any);
 
 const startServer = async () => {
@@ -29,11 +35,13 @@ const startServer = async () => {
   });
 };
 
-setInterval(() => {
+// Start TRPC Client To Local Server
+
+setInterval(async () => {
   // @ts-ignore
   console.log(Object.keys(mqttClient.clients));
   console.log('gates', gates);
-}, 2000);
+}, 5000);
 
 mqttClient.on('client', clientConnected);
 

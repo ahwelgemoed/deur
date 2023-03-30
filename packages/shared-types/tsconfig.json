@@ -3,7 +3,10 @@
     "lib": ["ES2015"],
     "module": "CommonJS",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "noFallthroughCasesInSwitch": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "exclude": ["node_modules"],
   "extends": "@deur/tsconfig/base.json",

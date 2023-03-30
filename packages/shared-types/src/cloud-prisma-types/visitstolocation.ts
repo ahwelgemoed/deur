@@ -1,11 +1,5 @@
-import * as z from 'zod';
-
-import {
-  CompleteUser,
-  RelatedUserCloudModel,
-  CompleteLocation,
-  RelatedLocationCloudModel,
-} from './index';
+import * as z from "zod"
+import { CompleteUser, RelatedUserCloudModel, CompleteLocation, RelatedLocationCloudModel } from "./index"
 
 export const VisitsToLocationCloudModel = z.object({
   id: z.string(),
@@ -13,11 +7,11 @@ export const VisitsToLocationCloudModel = z.object({
   locationId: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-});
+})
 
 export interface CompleteVisitsToLocation extends z.infer<typeof VisitsToLocationCloudModel> {
-  user: CompleteUser;
-  location: CompleteLocation;
+  user: CompleteUser
+  location: CompleteLocation
 }
 
 /**
@@ -25,9 +19,7 @@ export interface CompleteVisitsToLocation extends z.infer<typeof VisitsToLocatio
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedVisitsToLocationCloudModel: z.ZodSchema<CompleteVisitsToLocation> = z.lazy(() =>
-  VisitsToLocationCloudModel.extend({
-    user: RelatedUserCloudModel,
-    location: RelatedLocationCloudModel,
-  })
-);
+export const RelatedVisitsToLocationCloudModel: z.ZodSchema<CompleteVisitsToLocation> = z.lazy(() => VisitsToLocationCloudModel.extend({
+  user: RelatedUserCloudModel,
+  location: RelatedLocationCloudModel,
+}))

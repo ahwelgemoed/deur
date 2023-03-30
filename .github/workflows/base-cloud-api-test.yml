@@ -8,40 +8,21 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  test_setup:
-    name: Wait for Vercel preview deployment to be ready
-    runs-on: ubuntu-latest
-    outputs:
-      preview_url: ${{ steps.waitForVercelPreviewDeployment.outputs.url }}
-    steps:
-      - name: Wait for Vercel preview deployment to be ready
-        uses: patrickedqvist/wait-for-vercel-preview@v1.2.0
-        id: waitForVercelPreviewDeployment
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 600
   test_e2e:
-    needs: test_setup
     name: Playwright E2E Tests
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Setup repository
         uses: actions/checkout@v3
-
       - name: 🏗 Setup monorepo
         uses: ./.github/actions/setup-monorepo
       - run: npx playwright install --with-deps
-
       - name: Start docker containers
         run: |
-          echo "VERSION=$(versioninfo)" >> $GITHUB_ENV
           docker-compose -f docker-compose-cloud.yml up --build --detach
-          sleep 10  # wait for database to be ready
       - name: 👷 Run E2E Tests
         run: pnpm run test:base:cloud:e2e
-        env:
-
       - name: 🧑🏽‍🎤 Upload E2E Report
         uses: actions/upload-artifact@v3
         with:

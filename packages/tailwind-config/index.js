@@ -7,5 +7,14 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
   ],
   plugins: [],
-  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        primary: '#00C6AE',
+        yellow: '#FFBD12',
+        dark: '#000000',
+        light: '#ffffff',
+      },
+    },
+  },
 };
