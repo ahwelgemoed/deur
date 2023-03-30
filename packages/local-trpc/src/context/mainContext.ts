@@ -14,6 +14,10 @@ import {
 const cloudBaseTrpcClient = createTRPCServerClient<CloudAppRouter>(`http://127.0.0.1:3030/trpc`); //CLOUD
 
 export function createContext({ req, res }: CreateFastifyContextOptions) {
+  const metaData = {
+    locationId: process.env.LOCATION_ID,
+    countryId: process.env.COUNTRY_ID,
+  };
   axios.defaults.headers.common = {
     'x-location': process.env.LOCATION_ID,
     'x-country': process.env.COUNTRY_ID,
@@ -23,7 +27,16 @@ export function createContext({ req, res }: CreateFastifyContextOptions) {
     logGateUserQueue,
     createNewUserQueue,
   };
-  return { req, res, axios, redis: mainRedisClient, mq, saveRedisInstance, cloudBaseTrpcClient };
+  return {
+    req,
+    res,
+    axios,
+    redis: mainRedisClient,
+    mq,
+    saveRedisInstance,
+    cloudBaseTrpcClient,
+    metaData,
+  };
 }
 
 export type LocalContext = inferAsyncReturnType<typeof createContext>;

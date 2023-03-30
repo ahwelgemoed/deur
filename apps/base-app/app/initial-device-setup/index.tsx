@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { mergedTrpcApi } from '../../src/contexts/trpc/trpc.provider';
 
-const selectView = 'p-2 m-2 bg-[#0f0f0f] flex rounded-md border-2 border-white';
+const selectView = 'p-2 m-2 bg-[#efefef] flex rounded-md border-2 border-[#e0e0e0]';
 
 const InitialSetup = () => {
   const deviceState = useDeviceState();
@@ -47,6 +47,8 @@ const InitialSetup = () => {
   const handleSave = async () => {
     createDeviceMutation.mutate({
       data: {
+        lastOnline: new Date(),
+        isOnline: true,
         deviceId: device.deviceId,
         name: device.friendlyName,
         locationId: device.locationId,
@@ -56,7 +58,7 @@ const InitialSetup = () => {
   };
   return (
     <MainLayout
-      bgColor="#0f0f0f"
+      bgColor="bg-yellow-500"
       headerMainText="Setup New Device"
       headerSubText="Initial Device Setup"
       body={
@@ -69,14 +71,14 @@ const InitialSetup = () => {
           >
             <View className={selectView}>
               {countiesLoading || countriesError ? (
-                <ActivityIndicator size="small" color="white" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <>
-                  <Text className="uppercase font-text text-xl text-white pt-4 text-center">
+                  <Text className="uppercase font-text text-xl text-black pt-4 text-center">
                     Chose a country
                   </Text>
                   <Picker
-                    itemStyle={{ color: 'white' }}
+                    itemStyle={{ color: 'black' }}
                     selectedValue={device.countryId}
                     onValueChange={(itemValue, itemIndex) => {
                       setDevice({ ...device, countryId: itemValue as string, locationId: '' });
@@ -95,19 +97,19 @@ const InitialSetup = () => {
               )}
             </View>
             <View className={selectView}>
-              <Text className="uppercase font-text text-xl text-white pt-4 text-center">
+              <Text className="uppercase font-text text-xl text-black pt-4 text-center">
                 Chose a Location in {counties?.find((c: any) => c.id === device.countryId)?.name}
               </Text>
               {!locations ? (
                 ''
               ) : locationsLoading ? (
-                <ActivityIndicator size="small" color="white" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <>
                   <Picker
                     // @ts-ignore
                     className="p-0 m-0"
-                    itemStyle={{ color: 'white' }}
+                    itemStyle={{ color: 'black' }}
                     selectedValue={device.locationId}
                     onValueChange={(itemValue, itemIndex) =>
                       setDevice({ ...device, locationId: itemValue as string })
@@ -126,17 +128,17 @@ const InitialSetup = () => {
               )}
             </View>
             <View className={selectView}>
-              <Text className="uppercase font-text text-xl text-white pt-4 text-center">
+              <Text className="uppercase font-text text-xl text-black pt-4 text-center">
                 Choose a Device Type
               </Text>
               {deviceTypesLoading ? (
-                <ActivityIndicator size="small" color="white" />
+                <ActivityIndicator size="small" color="black" />
               ) : (
                 <>
                   <Picker
                     // @ts-ignore
                     className="p-0 m-0"
-                    itemStyle={{ color: 'white' }}
+                    itemStyle={{ color: 'black' }}
                     selectedValue={device.deviceTypeId}
                     onValueChange={(itemValue, itemIndex) =>
                       setDevice({ ...device, deviceTypeId: itemValue as unknown as number })

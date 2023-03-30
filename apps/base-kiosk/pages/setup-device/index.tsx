@@ -32,6 +32,8 @@ const SetUpDevice = () => {
   const handleSave = async () => {
     createDeviceMutation.mutate({
       data: {
+        lastOnline: new Date(),
+        isOnline: true,
         deviceId: device.deviceId,
         name: device.friendlyName,
         locationId: device.locationId,

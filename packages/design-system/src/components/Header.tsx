@@ -11,7 +11,7 @@ interface HeaderProps {
 export const Header = ({ children, classNames, isBig }: HeaderProps) => {
   return (
     <View>
-      <Text className={`font-body ${isBig ? 'text-[80px]' : 'text-[20px]'} ${classNames}`}>
+      <Text className={`font-body ${isBig ? 'text-[80px]' : 'text-[20px]'} ${classNames} `}>
         {children}
       </Text>
     </View>
