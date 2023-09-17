@@ -1,9 +1,25 @@
-# RULES
+# Deur
 
-# Developer
+A collection of apps and ideas, taken a bit to the extreme.
+
+High lever over view:
+
+- Base-App: Expo App to run on iPad
+- Base-Cloud: Central server to save all User data and location settings
+- Base-Kiosk: A NextJS App running the same code as the Expo App.
+- Base-MQTT: A Mqtt server to communicate locally between "Access Points" and the "Base-Apps"
+- Base-Local: Local Server to Manage the Location and using a Message Queue to Log requests to Cloud server.
+- Base-StoryBook: A Storybook server to manage the design system
+
+All communication happens over [TRPC](https://trpc.io). So Base-Local uses trpc to talk to Base-Cloud, Base-Kiosk uses TRPC to talk to Base-Cloud, Base-MQTT uses TRPC to talk to Base-Local.
+
+Note: This is an experiment and code quality and documentation is not a priority, and there might be some odd choices made.
+
+## Goals of Experiment:
+
+### Developer
 
 - TS Everywhere, C++ if you cant
-
 - Tailwind Everywhere
 - Easy to Deploy
 - Easy to update
@@ -13,7 +29,7 @@
 - Design System with Storybook
 - Documentation in Repo
 
-# Business
+### Business
 
 - Monetize new features
 - Cheap to Build
